@@ -1,0 +1,98 @@
+﻿<controls:ChildWindow x:Class="DynamicConnections.NutriStyle.MenuGenerator.ChildWindows.ActivityLevelsPopup"
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+           xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit" 
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:toolkit2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+           mc:Ignorable="d"
+           xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+           d:DesignWidth="400" d:DesignHeight="500">
+    
+    <sdk:ChildWindow.Style>
+        <StaticResource ResourceKey="CustomChildWindow"/>
+    </sdk:ChildWindow.Style>
+
+    <Grid x:Name="LayoutRoot" Height="Auto" Width="Auto" ShowGridLines="False">
+       
+
+        <!--<Border Background ="Transparent" Width="Auto" >-->
+            
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"></RowDefinition> <!-- header-->
+                    <RowDefinition Height="*"></RowDefinition><!-- content-->
+                    <RowDefinition Height="30"></RowDefinition> <!-- footer-->
+                </Grid.RowDefinitions>
+
+                <Border Background ="#3298CC" Grid.Row="0" VerticalAlignment="Center" CornerRadius="4,4,0,0">
+                    <!--header-->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="40"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                    <sdk:Label Name="header"  Grid.Column="1"
+                               Content=""
+                           Foreground="#ffffff" 
+                           VerticalAlignment="Center" 
+                           HorizontalAlignment="Center" 
+                           FontWeight="Bold" 
+                           FontSize="18" 
+                           Height="40" 
+                           
+                           />
+                    <Button Content="Close" Cursor="Hand" ToolTipService.ToolTip="Close Window" Height="24" Click="OKButton_Click" Grid.Column="2"/>
+                </Grid>
+            </Border>
+
+                <StackPanel Grid.Row="1" Background="White"> <!-- content-->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5" > <!-- row 1-->
+                            <StackPanel Orientation="Vertical" Width="250">
+                                <sdk:Label Name="sedentarySubHeader" Content="" Style="{StaticResource activitySubHeaderStyle}" />
+                            <TextBlock Name="sedentaryContent" Text="" Foreground="#878586" Padding="5,0,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/Sedentary.png" Width="125" HorizontalAlignment="Right"/>
+                        </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5" >
+                        <!-- row 1-->
+                        <StackPanel Orientation="Vertical" Width="250">
+                            <sdk:Label Name="lightActivitySubHeader" Content="" Style="{StaticResource activitySubHeaderStyle}" />
+                            <TextBlock Name="lightActivityContent" Text="" Foreground="#878586" Padding="5,0,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/LightActivity.png" Width="125" HorizontalAlignment="Right"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5" >
+                        <!-- row 1-->
+                        <StackPanel Orientation="Vertical" Width="250">
+                            <sdk:Label Name="moderateActivitySubHeader" Content="" Style="{StaticResource activitySubHeaderStyle}" />
+                            <TextBlock Name="moderateActivityContent" Text="" Foreground="#878586" Padding="5,0,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/ModerateActivity.png" Width="125" HorizontalAlignment="Right"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5" >
+                        <!-- row 1-->
+                        <StackPanel Orientation="Vertical" Width="250">
+                            <sdk:Label Name="veryActiveSubHeader" Content="" Style="{StaticResource activitySubHeaderStyle}" />
+                            <TextBlock Name="veryActiveContent" Text="" Foreground="#878586" Padding="5,0,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/VeryActive.png" Width="125" HorizontalAlignment="Right"/>
+                    </StackPanel>
+                    
+                </StackPanel>
+
+                <Border Background ="#3298CC" Grid.Row="2" CornerRadius="0,0,4,4" > <!--footer-->
+                    <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" Height="23" Padding="0,5,0,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                </Border>
+
+            </Grid>
+        <!--</Border>-->
+  
+    </Grid>
+    
+</controls:ChildWindow>

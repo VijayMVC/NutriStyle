@@ -1,0 +1,251 @@
+﻿<controls:ChildWindow x:Class="DynamicConnections.NutriStyle.MenuGenerator.ChildWindows.FoodNutrients"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+           xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit" 
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:toolkit2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+           xmlns:Controls="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Controls;assembly=DynamicConnections.NutriStyle.MenuGenerator"
+           xmlns:Scroll="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Controls.Scroll;assembly=DynamicConnections.NutriStyle.MenuGenerator"
+           mc:Ignorable="d"
+           xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+           d:DesignWidth="600" d:DesignHeight="650"
+           xmlns:helpers="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Engine.Helpers"
+           xmlns:toolkit1="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
+           xmlns:charting="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" 
+           xmlns:System_Windows_Controls_DataVisualization_Charting_Primitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit"                      
+           xmlns:datavis="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"    
+             xmlns:layout="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
+           Width="1000" Height="650" Background="Transparent">
+    <sdk:ChildWindow.Style>
+        <StaticResource ResourceKey="CustomChildWindow"/>
+    </sdk:ChildWindow.Style>
+
+    <controls:ChildWindow.Resources>
+        <helpers:WidthToTranslate x:Key="WidthConverter" />
+        <helpers:RectangleHeight x:Key="HeightConverter" />
+        
+        <ControlTemplate x:Key="LegendControlTemplate1" TargetType="toolkit1:Legend">
+            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <toolkit1:Title Grid.Row="0" x:Name="HeaderContent" Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" Style="{TemplateBinding TitleStyle}" />
+                    <ItemsPresenter x:Name="Items" Margin="2,0,2,0"  />
+                </Grid>
+            </Border>
+        </ControlTemplate>
+
+
+        <Style x:Key="DataPointStylePositive" TargetType="toolkit1:ColumnDataPoint">
+            <Setter Property="Background" Value="Green"/>
+            <Setter Property="DependentValueStringFormat" Value="{}{0:P}"/>
+        </Style>
+        
+        <Style x:Key="DataPointStyleNegitive" TargetType="toolkit1:ColumnDataPoint">
+            <Setter Property="Background" Value="Blue"/>
+            <Setter Property="DependentValueStringFormat" Value="{}{0:P}"/>
+
+        </Style>
+
+        <Style x:Key="newLegend" TargetType="toolkit1:Legend">
+            <Setter Property="toolkit1:Chart.LegendStyle">
+                <Setter.Value>
+                    <Style TargetType="datavis:Legend">
+                        <Setter Property="Margin" Value="5,0,5,0"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="BorderBrush" Value="#FFDBDBDB"/>
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <LinearGradientBrush EndPoint="0.442,0.005" StartPoint="0.558,0.995">
+                                    <GradientStop Color="#FFDBDBDB"/>
+                                    <GradientStop Color="#FFFFFFFF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="ItemsPanel">
+                            <Setter.Value>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+
+
+        </Style>
+
+
+        <ControlTemplate x:Key="ChartLayoutBottom" TargetType="toolkit1:Chart">
+            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" 
+                    Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <toolkit1:Title Content="{TemplateBinding Title}" Style="{TemplateBinding TitleStyle}"/>
+                    <Grid Margin="0,0,0,0" Grid.Row="1">
+                        <!--Original definitions-->
+                        <!--<Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>-->
+                        <!--New definitions for the Legend to be bellow the Chart-->
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <!--Original definition, replaced by Grid.Row="1" on the Legend object-->
+                        <!--Grid.Column="1"-->
+                        <toolkit1:Legend x:Name="Legend" Grid.Row="1" 
+                            Header="{TemplateBinding LegendTitle}" 
+                            HorizontalAlignment="Center" Style="{TemplateBinding LegendStyle}"  
+                            VerticalAlignment="Bottom" Template="{StaticResource LegendControlTemplate1}">
+
+                        </toolkit1:Legend>
+
+
+                        <System_Windows_Controls_DataVisualization_Charting_Primitives:EdgePanel x:Name="ChartArea" Style="{TemplateBinding ChartAreaStyle}">
+                            <Grid Style="{TemplateBinding PlotAreaStyle}" Canvas.ZIndex="-1"/>
+                            <Border BorderBrush="#FF919191" BorderThickness="1" Canvas.ZIndex="10"/>
+                        </System_Windows_Controls_DataVisualization_Charting_Primitives:EdgePanel>
+                    </Grid>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+
+
+        <Style x:Key="LegendItemStyle1" TargetType="charting:LegendItem">
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="charting:LegendItem">
+                        <StackPanel Orientation="Horizontal">
+                            <Rectangle Fill="{Binding Background}" Stroke="{Binding BorderBrush}" StrokeThickness="1" Height="8" Margin="10,0,3,0" Width="8"/>
+                            <TextBlock Text="{TemplateBinding Content}" TextWrapping="Wrap" MaxWidth="100" />
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="NumericAxisLabelStyle1" TargetType="charting:NumericAxisLabel">
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="StringFormat" Value="{}{0:C0}"/>
+            <Setter Property="Grid.ShowGridLines" Value="True" />
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="charting:NumericAxisLabel">
+                        <sdk:Label Content="{TemplateBinding FormattedContent}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <Style x:Name="HorizontalLabelStyle" TargetType="toolkit1:AxisLabel">
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <RotateTransform Angle="270"></RotateTransform>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="lengandStyle" TargetType="toolkit1:Legend">
+            <Setter Property="Width" Value="0"/>
+            <Setter Property="Height" Value="0"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Setter Property="Background" Value="Blue"/>
+            <Setter Property="Width" Value="0"/>
+        </Style>
+        <Style x:Key="legendItemStyle" TargetType="toolkit1:LegendItem">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Setter Property="Width" Value="0"/>
+            <Setter Property="Height" Value="0"/>
+            <Setter Property="Background" Value="Green"/>
+        </Style>
+
+        <Style x:Key="titleStyle" TargetType="toolkit1:Title">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Setter Property="Background" Value="Blue"/>
+            <Setter Property="Width" Value="0"/>
+            <Setter Property="Height" Value="0"/>
+        </Style>
+        <Style x:Key="HoursLabel" TargetType="toolkit1:AxisLabel">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="toolkit1:AxisLabel">
+                        <TextBlock Text="" FontSize="8" Visibility="Collapsed"  />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </controls:ChildWindow.Resources>
+
+
+    <Border Style="{StaticResource borderStyle}" BorderThickness="1" Grid.Row="0" Padding="4">
+        <Grid x:Name="LayoutRoot" Margin="2">
+            <Grid.Background>
+                <ImageBrush x:Name="backgroundImage"  ImageSource="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/background.png"/>
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="40"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="" Name="FoodName" Style="{StaticResource textBlockHeaderStyle}" Grid.ColumnSpan="2" VerticalAlignment="Center" ></TextBlock>
+                <Button Content="Close" Cursor="Hand" ToolTipService.ToolTip="Close Window" Height="24" Click="OKButton_Click" Grid.Column="2"/>
+            </Grid>
+
+            <Border Style="{StaticResource borderStyle}" Margin="5" Padding="4"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White" Grid.RowSpan="2" Grid.Row="1">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        
+                        <RowDefinition Height="550"></RowDefinition>
+                        
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Vertical">
+
+                            <toolkit:BusyIndicator Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch"   Margin="0,10,0,0" 
+                                VerticalAlignment="Stretch" BorderThickness="0" Name="busyIndicator"
+                                Height="540"                   
+                                IsBusy="True" >
+                                
+                                <sdk:DataGrid AutoGenerateColumns="False"  Height="Auto" Grid.Row="0"
+                                    HorizontalAlignment="Stretch" Name="dataGrid" VerticalAlignment="Stretch" 
+                                    Style="{StaticResource dataGridCustom}"
+                                    AlternatingRowBackground="White" RowBackground="White"
+                                    ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle1}"     
+                                           
+                                />
+                            </toolkit:BusyIndicator>
+                        </StackPanel>
+                   
+                </Grid>
+
+            </Border>
+
+        </Grid>
+    </Border>
+</controls:ChildWindow>

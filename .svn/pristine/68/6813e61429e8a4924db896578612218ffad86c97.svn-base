@@ -1,0 +1,394 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Configuration;
+using DynamicConnections.CRM2011.Common.Utility;
+using Microsoft.Xrm.Sdk.Client;
+using System.Xml;
+using System.Xml.Serialization;
+using Microsoft.Xrm.Sdk.Metadata;
+using System.IO;
+using System.Runtime.Serialization;
+
+using Microsoft.Xrm.Sdk;
+using System.Web.Services.Protocols;
+
+using System.ServiceModel;
+using System.ServiceModel.Description;
+using Microsoft.Xrm.Sdk.Query;
+
+using System.Text;
+using Microsoft.Crm.Sdk.Messages;
+
+
+namespace DynamicConnections.NutriStyle.CRM2011.WebServices.Engine
+{
+    public class User
+    {
+        
+        Logger logger;
+        public static OrganizationServiceProxy crmService = null;
+        public XmlDocument xmlDocResults {get;set;}
+        public User() {
+
+            String level    = ConfigurationManager.AppSettings["LogLevel"];
+            String location = ConfigurationManager.AppSettings["LogLocation"];
+            logger          = new Logger(level, location);
+            String user     = ConfigurationManager.AppSettings["CrmUser"];
+            String password = ConfigurationManager.AppSettings["Password"];
+            String orgName  = ConfigurationManager.AppSettings["CrmOrganization"];
+            String hostname = ConfigurationManager.AppSettings["Hostname"];
+            String domain   = ConfigurationManager.AppSettings["Domain"];
+            String portnumber = ConfigurationManager.AppSettings["Portnumber"];
+
+            try
+            {
+                
+                logger.debug("orgName:" + orgName);
+                logger.debug("user:" + user);
+                logger.debug("password:" + password);
+                logger.debug("domain:" + domain);
+                logger.debug("hostname:" + hostname);
+                logger.debug("portnumber:" + portnumber);
+
+                if (crmService == null)
+                {
+                    crmService = CrmHelper.CreateCrmService(user, password, domain, hostname, orgName, Convert.ToInt32(portnumber));
+                    
+                    logger.debug("Built crm service object");
+                }
+                else
+                {
+                    logger.debug("Value was set");
+                    logger.debug(crmService.CallerId.ToString());
+                }
+            }
+            catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.StackTrace);
+            }
+
+            catch (SoapException e)
+            {
+                logger.error(e.Message);
+                logger.error(e.Detail.InnerText);
+                logger.error(e.StackTrace);
+            }
+            catch (Exception e)
+            {
+                logger.error(e.Message);
+                logger.error(e.StackTrace);
+            }
+        }
+
+        /// <summary>
+        /// Creates a user with the passed in variables
+        /// </summary>
+        /// <param name="emailAddress"></param>
+        /// <param name="password"></param>
+        /// <param name="zipCode"></param>
+        /// <param name="firstname"></param>
+        /// <param name="lastname"></param>
+        /// <param name="grocerPrimaryId"></param>
+        /// <param name="grocerSecondaryId"></param>
+        /// <param name="grocerTertiaryId"></param>
+        /// <param name="countryId"></param>
+        /// <param name="grocerOther"></param>
+        /// <param name="verificationCodeId"></param>
+        /// <returns></returns>
+        public XmlDocument CreateUser(String emailAddress, String password, String zipCode, String firstname, String lastname,
+            Guid grocerPrimaryId, Guid grocerSecondaryId, Guid grocerTertiaryId, Guid countryId, String grocerOther, Guid verificationCodeId)
+        {
+            XmlDocument xml = Success.Create("success");
+            //Make sure that the contact email doesn't exist
+            logger.debug("emailAddress: " + emailAddress);
+            logger.debug("password: " + password);
+            logger.debug("zipCode: " + zipCode);
+
+            logger.debug("firstname: " + firstname);
+            logger.debug("lastname: " + lastname);
+
+            logger.debug("grocerPrimary: " + grocerPrimaryId);
+            logger.debug("grocerSecondary: " + grocerSecondaryId);
+            logger.debug("grocerTertiary: " + grocerTertiaryId);
+            logger.debug("grocerOther: " + grocerOther);
+
+            logger.debug("countryId: " + countryId);
+
+            try
+            {
+                EntityCollection ec = CrmHelper.GetEntitiesByAttribute("contact", "emailaddress1", emailAddress, new String[] { "contactid" }, null, crmService);
+                if (ec.Entities.Count > 0)
+                {
+                    xml = Error.Create("Please use an other email address.  This one is in use");
+                }
+                else//create user
+                {
+                    //Relate this contact to the default preset
+                    Guid presetId = Guid.Empty;
+                    String fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
+                      <entity name='dc_presets'>
+                        <attribute name='dc_presetsid' />
+                        <filter type='and'>
+                          <condition attribute='dc_defaultpreset' operator='eq' value='1' />
+                        </filter>
+                      </entity>
+                    </fetch>";
+
+                    EntityCollection response = crmService.RetrieveMultiple(new FetchExpression(fetchXml));
+
+                    logger.debug("Found " + response.Entities.Count + " contact records");
+                    if (response != null && response.Entities.Count > 0)
+                    {
+                        Entity preset = (Entity)response.Entities[0];
+                        presetId = preset.Id;
+                        logger.debug("PresetId: "+presetId);
+                    }
+
+
+                    Entity contact = new Entity();
+                    contact.LogicalName = "contact";
+                    contact["dc_password"] = password;
+                    contact["emailaddress1"] = emailAddress;
+                    contact["address1_postalcode"] = zipCode;
+                    contact["firstname"] = firstname;
+                    contact["lastname"] = lastname;
+                    contact["dc_grocerother"] = grocerOther;
+                    if (verificationCodeId != Guid.Empty)
+                    {
+                        contact["dc_verifycustomerid"] = new EntityReference("dc_verifycustomer", verificationCodeId);
+                    }
+                    if (grocerPrimaryId != Guid.Empty)
+                    {
+                        contact["dc_grocerprimaryid"] = new EntityReference("dc_grocer", grocerPrimaryId);
+                    }
+                    if (grocerSecondaryId != Guid.Empty)
+                    {
+                        contact["dc_grocersecondaryid"] = new EntityReference("dc_grocer", grocerSecondaryId);
+                    }
+                    if (grocerTertiaryId != Guid.Empty)
+                    {
+                        contact["dc_grocertertiaryid"] = new EntityReference("dc_grocer", grocerTertiaryId);
+                    }
+
+                    if (presetId != Guid.Empty)
+                    {
+                        contact["dc_menupresetid"] = new EntityReference("dc_presets", presetId);
+                    }
+                    if (countryId != Guid.Empty)
+                    {
+                        contact["dc_countryid"] = new EntityReference("dc_country", countryId);
+                    }
+
+                    Guid contactId = crmService.Create(contact);
+
+                    xml = Success.Create(contactId.ToString());
+
+                    
+                }
+            }
+            catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.StackTrace);
+            }
+
+            catch (SoapException e)
+            {
+                logger.error(e.Message);
+                logger.error(e.Detail.InnerText);
+                logger.error(e.StackTrace);
+            }
+            catch (Exception e)
+            {
+                logger.error(e.Message);
+                logger.error(e.StackTrace);
+            }
+            return (xml);
+        }
+        /// <summary>
+        /// Logs the user/contact in
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public Entity LoginContact(String email, String password)
+        {
+            XmlDocument xmlDoc = Success.Create("worked");
+            logger.debug("email: " + email);
+            logger.debug("password: " + password);
+            
+            Entity contact = null;
+            try
+            {
+                xmlDoc = new XmlDocument();
+                XmlNode results = xmlDoc.CreateNode(XmlNodeType.Element, "results", "");
+                XmlNode valid   = xmlDoc.CreateNode(XmlNodeType.Element, "valid", "");
+                XmlNode guid    = xmlDoc.CreateNode(XmlNodeType.Element, "guid", "");
+
+                xmlDoc.AppendChild(results);
+                results.AppendChild(valid);
+                results.AppendChild(guid);
+
+                valid.InnerText = false.ToString();
+                guid.InnerText = Guid.Empty.ToString();
+                
+                String contactFetchXml = @"<fetch distinct='false' mapping='logical' output-format='xml-platform' version='1.0' >
+                        <entity name='contact'> 
+                            <attribute name='firstname'/>
+                            <attribute name='emailaddress1'/> 
+                            <attribute name='lastname'/> 
+                            <attribute name='gendercode'/>
+                            <attribute name='dc_targetweight'/>
+                            <attribute name='dc_currentweight'/>
+                            <attribute name='dc_heightfeet'/>
+                            <attribute name='dc_heightinches'/>
+                            <attribute name='birthdate'/>
+                            <attribute name='dc_activitylevel'/>
+                            <attribute name='dc_poundsperweek'/>
+                            <attribute name='dc_maintaintargetweight'/>
+                            <attribute name='dc_kcalcalculatedtarget'/>
+                            <attribute name='dc_weightkg'/> 
+                            <attribute name='dc_heightcm'/> 
+                            <attribute name='dc_age'/>
+                            <attribute name='dc_bmi'/>
+                            <attribute name='contactid'/>
+
+                            <attribute name='dc_morningsnack'/>
+                            <attribute name='dc_afternoonsnack'/>
+                            <attribute name='dc_eveningsnack'/>
+                            <attribute name='dc_menupresetid'/>
+                            <attribute name='dc_dee'/>
+                            <attribute name='dc_userspecifiedkcaltarget'/>
+                            <attribute name='dc_kcaltarget'/>
+
+                            <filter type='and'>
+                                <condition attribute='emailaddress1' value='@EMAIL' operator='eq'/>
+                                <condition attribute='dc_password' value='@PASSWORD' operator='eq'/>
+                            </filter>
+                            <link-entity name='dc_menu' alias='dc_menu' to='contactid' from='dc_contactid' link-type='outer'>
+                                 <attribute name='dc_menuid'/>
+                                <filter type='and'> <condition attribute='dc_primarymenu' value='1' operator='eq'/> 
+                                </filter> 
+                            </link-entity>
+                        </entity> 
+                    </fetch>";
+
+                contactFetchXml = contactFetchXml.Replace("@EMAIL", email);
+                contactFetchXml = contactFetchXml.Replace("@PASSWORD", password);
+
+                XmlDocument fetchXmlDoc = new XmlDocument();
+                fetchXmlDoc.LoadXml(contactFetchXml);
+
+                EntityCollection response = crmService.RetrieveMultiple(new FetchExpression(contactFetchXml));
+
+                logger.debug("Found " + response .Entities.Count+ " contact records");
+                if (response != null && response.Entities.Count > 0)
+                {
+                    contact = response.Entities[0];
+                    //xmlDocResults = DatabaseHelper.BuildXml(response, "contact", xmlDoc, crmService, General.CreateOrderXml(fetchXmlDoc));
+                    Database db     = new Database();
+                    xmlDocResults   = db.RetrieveFetchXml(fetchXmlDoc, General.CreateOrderXml(fetchXmlDoc), String.Empty);
+                }
+            }
+            catch (SoapException e)
+            {
+                logger.error(e.Message);
+                logger.error(e.Detail.InnerText);
+                logger.error(e.StackTrace);
+            }
+            catch (Exception e)
+            {
+                logger.error(e.Message);
+                logger.error(e.StackTrace);
+            }
+            return (contact);
+        }
+        /// <summary>
+        /// Send the password to a user/contact via a workflow
+        /// </summary>
+        /// <param name="emailAddress"></param>
+        /// <returns></returns>
+        public XmlDocument SendPassword(String emailAddress)
+        {
+            logger.debug("SendPassword: " + emailAddress);
+            XmlDocument results = Success.Create("Worked");
+            //make sure email address exists
+            Guid contactId = Guid.Empty;
+            String fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
+                      <entity name='contact'>
+                        <attribute name='contactid' />
+                        <filter type='and'>
+                          <condition attribute='emailaddress1' operator='eq' value='@EMAILADDRESS' />
+                        </filter>
+                      </entity>
+                    </fetch>";
+
+            fetchXml = fetchXml.Replace("@EMAILADDRESS", emailAddress);
+            try
+            {
+                EntityCollection response = crmService.RetrieveMultiple(new FetchExpression(fetchXml));
+
+                logger.debug("Found " + response.Entities.Count + " contact records");
+                if (response != null && response.Entities.Count > 0)
+                {
+                    Entity contact = (Entity)response.Entities[0];
+                    contactId = contact.Id;
+                    logger.debug("contactId: " + contactId);
+                }
+                else if(response != null && response.Entities.Count == 0) 
+                {
+                    results = Error.Create("Email address was not found");
+                    return (results);
+                }
+            }
+            catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> ex)
+            {
+                logger.error("Code: " + ex.Detail.ErrorCode);
+                logger.error("Message: " + ex.Detail.Message);
+                logger.error("Trace: " + ex.Detail.TraceText);
+                logger.error("Inner Fault: " + ex.Detail.InnerFault);
+                results = Error.Create(ex.Detail.Message);
+            }
+            if (contactId != Guid.Empty)
+            {
+                //Find workflow and fire it
+                // Find workflow GUID
+                QueryExpression qe = new QueryExpression("workflow");
+                qe.ColumnSet.AddColumn("workflowid");
+                qe.Criteria.AddCondition(new ConditionExpression("name", ConditionOperator.Equal, "Forgot Password"));
+                qe.Criteria.AddCondition(new ConditionExpression("type", ConditionOperator.Equal, 1));
+
+                DataCollection<Entity> list = crmService.RetrieveMultiple(qe).Entities;
+
+                Guid workflowId = Guid.Empty;
+
+                if (list.Count > 0)
+                {
+                    workflowId = list[0].Id;
+
+                    logger.debug("Workflow ID: " + workflowId);
+
+                    ExecuteWorkflowRequest request = new ExecuteWorkflowRequest();
+                    request.WorkflowId = workflowId;
+                    request.EntityId = contactId;
+                    crmService.Execute(request);
+                }
+            }
+
+            return (results);
+        }
+        
+        /// <summary>
+        /// Retrieve contact based on contactId
+        /// </summary>
+        /// <param name="contactId"></param>
+        /// <returns></returns>
+        public static XmlDocument RetrieveContactId(Guid contactId)
+        {
+            return (Queries.RetrieveContactId(contactId));
+        }
+    }
+}

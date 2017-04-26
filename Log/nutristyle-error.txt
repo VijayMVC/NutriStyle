@@ -1,0 +1,112 @@
+ERROR 10/14/2011 7:19:21 PM Could not load file or assembly 'Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' or one of its dependencies. The system cannot find the file specified.
+ERROR 10/14/2011 7:35:56 PM Code: -2147217150
+ERROR 10/14/2011 7:35:56 PM Message: The entity with a name = 'tbl_foods' was not found in the MetadataCache.
+ERROR 10/14/2011 7:35:56 PM Trace: 
+ERROR 10/14/2011 7:35:56 PM Inner Fault: 
+ERROR 11/15/2011 12:22:26 AM An error occurred in CalcGAP - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 33
+ERROR 11/15/2011 12:22:26 AM An error occurred in CalcGAP - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 31
+ERROR 11/15/2011 12:22:26 AM An error occurred in GetFoodRatios - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.GetFoodRatios.Execute(Entity entityMeal, List`1 entityMealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\GetFoodRatios.cs:line 62
+ERROR 11/15/2011 12:22:26 AM An error occurred in CheckPercentages - setActualsPercents method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+ERROR 11/15/2011 12:22:26 AM An error occurred in PerformRatioGapAnalysis - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.getFoodToAnalyze(List`1 mealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 61
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.Execute(Entity entityMeal, List`1 entityMealFood, OrganizationServiceProxy organizationServiceProxy) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 41
+ERROR 11/15/2011 12:22:28 AM An error occurred in CalcGAP - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 33
+ERROR 11/15/2011 12:22:28 AM An error occurred in CalcGAP - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 31
+ERROR 11/15/2011 12:22:28 AM An error occurred in GetFoodRatios - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.GetFoodRatios.Execute(Entity entityMeal, List`1 entityMealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\GetFoodRatios.cs:line 62
+ERROR 11/15/2011 12:22:28 AM An error occurred in CheckPercentages - setActualsPercents method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+ERROR 11/15/2011 12:22:28 AM An error occurred in PerformRatioGapAnalysis - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.getFoodToAnalyze(List`1 mealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 61
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.Execute(Entity entityMeal, List`1 entityMealFood, OrganizationServiceProxy organizationServiceProxy) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 41
+ERROR 11/15/2011 12:22:30 AM An error occurred in CalcGAP - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 33
+ERROR 11/15/2011 12:22:30 AM An error occurred in CalcGAP - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 31
+ERROR 11/15/2011 12:22:30 AM An error occurred in GetFoodRatios - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.GetFoodRatios.Execute(Entity entityMeal, List`1 entityMealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\GetFoodRatios.cs:line 62
+ERROR 11/15/2011 12:22:30 AM An error occurred in CheckPercentages - setActualsPercents method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+ERROR 11/15/2011 12:22:30 AM An error occurred in PerformRatioGapAnalysis - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.getFoodToAnalyze(List`1 mealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 61
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.Execute(Entity entityMeal, List`1 entityMealFood, OrganizationServiceProxy organizationServiceProxy) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 41
+ERROR 11/15/2011 12:22:31 AM An error occurred in CalcGAP - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 33
+ERROR 11/15/2011 12:22:31 AM An error occurred in CalcGAP - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 31
+ERROR 11/15/2011 12:22:31 AM An error occurred in GetFoodRatios - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.GetFoodRatios.Execute(Entity entityMeal, List`1 entityMealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\GetFoodRatios.cs:line 62
+ERROR 11/15/2011 12:22:31 AM An error occurred in CheckPercentages - setActualsPercents method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+ERROR 11/15/2011 12:22:31 AM An error occurred in PerformRatioGapAnalysis - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.getFoodToAnalyze(List`1 mealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 61
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.Execute(Entity entityMeal, List`1 entityMealFood, OrganizationServiceProxy organizationServiceProxy) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 41
+ERROR 11/15/2011 12:23:18 AM An error occurred in CalcGAP - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 33
+ERROR 11/15/2011 12:23:42 AM An error occurred in CalcGAP - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 31
+ERROR 11/15/2011 12:24:21 AM An error occurred in CalcGAP - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 33
+ERROR 11/15/2011 12:26:12 AM An error occurred in CalcGAP - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 33
+ERROR 11/15/2011 12:26:24 AM An error occurred in CalcGAP - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 31
+ERROR 11/15/2011 12:26:24 AM An error occurred in GetFoodRatios - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.GetFoodRatios.Execute(Entity entityMeal, List`1 entityMealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\GetFoodRatios.cs:line 62
+ERROR 11/15/2011 12:26:24 AM An error occurred in CheckPercentages - setActualsPercents method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+ERROR 11/15/2011 12:26:24 AM An error occurred in PerformRatioGapAnalysis - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.getFoodToAnalyze(List`1 mealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 61
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.Execute(Entity entityMeal, List`1 entityMealFood, OrganizationServiceProxy organizationServiceProxy) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 41
+ERROR 11/15/2011 12:47:22 AM An error occurred in CheckPercentages - setActualsPercents method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal)
+ERROR 11/15/2011 12:47:22 AM An error occurred in PerformRatioGapAnalysis - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.getFoodToAnalyze(List`1 mealFoods)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.Execute(Entity entityMeal, List`1 entityMealFood, OrganizationServiceProxy organizationServiceProxy)
+ERROR 11/15/2011 12:47:30 AM An error occurred in CheckPercentages - setActualsPercents method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal)
+ERROR 11/15/2011 12:48:09 AM An error occurred in PerformRatioGapAnalysis - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.getFoodToAnalyze(List`1 mealFoods)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.Execute(Entity entityMeal, List`1 entityMealFood, OrganizationServiceProxy organizationServiceProxy)
+ERROR 11/15/2011 1:27:29 AM An error occurred in CheckPercentages - setActualsPercents method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+ERROR 11/15/2011 1:29:13 AM An error occurred in CheckPercentages - setActualsPercents method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+ERROR 11/15/2011 1:29:59 AM An error occurred in CheckPercentages - setActualsPercents method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal)
+ERROR 11/17/2011 5:14:04 PM An error occurred in CheckPercentages - setActualsPercents method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+ERROR 11/18/2011 11:10:24 AM An error occurred in CheckPercentages - setActualsPercents method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal)

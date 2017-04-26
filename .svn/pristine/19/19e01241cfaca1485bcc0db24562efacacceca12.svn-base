@@ -1,0 +1,478 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+using System.Windows.Media.Imaging;
+using System.Xml.Linq;
+using DynamicConnections.NutriStyle.MenuGenerator.Engine.Helpers;
+using System.Windows.Data;
+using System.Windows.Controls.DataVisualization.Charting;
+using System.Text;
+using System.Windows.Controls.Primitives;
+
+using DynamicConnections.NutriStyle.MenuGenerator.Controls.Scroll;
+using System.ComponentModel;
+
+
+namespace DynamicConnections.NutriStyle.MenuGenerator.ChildWindows
+{
+    public partial class CompareFoods : ChildWindow
+    {
+
+        private Guid foodId;
+        private decimal portionSize;
+        private String foodName;
+
+        Dictionary<String, String> names = new Dictionary<string, string>();
+        private RowIndexConverter _rowIndexConverter = new RowIndexConverter();
+        SortableCollectionView grams = new SortableCollectionView();
+        SortableCollectionView percents = new SortableCollectionView();
+        SortableCollectionView multipleRecommendations = new SortableCollectionView();
+
+        List<KeyValuePair<Guid, bool>> recipeList = new List<KeyValuePair<Guid, bool>>();
+
+        Dictionary<Guid, Food> foods;
+
+        public event EventHandler SwapClicked;
+
+        String searchText;
+        bool processCompareFood;
+
+        public CompareFoods()
+        {
+            InitializeComponent();
+            processCompareFood = false;
+            searchText = String.Empty;
+            foods = new Dictionary<Guid, Food>();
+            foodName = String.Empty;
+        }
+
+        public CompareFoods(Guid foodId, decimal portionSize, String foodName)
+        {
+            InitializeComponent();
+            searchText = String.Empty;
+            processCompareFood = false;
+            foods = new Dictionary<Guid, Food>();
+            this.foodId = foodId;
+            this.portionSize = portionSize;
+            this.foodName = foodName;
+
+            RetrieveDataForEachFood(this.foodId, this.portionSize);
+        }
+        private void RetrieveDataForEachFood(Guid foodId, decimal portionSize)
+        {
+            try
+            {
+                if (foodId != null && foodId != Guid.Empty)
+                {
+                    busyIndicator.IsBusy = true;
+                    CrmSdk.WebServicesSoapClient cms = new CrmSdk.WebServicesSoapClient(((App)App.Current).webServicesName);
+                    cms.FoodNutrientsFoodIdPortionSizeCompleted += new EventHandler<CrmSdk.FoodNutrientsFoodIdPortionSizeCompletedEventArgs>(cms_RetrieveDataFoodId);
+                    cms.FoodNutrientsFoodIdPortionSizeAsync(foodId.ToString(), portionSize.ToString());
+                }
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message);
+                MessageBox.Show(err.StackTrace);
+            }
+        }
+
+        private void cms_RetrieveDataFoodId(object sender, CrmSdk.FoodNutrientsFoodIdPortionSizeCompletedEventArgs e)
+        {
+
+            SortableCollectionView data = new SortableCollectionView();
+            if (dataGrid.ItemsSource != null)
+            {
+                data = (SortableCollectionView)dataGrid.ItemsSource;
+            }
+            try
+            {
+                XElement element = e.Result;
+                data.ColumnNames = new Dictionary<string, string>();
+                if (element.Descendants("columns").Count() > 0)
+                {
+
+                    if (dataGrid.Columns.Count == 0)
+                    {
+                        XElement xEl = element.Descendants("columns").ToList()[0];//get first one
+                        //MessageBox.Show(xEl.ToString());
+
+                        foreach (XElement xe in xEl.Elements())
+                        {
+
+                            data.ColumnTypes.Add(xe.Name.LocalName, xe.Attribute("Type").Value);
+                            data.ColumnNames.Add(xe.Name.LocalName, xe.Attribute("LabelName").Value);
+
+                            Row rowData = new Row();
+                            rowData["name"] = (String)data.ColumnNames[xe.Name.LocalName];
+                            rowData["key"] = xe.Name.LocalName;
+                            data.Add(rowData);
+
+                        }
+
+                        DataGridTextColumn dg = new DataGridTextColumn();
+                        dg.Header = "Nutrient";
+                        dg.CanUserSort = false;
+                        dg.SortMemberPath = "Nutrient Name";
+                        dg.Binding = new Binding("Data")
+                        {
+                            Converter = _rowIndexConverter,
+                            ConverterParameter = "name"
+                        };
+
+                        dataGrid.Columns.Add(dg);
+
+                        dg = new DataGridTextColumn();
+                        dg.Header = foodName;
+                        dg.CanUserSort = true;
+                        dg.SortMemberPath = "value";
+                        dg.Binding = new Binding("Data")
+                        {
+                            Converter = _rowIndexConverter,
+                            ConverterParameter = "value"
+                        };
+
+                        dataGrid.Columns.Add(dg);
+
+                        dg = new DataGridTextColumn();
+                        dg.Header = "Nutrient Value";
+                        dg.CanUserSort = true;
+                        dg.SortMemberPath = "comparevalue";
+                        dg.Binding = new Binding("Data")
+                        {
+                            Converter = _rowIndexConverter,
+                            ConverterParameter = "comparevalue"
+                        };
+
+                        dataGrid.Columns.Add(dg);
+
+                        dg = new DataGridTextColumn();
+                        dg.Header = "Difference";
+                        dg.CanUserSort = false;
+                        dg.SortMemberPath = "difference";
+                        dg.Binding = new Binding("Data")
+                        {
+                            Converter = _rowIndexConverter,
+                            ConverterParameter = "difference"
+                        };
+
+                        dataGrid.Columns.Add(dg);
+                    }
+
+                    //Bind data
+
+                    var rows = element.Descendants("dc_foods");
+                    foreach (var row in rows)
+                    {
+                        foreach (XElement xe in row.Elements())
+                        {
+                            var node = from x in data where (string)x["key"] == xe.Name.LocalName select x;
+                            Row r = ((Row)node.FirstOrDefault());
+                            if (xe.Name.LocalName.Equals("dc_foodsid"))
+                            {
+                                data.Remove(r);
+                            }
+                            else
+                            {
+                                if (processCompareFood)//Add to second column
+                                {
+                                    r["comparevalue"] = xe.Value;
+                                    //Setup differences
+                                    decimal d1 = 0m;
+                                    decimal d2 = 0m;
+                                    
+                                    bool d1Decimal = decimal.TryParse(xe.Value, out d1);
+                                    bool d2Decimal = decimal.TryParse((String)r["value"], out d2);
+                                    if (!d1Decimal && !d2Decimal)
+                                    {
+                                        r["difference"] = String.Empty;
+                                    }
+                                    else
+                                    {
+                                        if ((d1 % 1) == 0 || (d2 % 1) == 0)
+                                        {
+                                            r["difference"] = Math.Round(d1 - d2, 1);
+                                        }
+                                        else
+                                        {
+                                            r["difference"] = Math.Round(d1 - d2, 0);
+                                        }
+                                    }
+
+                                }
+                                else  //add to first
+                                {
+                                    r["value"] = xe.Value;
+                                }
+                            }
+                        }
+
+
+                    }
+                    //set sort
+                    //data.SortDescriptions.Add(new SortDescription("dc_name", ListSortDirection.Ascending));
+
+                    dataGrid.ItemsSource = data;
+
+                    dataGrid.Visibility = System.Windows.Visibility.Visible;
+                    dataGrid.SelectedIndex = 0;
+
+                    dataGrid.BorderThickness = new Thickness(1);
+                    busyIndicator.IsBusy = false;
+
+                }
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message);
+                MessageBox.Show(err.StackTrace);
+            }
+            busyIndicator.IsBusy = false;
+
+        }
+        private void OKButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+        }
+        private void food_KeyDown(object sender, KeyEventArgs e)
+        {
+            String text = food.Text;
+
+            if (String.IsNullOrEmpty(searchText) || searchText.Length >= text.Length)
+            {
+                if (text.Length > 1 && (e.Key != Key.Down && e.Key != Key.Up && e.Key != Key.Delete && e.Key != Key.Back))
+                {
+                    if (String.IsNullOrEmpty(searchText) || (text.Length == searchText.Length))
+                    {
+                        searchText = text;
+                    }
+
+                    food.MyAutoCompleteBox.SelectionChanged -= MyAutoCompleteBox_SelectionChanged;
+                    food.MyAutoCompleteBox.SelectionChanged += new SelectionChangedEventHandler(MyAutoCompleteBox_SelectionChanged);
+
+                    food.IsBusy = true;
+
+                    String fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true'>
+                      <entity name='dc_foods'>
+                        <attribute name='dc_name' />
+                        <attribute name='dc_recipefood' />
+                        <attribute name='dc_portion_amount' />
+                        <attribute name='dc_foodsid' />
+                        <order attribute='dc_name' descending='false' />
+                        <link-entity name='dc_food_nutrients' from='dc_food_nutrientsid' to='dc_foodnutrientid' alias='dc_food_nutrients'>
+                                    <attribute name='dc_fat' />
+                                    <attribute name='dc_protein' />
+                                    <attribute name='dc_carbohydrate' />
+                                    <attribute name='dc_alcohol' />
+                                </link-entity>
+
+                        <filter type='and'>
+                            <condition attribute='dc_name' value='%@TEXT%' operator='like'/>
+                            <condition attribute='dc_food_id' operator='null'/>
+                            <condition attribute='statecode' operator='eq' value='0'/>
+                            <condition attribute='dc_reviewed' operator='eq' value='1'/>
+                        </filter>
+                      </entity>
+                    </fetch>";
+
+                    fetchXml = fetchXml.Replace("@TEXT", text);
+
+                    XElement orderXml = new XElement("ColumnOrder");
+                    orderXml.Add(new XElement("Column", "dc_name"));
+                    orderXml.Add(new XElement("Column", "dc_recipefood"));
+                    orderXml.Add(new XElement("Column", "dc_foodsid"));
+
+                    orderXml.Add(new XElement("Column", "dc_food_nutrients.dc_fat"));
+                    orderXml.Add(new XElement("Column", "dc_food_nutrients.dc_protein"));
+                    orderXml.Add(new XElement("Column", "dc_food_nutrients.dc_carbohydrate"));
+                    orderXml.Add(new XElement("Column", "dc_food_nutrients.dc_alcohol"));
+
+                    try
+                    {
+                        //busyIndicator.IsBusy = true;
+                        //busyIndicator.Visibility = System.Windows.Visibility.Visible;
+
+                        CrmSdk.WebServicesSoapClient cms = new CrmSdk.WebServicesSoapClient(((App)App.Current).webServicesName);
+                        cms.RetrieveFoodsCompleted += new EventHandler<CrmSdk.RetrieveFoodsCompletedEventArgs>(cms_RetrieveFoods);
+                        cms.RetrieveFoodsAsync(General.ContactId(), text);
+                    }
+                    catch (Exception err)
+                    {
+                        MessageBox.Show(err.Message);
+                        MessageBox.Show(err.StackTrace);
+                    }
+                }
+            }
+        }
+        private void cms_RetrieveFoods(object sender, CrmSdk.RetrieveFoodsCompletedEventArgs e)
+        {
+            String entityName = "dc_foods";
+            var element = e.Result;
+
+            List<PairWithList> data = new List<PairWithList>();
+            try
+            {
+                if (element.Descendants(entityName).Count() > 0)
+                {
+                    //Bind data
+                    var rows = element.Descendants(entityName);
+                    foreach (var row in rows)
+                    {
+                        Row rowData             = new Row();
+                        String name             = String.Empty;
+                        String Id               = String.Empty;
+                        String portionAmount    = "0";
+                        String fat              = "0";
+                        String carbs            = "0";
+                        String protein          = "0";
+                        String alcohol          = "0";
+
+                        String portionTypeAbbreviation = String.Empty;
+                        bool isRecipe = false;
+                        foreach (XElement xe in row.Elements())
+                        {
+                            if (xe.Name.LocalName.Equals("dc_name", StringComparison.OrdinalIgnoreCase))
+                            {
+                                name = xe.Value;
+                            }
+                            else if (xe.Name.LocalName.Equals("dc_foodsid", StringComparison.OrdinalIgnoreCase))
+                            {
+                                Id = xe.Value;
+                            }
+                            else if (xe.Name.LocalName.Equals("dc_portion_amount", StringComparison.OrdinalIgnoreCase))
+                            {
+                                portionAmount = xe.Value;
+                            }
+                            else if (xe.Name.LocalName.Equals("dc_food_nutrients.dc_fat", StringComparison.OrdinalIgnoreCase))
+                            {
+                                fat = xe.Value;
+                            }
+                            else if (xe.Name.LocalName.Equals("dc_food_nutrients.dc_carbohydrate", StringComparison.OrdinalIgnoreCase))
+                            {
+                                carbs = xe.Value;
+                            }
+                            else if (xe.Name.LocalName.Equals("dc_food_nutrients.dc_protein", StringComparison.OrdinalIgnoreCase))
+                            {
+                                protein = xe.Value;
+                            }
+                            else if (xe.Name.LocalName.Equals("dc_food_nutrients.dc_alcohol", StringComparison.OrdinalIgnoreCase))
+                            {
+                                alcohol = xe.Value;
+                            }
+                            else if (xe.Name.LocalName.Equals("dc_recipefood", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Convert.ToBoolean(xe.Value))
+                                {
+                                    isRecipe = true;
+                                }
+                            }
+                            else if (xe.Name.LocalName.Equals("dc_portion_types.dc_abbreviation", StringComparison.OrdinalIgnoreCase))
+                            {
+                                portionTypeAbbreviation = xe.Value;
+                            }
+                        }
+                        data.Add(new PairWithList(name, Id));
+                        if (!foods.ContainsKey(new Guid(Id)))
+                        {
+                            Food f = new Food();
+                            f.PortionSize = Convert.ToDecimal(portionAmount);
+                            f.Fat = Convert.ToDecimal(fat);
+                            f.Carbohydrate = Convert.ToDecimal(carbs);
+                            f.Protein = Convert.ToDecimal(protein);
+                            f.Alcohol = Convert.ToDecimal(alcohol);
+                            f.PortionTypeAbbreviation = portionTypeAbbreviation;
+                            foods.Add(new Guid(Id), f);
+                        }
+
+                        if (!recipeList.Contains(new KeyValuePair<Guid, bool>(new Guid(Id), isRecipe)))
+                        {
+                            recipeList.Add(new KeyValuePair<Guid, bool>(new Guid(Id), isRecipe));
+                        }
+                    }
+                    food.SelectedPair = new PairWithList(String.Empty, String.Empty, String.Empty, data);
+
+                    food.OpenDropdown(true);
+                    food.IsBusy = false;
+                }
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message);
+                MessageBox.Show(err.StackTrace);
+            }
+        }
+        /// <summary>
+        /// Retrieve the portion type for the food
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void MyAutoCompleteBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //Make sure something is selected on the row
+
+
+
+            AutoCompleteBox cb = (AutoCompleteBox)sender;
+            //Get parent datagrid
+
+            if (cb.SelectedItem != null && !String.IsNullOrEmpty(cb.Text))
+            {
+                PairWithList p = (PairWithList)cb.SelectedItem;
+
+                formPortionSize.SelectedText = foods[new Guid(p.Id)].PortionSize.ToString();
+                formPortionType.SelectedText = foods[new Guid(p.Id)].PortionTypeAbbreviation.ToString();
+
+            }
+
+        }
+
+        private void SwapFoods_Click(object sender, RoutedEventArgs e)
+        {
+            PairWithList pl = food.SelectedPair;
+            Food f = foods[new Guid(pl.Id)];
+            decimal kcalMultiplier = portionSize / f.PortionSize;
+
+            String[] array = new String[] { pl.Id, pl.Name, formPortionSize.SelectedText, 
+                (f.Fat * kcalMultiplier).ToString(), (f.Protein * kcalMultiplier).ToString(), (f.Carbohydrate * kcalMultiplier).ToString() };
+
+            SwapClicked(array, new EventArgs());
+            this.DialogResult = true;
+        }
+
+        private void CompareFoods_Click(object sender, RoutedEventArgs e)
+        {
+            processCompareFood = true;
+            String compareFoodName = String.Empty;
+            //Get foodId and portionSize
+            Guid compareFoodId = Guid.Empty;
+            decimal size = 0m;
+            PairWithList pl = food.SelectedPair;
+            if (pl != null && !String.IsNullOrEmpty(pl.Id))
+            {
+                compareFoodId = new Guid(pl.Id);
+                compareFoodName = pl.Name;
+                dataGrid.Columns[2].Header = compareFoodName;
+
+            }
+            if (!String.IsNullOrEmpty(formPortionSize.SelectedText))
+            {
+                size = Convert.ToDecimal(formPortionSize.SelectedText);//use Decimal.TryParse
+            }
+
+            if (compareFoodId != Guid.Empty && size > 0)
+            {
+                RetrieveDataForEachFood(compareFoodId, size);
+            }
+
+        }
+    }
+}
+

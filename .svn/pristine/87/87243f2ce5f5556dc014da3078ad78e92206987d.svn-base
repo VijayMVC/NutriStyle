@@ -1,0 +1,77 @@
+﻿using System;
+using System.Net;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+using System.ComponentModel;
+using System.Text.RegularExpressions;
+
+namespace DynamicConnections.NutriStyle.MenuGenerator.Engine.Helpers
+{
+    public class FeedBack : INotifyPropertyChanged
+    {
+        private String title = String.Empty;
+        private String description = String.Empty;
+        
+
+        public String Title
+        {
+            get
+            {
+                
+                return (title);
+            }
+            
+            set
+            {
+                if (String.IsNullOrEmpty(value) || value.Equals("title", StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new Exception("Please enter title");
+                }
+                else
+                {
+                    title = value;
+                    OnPropertyChanged("Title");
+                }
+            }
+        }
+       
+        public String Description
+        {
+            get
+            {
+                return (description);
+            }
+
+            set
+            {
+                if (String.IsNullOrEmpty(value) || value.Equals("description", StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new Exception("Please enter description");
+                }
+                else
+                {
+                    description = value;
+                    OnPropertyChanged("Description");
+                }
+            }
+        }
+
+       
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+}

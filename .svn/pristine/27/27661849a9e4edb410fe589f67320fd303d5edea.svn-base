@@ -1,0 +1,383 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Configuration;
+using DynamicConnections.CRM2011.Common.Utility;
+using Microsoft.Xrm.Sdk.Client;
+using System.Xml;
+using System.Xml.Serialization;
+using Microsoft.Xrm.Sdk.Metadata;
+using System.IO;
+using System.Runtime.Serialization;
+
+using Microsoft.Xrm.Sdk;
+using System.Web.Services.Protocols;
+
+using System.ServiceModel;
+using System.ServiceModel.Description;
+using Microsoft.Xrm.Sdk.Query;
+
+using System.Text;
+using Microsoft.Crm.Sdk.Messages;
+using DynamicConnections.NutriStyle.CRM2011.Webservices.Engine.Helpers;
+
+
+namespace DynamicConnections.NutriStyle.CRM2011.WebServices.Engine
+{
+    public class ShoppingList
+    {
+
+        Logger logger;
+        public static OrganizationServiceProxy crmService = null;
+
+        public ShoppingList()
+        {
+
+            String level = ConfigurationManager.AppSettings["LogLevel"];
+            String location = ConfigurationManager.AppSettings["LogLocation"];
+            logger = new Logger(level, location);
+            String user = ConfigurationManager.AppSettings["CrmUser"];
+            String password = ConfigurationManager.AppSettings["Password"];
+            String orgName = ConfigurationManager.AppSettings["CrmOrganization"];
+            String hostname = ConfigurationManager.AppSettings["Hostname"];
+            String domain = ConfigurationManager.AppSettings["Domain"];
+            String portnumber = ConfigurationManager.AppSettings["Portnumber"];
+
+            try
+            {
+                logger.debug("orgName:" + orgName);
+                logger.debug("user:" + user);
+                logger.debug("password:" + password);
+                logger.debug("domain:" + domain);
+                logger.debug("hostname:" + hostname);
+                logger.debug("portnumber:" + portnumber);
+
+                if (crmService == null)
+                {
+                    crmService = CrmHelper.CreateCrmService(user, password, domain, hostname, orgName, Convert.ToInt32(portnumber));
+
+                    logger.debug("Built crm service object");
+                }
+                else
+                {
+                    logger.debug("Value was set");
+                    logger.debug(crmService.CallerId.ToString());
+                }
+            }
+            catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.StackTrace);
+            }
+
+            catch (SoapException e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.Detail.InnerText);
+                logger.debug(e.StackTrace);
+            }
+            catch (Exception e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.StackTrace);
+            }
+        }
+        public XmlDocument RemoveFood(Guid contactId, Guid foodId)
+        {
+            XmlDocument xml = Success.Create("success");
+            
+            try
+            {
+                String fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical'>
+                  <entity name='dc_mealfood'>
+                    <attribute name='dc_mealfoodid'/>
+                    <filter type='and'>
+                        <condition attribute='dc_foodid' operator='eq' value='@FOODID' />
+                    </filter>
+                    <link-entity name='dc_meal' from='dc_mealid' to='dc_mealid' alias='dc_meal'>
+                      <link-entity name='dc_day' from='dc_dayid' to='dc_dayid' alias='dc_day'>
+                        <link-entity name='dc_menu' from='dc_menuid' to='dc_menuid' alias='dc_menu'>
+                          <filter type='and'>
+                            <condition attribute='dc_contactid' operator='eq' value='@CONTACTID' />
+                            <condition attribute='statecode' operator='eq' value='0' />
+                          </filter>
+                        </link-entity>
+                      </link-entity>
+                    </link-entity>
+                  </entity>
+                </fetch>";
+
+                fetchXml = fetchXml.Replace("@CONTACTID", contactId.ToString());
+                fetchXml = fetchXml.Replace("@FOODID", foodId.ToString());
+
+                EntityCollection ec = crmService.RetrieveMultiple(new FetchExpression(fetchXml));
+                logger.debug("Found " + ec.Entities.Count+ " foods to remove from shopping list");
+                foreach (Entity mealFood in ec.Entities)
+                {
+                    mealFood["dc_includeinshoppinglist"] = false;
+                    crmService.Update(mealFood);
+                }
+
+            }
+            catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> ex)
+            {
+                logger.error("Code: " + ex.Detail.ErrorCode);
+                logger.error("Message: " + ex.Detail.Message);
+                logger.error("Trace: " + ex.Detail.TraceText);
+                logger.error("Inner Fault: " + ex.Detail.InnerFault);
+                logger.error("Stack Trace: " +ex.StackTrace);
+                xml = Error.Create(ex.Message + "\n" + ex.StackTrace);
+            }
+            catch (SoapException e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.Detail.InnerText);
+                logger.debug(e.StackTrace);
+                xml = Error.Create(e.Message + "\n" + e.StackTrace);
+            }
+            catch (Exception e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.StackTrace);
+                xml = Error.Create(e.Message + "\n" + e.StackTrace);
+            }
+            return (xml);
+        }
+
+        public XmlDocument Reset(Guid contactId)
+        {
+            XmlDocument xml = Success.Create("success");
+            
+            //Make sure that the contact email doesn't exist
+            try
+            {
+                String fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical'>
+                  <entity name='dc_mealfood'>
+                    <attribute name='dc_mealfoodid'/>
+                    <link-entity name='dc_meal' from='dc_mealid' to='dc_mealid' alias='dc_meal'>
+                      <link-entity name='dc_day' from='dc_dayid' to='dc_dayid' alias='dc_day'>
+                        <link-entity name='dc_menu' from='dc_menuid' to='dc_menuid' alias='dc_menu'>
+                          <filter type='and'>
+                            <condition attribute='dc_contactid' operator='eq' value='@CONTACTID' />
+                          </filter>
+                        </link-entity>
+                      </link-entity>
+                    </link-entity>
+                  </entity>
+                </fetch>";
+
+                fetchXml = fetchXml.Replace("@CONTACTID", contactId.ToString());
+                
+                EntityCollection ec = crmService.RetrieveMultiple(new FetchExpression(fetchXml));
+                logger.debug("Found " + ec.Entities.Count + " foods to add to shopping list");
+                foreach (Entity mealFood in ec.Entities)
+                {
+                    mealFood["dc_includeinshoppinglist"] = true;
+                    crmService.Update(mealFood);
+                }
+
+            }
+            catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> ex)
+            {
+                logger.error("Code: " + ex.Detail.ErrorCode);
+                logger.error("Message: " + ex.Detail.Message);
+                logger.error("Trace: " + ex.Detail.TraceText);
+                logger.error("Inner Fault: " + ex.Detail.InnerFault);
+                logger.error("Stack Trace: " + ex.StackTrace);
+                xml = Error.Create(ex.Message + "\n" + ex.StackTrace);
+            }
+            catch (SoapException e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.Detail.InnerText);
+                logger.debug(e.StackTrace);
+                xml = Error.Create(e.Message + "\n" + e.StackTrace);
+            }
+            catch (Exception e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.StackTrace);
+                xml = Error.Create(e.Message + "\n" + e.StackTrace);
+            }
+            return (xml);
+        }
+        public XmlDocument CreateFromMenu(Guid menuId)
+        {
+            XmlDocument xml = Success.Create("success");
+            logger.debug("CreateFromMenu(" + menuId .ToString()+ "): starting");
+            Guid shoppingListId = Guid.Empty;
+            Guid contactId = Guid.Empty;
+
+            //find contactid from menu
+            Entity menu = crmService.Retrieve("dc_menu", menuId, new ColumnSet(new String[] { "dc_contactid" }));
+            if (menu != null && menu.Attributes.Contains("dc_contactid"))
+            {
+                contactId = ((EntityReference)menu.Attributes["dc_contactid"]).Id;
+
+            }
+            else
+            {
+                logger.debug("ContactId was not found");
+            }
+            //make sure that all existing shopping lists are disabled
+            String menuFetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
+                  <entity name='dc_shoppinglist'>
+                    <attribute name='dc_shoppinglistid' />
+                    <filter type='and'> 
+                        <condition attribute='statecode' value='0' operator='eq'/> 
+                    </filter>
+                    <link-entity name='contact' from='contactid' to='dc_contactid' alias='aa'>
+                      <filter type='and'>
+                        <condition attribute='contactid' operator='eq' value='@CONTACTID' />
+                      </filter>
+                    </link-entity>
+                  </entity>
+                </fetch>";
+
+            menuFetchXml = menuFetchXml.Replace("@CONTACTID", contactId.ToString());
+            
+            
+            String fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' aggregate='true'>
+              <entity name='dc_mealfood'>
+                <attribute name='dc_foodid' alias='alias_dc_foodid' groupby='true'/>
+                <attribute name='dc_portionsize' alias='alias_dc_portionsize' aggregate='sum'/>
+                <attribute name='dc_portiontypeid' alias='alias_dc_portiontypeid' groupby='true'/>
+                <order alias='alias_dc_foodid' descending='false' />
+                
+                <link-entity name='dc_foods' alias='aa' to='dc_foodid' from='dc_foodsid'> 
+                    <filter type='and'> 
+                        <condition attribute='dc_recipefood' value='1' operator='ne'/> 
+                    </filter> 
+                </link-entity>
+
+                <link-entity name='dc_meal' from='dc_mealid' to='dc_mealid' alias='dc_meal'>
+                  <link-entity name='dc_day' from='dc_dayid' to='dc_dayid' alias='dc_day'>
+                    <link-entity name='dc_menu' from='dc_menuid' to='dc_menuid' alias='dc_menu'>
+                      <filter type='and'>
+                        <condition attribute='dc_menuid' operator='eq' value='@DC_MENUID' />
+                      </filter>
+                    </link-entity>
+                  </link-entity>
+                </link-entity>
+              </entity>
+            </fetch>";
+
+            fetchXml = fetchXml.Replace("@DC_MENUID", menuId.ToString());
+            try
+            {
+                EntityCollection ec = crmService.RetrieveMultiple(new FetchExpression(fetchXml));
+
+                if (ec != null && ec.Entities.Count > 0)
+                {
+                    Entity shoppingList = new Entity("dc_shoppinglist");
+                    shoppingList["dc_contactid"] = new EntityReference("contact", contactId);
+                    shoppingList["dc_menuid"] = new EntityReference("dc_menu", menuId);
+                    shoppingList["dc_name"] = DateTime.Now.ToString();
+
+                    shoppingListId = crmService.Create(shoppingList);
+                    logger.debug("Shopping list created: " + shoppingListId.ToString());
+                    xml = Success.Create(shoppingListId.ToString());
+
+                }
+                else
+                {
+                    logger.debug("Menu was not found");
+                }
+                foreach (Entity mealFood in ec.Entities)
+                {
+                    Entity shoppingListItem = new Entity("dc_shoppinglistitem");
+
+
+                    //logger.debug("" + ((AliasedValue)mealFood.Attributes["alias_dc_portionsize"]).Value.GetType());
+                    shoppingListItem["dc_shoppinglistid"] = new EntityReference("dc_shoppinglist", shoppingListId);
+                    shoppingListItem["dc_portionsize"] = (decimal)(((AliasedValue)mealFood.Attributes["alias_dc_portionsize"]).Value);
+                    shoppingListItem["dc_foodid"] = ((AliasedValue)mealFood.Attributes["alias_dc_foodid"]).Value;
+                    shoppingListItem["dc_portiontypeid"] = ((AliasedValue)mealFood.Attributes["alias_dc_portiontypeid"]).Value;
+                    shoppingListItem["dc_name"] = ((EntityReference)((AliasedValue)mealFood.Attributes["alias_dc_foodid"]).Value).Name;
+                    crmService.Create(shoppingListItem);
+                }
+                //recipe
+                fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical'>
+                  <entity name='dc_ingredient'>
+                    <attribute name='dc_foodingredientid'  />
+                    <attribute name='dc_portiontypeid' />
+                    <attribute name='dc_portionsize'  />
+                    <link-entity name='dc_foods' from='dc_foodsid' to='dc_foodid' alias='dc_foods'>
+                        <attribute name='dc_portion_amount'  />
+                      <link-entity name='dc_mealfood' from='dc_foodid' to='dc_foodsid' alias='dc_mealfood'>
+                        <attribute name='dc_portionsize'  />
+                        <link-entity name='dc_meal' from='dc_mealid' to='dc_mealid' alias='ac'>
+                          <link-entity name='dc_day' from='dc_dayid' to='dc_dayid' alias='ad'>
+                            <link-entity name='dc_menu' from='dc_menuid' to='dc_menuid' alias='ae'>
+                              <filter type='and'>
+                                <condition attribute='dc_menuid' operator='eq' value='@DC_MENUID' />
+                              </filter>
+                            </link-entity>
+                          </link-entity>
+                        </link-entity>
+                      </link-entity>
+                    </link-entity>
+                  </entity>
+                </fetch>";
+                
+                fetchXml = fetchXml.Replace("@DC_MENUID", menuId.ToString());
+
+                ec = crmService.RetrieveMultiple(new FetchExpression(fetchXml));
+
+                Dictionary<Guid, ShoppingListHelper> list = new Dictionary<Guid,ShoppingListHelper>();
+
+                foreach (Entity mealFood in ec.Entities)
+                {
+                 
+                    //multiplier
+                    decimal portionSize = (decimal)(((AliasedValue)mealFood.Attributes["dc_mealfood.dc_portionsize"]).Value);
+                    double orgPortionSize = (double)(((AliasedValue)mealFood.Attributes["dc_foods.dc_portion_amount"]).Value);
+                    decimal multiplier = portionSize / Convert.ToDecimal(orgPortionSize);
+                    //logger.debug("multiplier: " + multiplier);
+
+                    ShoppingListHelper slh = new ShoppingListHelper();
+                    slh.Name            = ((EntityReference)mealFood.Attributes["dc_foodingredientid"]).Name;
+                    slh.FoodId          = ((EntityReference)mealFood.Attributes["dc_foodingredientid"]).Id;
+                    slh.Portionsize = ((decimal)mealFood.Attributes["dc_portionsize"]) * multiplier;
+                    slh.PortionTypeId   = ((EntityReference)mealFood.Attributes["dc_portiontypeid"]).Id;
+
+                    if (list.ContainsKey(slh.FoodId))
+                    {
+                        list[slh.FoodId].Portionsize += slh.Portionsize;
+                    }
+                    else
+                    {
+                        list.Add(slh.FoodId, slh);
+                    }
+                }
+                //add to shopping list
+                foreach (KeyValuePair<Guid, ShoppingListHelper> pair in list)
+                {
+                    Entity shoppingListItem = new Entity("dc_shoppinglistitem");
+
+                    shoppingListItem["dc_shoppinglistid"]   = new EntityReference("dc_shoppinglist", shoppingListId);
+                    shoppingListItem["dc_portionsize"]      = pair.Value.Portionsize;
+                    shoppingListItem["dc_foodid"]           = new EntityReference("Dc_foods", pair.Value.FoodId);
+                    shoppingListItem["dc_portiontypeid"]    = new EntityReference("dc_portion_types", pair.Value.PortionTypeId);
+                    shoppingListItem["dc_name"]             = pair.Value.Name;
+                    crmService.Create(shoppingListItem);
+                }
+            }
+            catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> ex)
+            {
+                logger.error("Code: " + ex.Detail.ErrorCode);
+                logger.error("Message: " + ex.Detail.Message);
+                logger.error("Trace: " + ex.Detail.TraceText);
+                logger.error("Inner Fault: " + ex.Detail.InnerFault);
+                logger.error("Stack Trace: " + ex.StackTrace);
+                xml = Error.Create(ex.Message + "\n" + ex.StackTrace);
+            }catch(Exception e) {
+                logger.error(e.Message);
+                logger.error(e.StackTrace);
+                xml = Error.Create(e.Message + "\n" + e.StackTrace);
+            }
+            return (xml);
+        }
+    }
+}

@@ -1,0 +1,12 @@
+C:\Builds\NutriStyle\Applications\SyncDatabases\bin\Debug\SyncDatabases.exe.config
+C:\Builds\NutriStyle\Applications\SyncDatabases\obj\x86\Debug\SyncDatabases.csprojResolveAssemblyReference.cache
+C:\Builds\NutriStyle\Applications\SyncDatabases\bin\Debug\SyncDatabases.exe
+C:\Builds\NutriStyle\Applications\SyncDatabases\bin\Debug\SyncDatabases.pdb
+C:\Builds\NutriStyle\Applications\SyncDatabases\bin\Debug\DynamicConnections.CRM2011.Common.dll
+C:\Builds\NutriStyle\Applications\SyncDatabases\bin\Debug\Microsoft.Crm.Sdk.dll
+C:\Builds\NutriStyle\Applications\SyncDatabases\bin\Debug\microsoft.crm.sdk.proxy.dll
+C:\Builds\NutriStyle\Applications\SyncDatabases\bin\Debug\microsoft.xrm.sdk.dll
+C:\Builds\NutriStyle\Applications\SyncDatabases\bin\Debug\DynamicConnections.CRM2011.Common.pdb
+C:\Builds\NutriStyle\Applications\SyncDatabases\obj\x86\Debug\SyncDatabases.exe
+C:\Builds\NutriStyle\Applications\SyncDatabases\obj\x86\Debug\SyncDatabases.pdb
+C:\Builds\NutriStyle\Applications\SyncDatabases\bin\Debug\Microsoft.IdentityModel.dll

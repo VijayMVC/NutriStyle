@@ -1,0 +1,595 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+using DynamicConnections.NutriStyle.MenuGenerator.Engine.Helpers;
+using System.Windows.Controls.DataVisualization.Charting;
+using System.Windows.Controls.DataVisualization;
+using System.Windows.Controls.DataVisualization.Charting.Primitives;
+using System.Xml.Linq;
+using System.Text;
+using System.Windows.Markup;
+using System.Windows.Data;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using DynamicConnections.NutriStyle.MenuGenerator.ChildWindows;
+using DynamicConnections.NutriStyle.MenuGenerator.Pages;
+using System.Windows.Controls.Primitives;
+using System.ComponentModel;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Threading;
+
+namespace DynamicConnections.NutriStyle.MenuGenerator.Controls
+{
+    public partial class Profile : UserControl
+    {
+
+        public event EventHandler SavedClicked;
+
+        // Lock Objects 0 for false, 1 for true.
+        private int AsyncErrorResource = 0;
+        private int AsyncFinal = 0;
+        private List<Exception> AsyncErrors;    // If not null errors have been encountered.
+        private int PendingAsyncOperations;     // Holds the counted total of ongoing async operations. Zero means do users final operation.
+        private Action FinalOperation;          // The user's final operation.
+        String gender = String.Empty;
+
+        public Guid ContactId { get; set; }
+        public Guid ParentContactId { get; set; }
+        public bool IsPrimary { get; set; }
+        Contact c;
+        public Profile()
+        {
+            InitializeComponent();
+            //Setup birthday values
+            ContactId       = Guid.Empty;
+            ParentContactId = Guid.Empty;
+        }
+
+        public void ShowName(bool show)
+        {
+            if (!show)
+            {
+                Name.Visibility         = Visibility.Collapsed;
+                Next.Visibility         = Visibility.Visible;
+                BottomNext.Visibility   = Visibility.Visible;
+
+            }
+            else
+            {
+                Name.Visibility         = Visibility.Visible;
+                Next.Visibility         = Visibility.Collapsed;
+                BottomNext.Visibility   = Visibility.Collapsed;
+            }
+        }
+        private void RetrieveContactProfile(Contact contact)
+        {
+            //populate from the contact object
+            var dtf = CultureInfo.CurrentCulture.DateTimeFormat;
+
+            name.Content = contact.Email;
+            //targetWeight.Text = c.TargetWeight.ToString();
+            if (contact != null && contact.Gender != null && contact.Gender.Id == "1")
+            {
+                femaleImage.Source  = new BitmapImage(new Uri("/DynamicConnections.NutriStyle.MenuGenerator;component/images/female_off.png", UriKind.Relative));
+                maleImage.Source    = new BitmapImage(new Uri("/DynamicConnections.NutriStyle.MenuGenerator;component/images/male_on.png", UriKind.Relative));
+                gender              = "1";
+            }
+            else if (contact != null && contact.Gender != null && contact.Gender.Id == "2")
+            {
+                femaleImage.Source  = new BitmapImage(new Uri("/DynamicConnections.NutriStyle.MenuGenerator;component/images/female_on.png", UriKind.Relative));
+                maleImage.Source    = new BitmapImage(new Uri("/DynamicConnections.NutriStyle.MenuGenerator;component/images/male_off.png", UriKind.Relative));
+                gender              = "2";
+            }
+            if (contact != null && contact.KcalCalculatedTarget > decimal.MinValue)
+            {
+                if (ContactId == Guid.Empty)//primary profi
+                {
+                    ((App)App.Current).kcalCalculatedTarget = contact.KcalCalculatedTarget;
+                }
+            }
+
+            busyIndicator.IsBusy    = false;
+            LayoutRoot.DataContext = contact;
+            maintainWeight_Checked(maintainWeight, null);
+            HeightFeet.IsBusy       = false;
+            HeightInches.IsBusy     = false;
+        }
+
+
+        private void RetrieveGender()
+        {
+
+            CrmSdk.WebServicesSoapClient cms = new CrmSdk.WebServicesSoapClient(((App)App.Current).webServicesName);
+            cms.RetrieveOptionSetValuesCompleted += new EventHandler<CrmSdk.RetrieveOptionSetValuesCompletedEventArgs>(cms_RetrieveGender);
+            cms.RetrieveOptionSetValuesAsync("contact", "gendercode");
+
+            cms.RetrieveOptionSetValuesCompleted += (s, e) => { AssignResultCheckforAllAsyncsDone(e, e.Result, "Acquisition failure for Gender code"); };
+        }
+        private void cms_RetrieveGender(object sender, CrmSdk.RetrieveOptionSetValuesCompletedEventArgs e)
+        {
+            try
+            {
+                ComboBoxItem itemSelected = new ComboBoxItem();
+                List<Pair> list = new List<Pair>();
+                var results = from x in e.Result.Descendants("pair") select x;
+
+                foreach (var pair in results)
+                {
+                    Pair p = new Pair();
+                    p.Name = pair.Descendants("name").First().Value;
+                    p.Id = pair.Descendants("value").First().Value;
+
+                    list.Add(p);
+                }
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message);
+                MessageBox.Show(err.StackTrace);
+            }
+        }
+
+        private void LoadupPage()
+        {
+
+            if (HeightFeet != null)
+            {
+                HeightFeet.SelectedPair = new PairWithList("Loading...", String.Empty, String.Empty, new List<PairWithList>());
+            }
+            if (HeightInches != null)
+            {
+                HeightInches.SelectedPair = new PairWithList("Loading...", String.Empty, String.Empty, new List<PairWithList>());
+            }
+            ActivityLevel.SelectedPair = new PairWithList("Loading...", String.Empty, String.Empty, new List<PairWithList>());
+
+            Row row = new Row();
+
+            List<PairWithList> days = new List<PairWithList>();
+            for (int x = 1; x < 32; x++)
+            {
+                PairWithList p = new PairWithList();
+                p.Name = x.ToString();
+                p.Id = x.ToString();
+                days.Add(p);
+            }
+            BirthDay.SelectedPair = new PairWithList(String.Empty, String.Empty, String.Empty, days);
+
+            List<PairWithList> months = new List<PairWithList>();
+            var dtf = CultureInfo.CurrentCulture.DateTimeFormat;
+
+            for (int x = 1; x < 13; x++)
+            {
+                PairWithList p = new PairWithList();
+                String monthName = dtf.GetAbbreviatedMonthName(x);
+                p.Name = monthName;
+                p.Id = x.ToString();
+                months.Add(p);
+            }
+            BirthMonth.SelectedPair = new PairWithList(String.Empty, String.Empty, String.Empty, months);
+
+            List<PairWithList> years = new List<PairWithList>();
+
+            for (int x = DateTime.Now.AddYears(-6).Year; x > DateTime.Now.AddYears(-106).Year; x--)
+            {
+                PairWithList p = new PairWithList();
+                p.Name = x.ToString();
+                p.Id = x.ToString();
+                years.Add(p);
+            }
+            BirthYear.SelectedPair = new PairWithList(String.Empty, String.Empty, String.Empty, years);
+
+            maintainWeight.Click += new RoutedEventHandler(maintainWeight_Checked);
+
+            //CombineDataAndDisplay();
+        }
+        private void SaveGrid(object sender, RoutedEventArgs e)
+        {
+            HeightFeet.GetBindingExpression(ComboBoxWithValidation.SelectedPairProperty).UpdateSource();
+            HeightInches.GetBindingExpression(ComboBoxWithValidation.SelectedPairProperty).UpdateSource();
+            BirthDay.GetBindingExpression(ComboBoxWithValidation.SelectedPairProperty).UpdateSource();
+            BirthMonth.GetBindingExpression(ComboBoxWithValidation.SelectedPairProperty).UpdateSource();
+            BirthYear.GetBindingExpression(ComboBoxWithValidation.SelectedPairProperty).UpdateSource();
+
+            maintainWeight.GetBindingExpression(CheckBox.IsCheckedProperty).UpdateSource();
+
+            CurrentWeight.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+
+            ActivityLevel.GetBindingExpression(ComboBoxWithValidation.SelectedPairProperty).UpdateSource();
+
+            if (!maintainWeight.IsChecked.Value)
+            {
+                targetWeight.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+
+                if (PoundsPerWeek.SelectedPair != null)
+                {
+                    PoundsPerWeek.GetBindingExpression(ComboBoxWithValidation.SelectedPairProperty).UpdateSource();
+                }
+                else
+                {
+                    PoundsPerWeek.SelectedPair = new PairWithList(String.Empty, String.Empty);
+                    PoundsPerWeek.GetBindingExpression(ComboBoxWithValidation.SelectedPairProperty).UpdateSource();
+                }
+            }
+            if (femaleButton.IsChecked.Value)
+            {
+                femaleButton.GetBindingExpression(ToggleButton.IsCheckedProperty).UpdateSource();
+            }
+            if (maleButton.IsChecked.Value)
+            {
+                maleButton.GetBindingExpression(ToggleButton.IsCheckedProperty).UpdateSource();
+            }
+
+            if (!femaleButton.IsChecked.Value && !maleButton.IsChecked.Value)
+            {
+                maleButton.GetBindingExpression(ToggleButton.IsCheckedProperty).UpdateSource();
+                femaleButton.GetBindingExpression(ToggleButton.IsCheckedProperty).UpdateSource();
+            }
+
+            if (!Validation.GetHasError(HeightFeet) && !Validation.GetHasError(HeightInches) &&
+                !Validation.GetHasError(BirthDay) && !Validation.GetHasError(BirthMonth) &&
+                !Validation.GetHasError(BirthYear) && !Validation.GetHasError(ActivityLevel) &&
+                !Validation.GetHasError(femaleButton) && !Validation.GetHasError(maleButton) &&
+                !Validation.GetHasError(targetWeight) && !Validation.GetHasError(PoundsPerWeek) &&
+                !Validation.GetHasError(CurrentWeight)
+                )
+            {
+                App ap = (App)App.Current;
+
+                XElement contactXml = new XElement("contact");
+
+                contactXml.Add(new XElement("contactid", ContactId));
+
+                if (ParentContactId != Guid.Empty)
+                {
+                    //Portion Type Id
+                    XElement parentContactXml = new XElement("dc_parentcontactid", ParentContactId.ToString());
+                    XAttribute a = new XAttribute("entityname", "contact");
+                    parentContactXml.Add(a);
+                    contactXml.Add(parentContactXml);
+                }
+
+                //height
+                if (HeightFeet.SelectedPair != null)
+                {
+                    contactXml.Add(new XElement("dc_heightfeet", ((PairWithList)HeightFeet.SelectedPair).Id));
+                }
+                if (HeightInches.SelectedPair != null)
+                {
+                    contactXml.Add(new XElement("dc_heightinches", ((PairWithList)HeightInches.SelectedPair).Id));
+                }
+                //Birthday
+                if (BirthYear.SelectedPair != null && BirthMonth.SelectedPair != null && BirthDay.SelectedPair != null)
+                {
+                    int year = Convert.ToInt32(((PairWithList)BirthYear.SelectedPair).Id);
+                    int month = Convert.ToInt32(((PairWithList)BirthMonth.SelectedPair).Id);
+                    int day = Convert.ToInt32(((PairWithList)BirthDay.SelectedPair).Id);
+
+                    DateTime dt = new DateTime(year, month, day);
+                    contactXml.Add(new XElement("birthdate", dt.ToString()));
+                }
+                //gender
+                contactXml.Add(new XElement("gendercode", gender));
+                //firstname
+                contactXml.Add(new XElement("firstname", FirstName.Text));
+                //lastname
+                contactXml.Add(new XElement("lastname", LastName.Text));
+
+                //current weight
+                if (CurrentWeight.Text != null)
+                {//TODO:  apply mask
+                    contactXml.Add(new XElement("dc_currentweight", CurrentWeight.Text));
+                }
+                //activity level
+                if (ActivityLevel.SelectedPair != null)
+                {
+                    contactXml.Add(new XElement("dc_activitylevel", ((PairWithList)ActivityLevel.SelectedPair).Id));
+                }
+                //maintain weight
+                contactXml.Add(new XElement("dc_maintaintargetweight", maintainWeight.IsChecked.Value.ToString()));
+
+                //target wieght
+                if (targetWeight.Text != null && !String.IsNullOrEmpty(targetWeight.Text))
+                {//TODO:  apply mask
+                    contactXml.Add(new XElement("dc_targetweight", targetWeight.Text));
+                }
+                //pounds per week
+                if (PoundsPerWeek.SelectedPair != null)
+                {
+                    contactXml.Add(new XElement("dc_poundsperweek", ((PairWithList)PoundsPerWeek.SelectedPair).Id));
+                }
+
+                CrmSdk.WebServicesSoapClient cms = new CrmSdk.WebServicesSoapClient(((App)App.Current).webServicesName);
+                cms.CreateUpdateReturnEntityCompleted += new EventHandler<CrmSdk.CreateUpdateReturnEntityCompletedEventArgs>(cms_CreateUpdateContact);
+                cms.CreateUpdateReturnEntityAsync(contactXml, true);
+            }
+            else
+            {
+                Status s = new Status("Please fill out required fields", false);
+                s.Show();
+
+                //Deal with gender toggle buttons
+                if (!Validation.GetHasError(femaleButton))//female is selected
+                {
+                    if (Validation.GetHasError(maleButton))//if validation error clear out
+                    {
+                        maleButton.ClearValue(RadioButton.IsCheckedProperty);
+                    }
+                }
+                else if (!Validation.GetHasError(maleButton))//male is selected
+                {
+                    if (Validation.GetHasError(femaleButton))//if validation error clear out
+                    {
+                        femaleButton.ClearValue(RadioButton.IsCheckedProperty);
+                    }
+                }
+            }
+        }
+        private void cms_CreateUpdateContact(object sender, CrmSdk.CreateUpdateReturnEntityCompletedEventArgs e)
+        {
+            var errors = from x in e.Result.Descendants("error") select x;
+            if (errors.Count() > 0)
+            {
+                String message = e.Result.Value.ToString();
+                Status s = new Status(message, false);
+                s.Show();
+            }
+            else
+            {
+                var contacts = from x in e.Result.Descendants("contact") select x;
+                XElement contactNode = e.Result.Descendants("contact").First();
+                Contact c = Contact.BuildContact(contactNode);
+                ((App)App.Current).contact = c;
+                //Need to raise an event for this
+                SavedClicked(e.Result, new EventArgs());
+
+            }
+        }
+        void maintainWeight_Checked(object sender, RoutedEventArgs e)
+        {
+            maintainWeight.GetBindingExpression(CheckBox.IsCheckedProperty).UpdateSource();
+
+            CheckBox cb = (CheckBox)sender;
+
+            if (cb.IsChecked.Value)
+            {
+                //Hide
+                targetWeightLabel.Visibility    = System.Windows.Visibility.Collapsed;
+                targetWeight.Visibility         = System.Windows.Visibility.Collapsed;
+                PoundsPerWeek.Visibility        = System.Windows.Visibility.Collapsed;
+                poundsPerWeekLabel.Visibility   = System.Windows.Visibility.Collapsed;
+                iWantToLose.Visibility          = System.Windows.Visibility.Collapsed;
+                //Clear out any validation errors
+                if (Validation.GetHasError(targetWeight) && ValidationSummary.Errors.Count > 0)
+                {
+                    int x = 0;
+                    while (true)
+                    {
+
+                        if (ValidationSummary.Errors[x].MessageHeader.Equals("TargetWeight", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ValidationSummary.Errors.Remove(ValidationSummary.Errors[x]);
+                            //targetWeight.Text = String.Empty;
+                            targetWeight.Text = int.MinValue.ToString();
+                            targetWeight.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+                            targetWeight.Text = String.Empty;
+                            break;
+                        }
+                        x++;
+                        if (x > ValidationSummary.Errors.Count())
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                if (Validation.GetHasError(PoundsPerWeek) && ValidationSummary.Errors.Count > 0)
+                {
+                    int x = 0;
+                    while (true)
+                    {
+
+                        if (ValidationSummary.Errors[x].MessageHeader.Equals("PoundsPerWeek", StringComparison.OrdinalIgnoreCase))
+                        {
+                            ValidationSummary.Errors.Remove(ValidationSummary.Errors[x]);
+                            PoundsPerWeek.SelectedPair = null;
+                            //targetWeight.Text = "1";
+                            PoundsPerWeek.GetBindingExpression(ComboBoxWithValidation.SelectedPairProperty).UpdateSource();
+                            break;
+                        }
+                        x++;
+                        if (x > ValidationSummary.Errors.Count())
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //show
+                targetWeightLabel.Visibility    = System.Windows.Visibility.Visible;
+                targetWeight.Visibility         = System.Windows.Visibility.Visible;
+                PoundsPerWeek.Visibility        = System.Windows.Visibility.Visible;
+                poundsPerWeekLabel.Visibility   = System.Windows.Visibility.Visible;
+                iWantToLose.Visibility          = System.Windows.Visibility.Visible;
+            }
+        }
+
+        void MyAutoCompleteBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AutoCompleteBox acb = (AutoCompleteBox)sender;
+            Pair p = (Pair)acb.SelectedItem;
+
+        }
+
+        private void CurrentWeight_KeyUp(object sender, KeyEventArgs e)
+        {
+           
+        }
+
+        public void CombineDataAndDisplay()
+        {
+            HeightFeet.SelectedPair     = new PairWithList(String.Empty, String.Empty, String.Empty, ((App)App.Current).HeightFeet);
+            HeightInches.SelectedPair   = new PairWithList(String.Empty, String.Empty, String.Empty, ((App)App.Current).HeightInches);
+            ActivityLevel.SelectedPair  = new PairWithList(String.Empty, String.Empty, String.Empty, ((App)App.Current).ActivityLevel);
+            PoundsPerWeek.SelectedPair  = new PairWithList(String.Empty, String.Empty, String.Empty, ((App)App.Current).PoundsPerWeek);
+            //RetrieveContactProfile(contact);
+        }
+
+        //For getting the contact retrieve to run after all the other call are completed
+        public void MultipleAsyncRun(Action Operation)
+        {
+            Interlocked.Increment(ref PendingAsyncOperations);
+            Operation();
+        }
+        public void FinalAsync(Action method)
+        {
+            FinalOperation = method;
+        }
+
+        public void AssignResultCheckforAllAsyncsDone<T>(AsyncCompletedEventArgs ea, T receivedData, string ErrorMessage)
+            where T : class
+        {
+            bool valid = !((ea.Error != null) || (receivedData == null));
+
+            if (valid == false)
+            {
+                if (0 == Interlocked.Exchange(ref AsyncErrorResource, 1))
+                {
+                    if (AsyncErrors == null)
+                        AsyncErrors = new List<Exception>();
+
+                    AsyncErrors.Add(ea.Error);
+
+                    //Release the lock
+                    Interlocked.Exchange(ref AsyncErrorResource, 0);
+                }
+            }
+            else
+            {
+                //assignTo = receivedData;
+            }
+
+            Interlocked.Decrement(ref PendingAsyncOperations);
+            if (PendingAsyncOperations == 0)
+            {
+                if (0 == Interlocked.Exchange(ref AsyncFinal, 1))
+                {
+                    FinalOperation();
+                }
+
+                Interlocked.Exchange(ref AsyncFinal, 0);
+                Interlocked.Decrement(ref PendingAsyncOperations); // Move to -1
+            }
+        }
+
+        private void Male_Click(object sender, RoutedEventArgs e)
+        {
+            femaleImage.Source = new BitmapImage(new Uri("/DynamicConnections.NutriStyle.MenuGenerator;component/images/female_off.png", UriKind.Relative));
+            maleImage.Source = new BitmapImage(new Uri("/DynamicConnections.NutriStyle.MenuGenerator;component/images/male_on.png", UriKind.Relative));
+            gender = "1";
+        }
+
+        private void Female_Click(object sender, RoutedEventArgs e)
+        {
+            femaleImage.Source = new BitmapImage(new Uri("/DynamicConnections.NutriStyle.MenuGenerator;component/images/female_on.png", UriKind.Relative));
+            maleImage.Source = new BitmapImage(new Uri("/DynamicConnections.NutriStyle.MenuGenerator;component/images/male_off.png", UriKind.Relative));
+            gender = "2";
+        }
+        private void ActivityLabel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            ChildWindows.ActivityLevelsPopup alp = new ActivityLevelsPopup("Activity Levels");
+            alp.Show();
+        }
+        private void LosePounds_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            ChildWindows.GenericPopup gp = new GenericPopup("I want to lose more than two pounds per week");
+            gp.Show();
+        }
+        private void MedicalLiability_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            ChildWindows.GenericPopup gp = new GenericPopup("Medial Liability Notice");
+            gp.Show();
+        }
+
+        private void iWantToLoseMore_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            GenericPopup gp = new GenericPopup("I want to loss more than 2 pounds per week");
+            gp.Show();
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (IsPrimary)
+            {
+                ShowName(false);
+
+            }
+            else
+            {
+                ShowName(true);
+            }
+            if (c == null)
+            {
+                LoadupPage();
+                CombineDataAndDisplay();
+                busyIndicator.IsBusy = false;
+            }
+            if (c == null && ContactId == Guid.Empty && ParentContactId == Guid.Empty)
+            {
+                c = new Contact();
+                c = ((App)App.Current).contact;
+                ContactId = c.ContactId;
+                RetrieveContactProfile(c);
+                busyIndicator.IsBusy = false;
+            }
+            else if (ContactId == Guid.Empty && ParentContactId != Guid.Empty)//new child
+            {
+                Contact contact = new Contact();
+                RetrieveContactProfile(contact);
+                busyIndicator.IsBusy = false;
+            }
+            else if (ContactId != Guid.Empty && c == null)
+            {
+                //retrieve contact from system
+                busyIndicator.IsBusy = true;
+                CrmSdk.WebServicesSoapClient cms = new CrmSdk.WebServicesSoapClient(((App)App.Current).webServicesName);
+                cms.RetrieveContactIdCompleted += new EventHandler<CrmSdk.RetrieveContactIdCompletedEventArgs>(cms_CreateUpdateGrid);
+                cms.RetrieveContactIdAsync(ContactId.ToString());
+            }
+            else if (c != null)
+            {
+                RetrieveContactProfile(c);
+                busyIndicator.IsBusy = false;
+            }
+        }
+        
+        private void cms_CreateUpdateGrid(object sender, CrmSdk.RetrieveContactIdCompletedEventArgs e)
+        {
+            var results = from x in e.Result.Descendants("contact") select x;
+            foreach (var result in results)
+            {
+                Contact profile = Contact.BuildContact(result);
+                //bind to GUI
+                RetrieveContactProfile(profile);
+                
+                busyIndicator.IsBusy = false;
+            }
+        }
+        public void SaveContact()
+        {
+            SaveGrid(null, null);
+        }
+    }
+}
+
+

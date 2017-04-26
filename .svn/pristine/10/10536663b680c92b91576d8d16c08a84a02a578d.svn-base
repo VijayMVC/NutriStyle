@@ -1,0 +1,68 @@
+<Project DefaultTargets="build"  ToolsVersion="4.0"  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- 
+    Always setup the path to the root and also the orders root folder.
+    We then include the orders properties, which includes the root properties
+    For this project the orders folder is in the same folder as this build file
+    so can just reference the ms build project directory property as the orders_root.
+  -->
+
+  <PropertyGroup>
+    <root>$(MSBuildProjectDirectory)\..\..</root>
+    <ILMergeExecutable>"C:\program files (x86)\Microsoft\ILMerge\ILMerge.exe"</ILMergeExecutable>
+    <KeyFile>"..\..\Include\CommonStrongKey.snk"</KeyFile>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+      <root>$(MSBuildProjectDirectory)\..\..</root>
+      <KeyFile>"..\..\Include\CommonStrongKey.snk"</KeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SourceFiles Include="$(root)\CommonAssemblyInfo.cs;
+      $(MSBuildProjectDirectory)\**\*.cs" Exclude="$(MSBuildProjectDirectory)\Properties\**\*.cs"/>
+    <ReferenceFiles Include="..\..\Include\Microsoft.Xrm.Sdk.dll;
+                    ..\..\Include\Microsoft.crm.sdk.proxy.dll;
+                    $(common)\Server\bin\assembly\DynamicConnections.CRM2011.CustomAssemblies.dll"/>
+    <Files Include="$(drop)\Server\bin\assembly\**\*.*"/>
+  </ItemGroup>
+  
+  <!--
+      Once we have the roots configured we can now include all the standard properties,
+      this also includes the root.properties also.
+  -->
+  <Import Project="$(root)\DC.properties.proj"/>
+  
+  <Target Name="clean">
+    <Exec Command="rmdir $(drop)\Server\bin\assembly\DynamicConnections.NutriStyle.CRM2011.Plugins.* /s /q" />
+  </Target>
+  
+  <Target Name="prebuild">
+    <Message Text="drop is $(drop)"/>
+    <Message Text="root is $(root)"/>
+    <Message Text="Project dir is $(MSBuildProjectDirectory)"/>
+    <MakeDir Directories="$(drop)\Server\bin\assembly\"/>
+    
+    <Csc TargetType="library"
+          Sources="@(SourceFiles)"
+          References="@(ReferenceFiles)"
+          OutputAssembly="$(drop)\Server\bin\assembly\DynamicConnections.NutriStyle.CRM2011.PrePlugins.dll" EmitDebugInformation="true" Optimize="true" KeyFile="..\..\Include\CommonStrongKey.snk"/>
+  </Target>
+
+
+  <Target Name="build" DependsOnTargets="prebuild">
+    <CreateItem Include="@(ReferencePath)" Condition="'%(ReferencePath.IlMerge)'=='true'">
+      <Output TaskParameter="Include" ItemName="IlmergeAssemblies"/>
+    </CreateItem>
+    <Message Text="MERGING: @(IlmergeAssemblies->'%(Filename)')" Importance="High" />
+
+    <Exec Command="$(ILMergeExecutable) /lib:..\..\Include\ /keyfile:$(KeyFile) /out:&quot;$(drop)\Server\bin\assembly\DynamicConnections.NutriStyle.CRM2011.Plugins.dll&quot; &quot;$(common)\Server\bin\assembly\DynamicConnections.CRM2011.CustomAssemblies.dll&quot; &quot;$(drop)\Server\bin\assembly\DynamicConnections.NutriStyle.CRM2011.PrePlugins.dll&quot;" />
+
+  </Target>
+  
+  
+    <Target Name="copy" DependsOnTargets="build">
+    <Copy SourceFiles="@(Files)"
+         DestinationFolder="\\10.1.10.2\assembly"/>
+  </Target>
+
+</Project>

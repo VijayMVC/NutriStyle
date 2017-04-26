@@ -1,0 +1,68 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Configuration;
+using DynamicConnections.CRM2011.Common.Utility;
+using Microsoft.Xrm.Sdk.Client;
+using System.Xml;
+using System.Xml.Serialization;
+using Microsoft.Xrm.Sdk.Metadata;
+using System.IO;
+using System.Runtime.Serialization;
+
+using Microsoft.Xrm.Sdk;
+using System.Web.Services.Protocols;
+
+
+using System.ServiceModel;
+using System.ServiceModel.Description;
+using Microsoft.Xrm.Sdk.Query;
+
+
+namespace DynamicConnections.NutriStyle.CRM2011.WebServices.Engine
+{
+    public class General
+    {
+
+
+        public General() { }
+
+        /// <summary>
+        /// Creates the orderXml document that the database.retrieve needs.
+        /// </summary>
+        /// <param name="fetchXmlDoc"></param>
+        /// <returns></returns>
+        public static XmlDocument CreateOrderXml(XmlDocument fetchXmlDoc)
+        {
+            XmlDocument columnOrderDoc = new XmlDocument();
+            XmlNode columnOrder = columnOrderDoc.CreateNode(XmlNodeType.Element, "ColumnOrder", String.Empty);
+            columnOrderDoc.AppendChild(columnOrder);
+
+            XmlNodeList list = fetchXmlDoc.GetElementsByTagName("attribute");
+            foreach (XmlNode node in list)
+            {
+                XmlNode orderNode = columnOrderDoc.CreateNode(XmlNodeType.Element, "Column", String.Empty);
+                if (node.ParentNode.Attributes["alias"] == null)
+                {
+                    orderNode.InnerText = node.Attributes["name"].InnerText;
+                }
+                else
+                {
+                    orderNode.InnerText = node.ParentNode.Attributes["alias"].InnerText + "." + node.Attributes["name"].InnerText;
+                }
+                Logger.Write(Logger.DEBUG, orderNode.InnerText);
+                if (!String.IsNullOrEmpty(orderNode.InnerText))
+                {
+                    columnOrder.AppendChild(orderNode);
+                }
+            }
+
+            return (columnOrderDoc);
+        }
+
+        public static decimal CalculateKcals(decimal carbohydrates, decimal fat, decimal protein) {
+            return((carbohydrates*4) + (fat * 9) + (protein * 4));
+        }
+    }
+}

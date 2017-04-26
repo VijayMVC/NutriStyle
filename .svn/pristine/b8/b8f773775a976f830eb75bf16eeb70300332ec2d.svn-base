@@ -1,0 +1,159 @@
+﻿using System;
+using DynamicConnections.CRM2011.Common.Utility;
+using Microsoft.Xrm.Sdk;
+using DynamicConnections.NutriStyle.CRM2011.MenuGenerator.Wrappers;
+
+namespace DynamicConnections.NutriStyle.CRM2011.MenuGenerator
+{
+    public class AdjustFoodPortion : General
+    {
+        private static Logger logger = GetLogger();
+
+        /// <summary>
+        /// MealFood is the entity getting adjusted, crmService, strDirection (increase or decrease)
+        /// </summary>
+        /// <param name="mealFoodWrapper"></param>
+        /// <param name="stringDirection"></param>
+        /// <returns></returns>
+        public static bool Execute(MealFoodWrapper mealFoodWrapper, string stringDirection)
+        {
+            bool adjust = false;
+            int foodId = 0;
+            decimal unitGramWeight = 5.0m;
+            decimal orginalAmount = 0.0m;
+            decimal minAmount = 0.0m;
+            decimal maxAmount = 0.0m;
+            decimal increaseAmount = 0.0m;
+            decimal currentAmount = 0.0m;
+            string foodName = string.Empty;
+            Guid dc_foodId = Guid.Empty;
+
+            Entity mealFood     = mealFoodWrapper.MealFood;
+            Entity food         = mealFoodWrapper.Food;
+            //Get the food relationship back to the dc_foods table vis the dc_foodid attribute
+            dc_foodId           = mealFood.Attributes.Contains("dc_foodid") ? ((EntityReference)mealFood.Attributes["dc_foodid"]).Id : Guid.Empty;            //9d909811-3100-e111-ba65-00155d0a0205
+            currentAmount       = mealFood.Attributes.Contains("dc_portionsize") ? Convert.ToDecimal(mealFood.Attributes["dc_portionsize"]) : 0.0m;   // 1M
+
+            unitGramWeight      = (decimal)mealFood["dc_unit_gram_weight"];
+            
+            orginalAmount       = food.Attributes.Contains("dc_portion_amount") ? Convert.ToDecimal(food.Attributes["dc_portion_amount"]) : 0.0m;
+            foodId              = food.Attributes.Contains("dc_food_id") ? (int)food.Attributes["dc_food_id"] : 0;
+            minAmount           = food.Attributes.Contains("dc_min_amount") ? Convert.ToDecimal(food.Attributes["dc_min_amount"]) : 0.0m;
+            maxAmount           = food.Attributes.Contains("dc_max_amount") ? Convert.ToDecimal(food.Attributes["dc_max_amount"]) : 0.0m;
+            increaseAmount      = food.Attributes.Contains("dc_amount_incr") ? Convert.ToDecimal(food.Attributes["dc_amount_incr"]) : 0.0m;
+
+            if ((minAmount == maxAmount))
+            {
+                /*
+                logger.debug("----------------------------------------------------------");
+                logger.debug("Min and Max amount match.  Can't adjust: " +food["dc_name"]);
+                logger.debug("----------------------------------------------------------");*/
+                mealFood["dc_canbeadjusted"] = false;
+                return (false);//can't be adjusted
+            }
+
+
+            minAmount           = minAmount         * mealFoodWrapper.PortionSizeMultiplier;
+            increaseAmount      = increaseAmount    * mealFoodWrapper.PortionSizeMultiplier;
+            maxAmount           = maxAmount         * mealFoodWrapper.AmountMultiplier;
+
+            decimal orgCarbs    = (decimal)mealFood["dc_carbohydrateoriginal"];
+            decimal orgFats     = (decimal)mealFood["dc_fatoriginal"];
+            decimal orgPro      = (decimal)mealFood["dc_proteinoriginal"];
+            decimal orgAlcohol  = (decimal)mealFood["dc_alcoholoriginal"];
+
+            if (orgAlcohol > 0)
+            {
+                logger.debug("working with alcohol");
+            }
+
+            decimal sngPortion  = 0.0m;
+
+            if (minAmount == 0 || maxAmount == 0 || increaseAmount == 0)
+            {
+                mealFood["dc_canbeadjusted"] = false;
+                return (false);//can't be adjusted
+            }
+            else
+            {
+                //decimal sngFactor = ((unitGramWeight/100m) / orginalAmount);
+                decimal sngFactor = ((unitGramWeight) / orginalAmount);
+
+                //Add data is discovered.  Starting work
+                if (stringDirection.Equals("increase", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (currentAmount >= maxAmount)
+                    {
+                        //  can't increase anymore
+                        mealFood["dc_canbeadjusted"] = false;
+                    }
+                    else
+                    {
+                        sngPortion  = currentAmount + increaseAmount;
+                        sngFactor   = sngFactor * sngPortion;
+                        adjust      = true;
+                    }
+                }   //Need code for decrease
+                else if (stringDirection.Equals("decrease", StringComparison.OrdinalIgnoreCase)) 
+                {
+                    if (currentAmount <= minAmount)//do nothing.  Can't reduce portion size
+                    {
+                        mealFood["dc_canbeadjusted"] = false;
+                    }
+                    else
+                    {
+                        sngPortion  = currentAmount - increaseAmount;
+                        sngFactor   = sngFactor * sngPortion;
+                        adjust      = true;
+                    }
+                }
+                if (orgFats != 100m)
+                {
+                    sngFactor = sngPortion / orginalAmount;
+                }
+                else
+                {
+                    logger.debug("Found food based on 100 unit gram weight");
+                    if (sngPortion == 0)
+                    {
+                        sngPortion = currentAmount;
+                    }
+                    //Always have to push into meal food.  No adjust.  Have to get the proper kcals in the mealfood
+                    decimal sngPro      = orgPro * sngFactor;
+                    decimal sngFat      = orgFats * sngFactor;
+                    decimal sngCarbs    = orgCarbs * sngFactor;
+                    decimal sngAlcohol  = orgAlcohol * sngFactor;
+
+                    decimal sngKcal = CalculateKcals(sngCarbs, sngFat, sngPro, sngAlcohol);//(sngPro * 4) + (sngFat * 9) + (sngCarbs * 4);
+
+                    //Push into mealFood
+                    mealFood["dc_carbohydrate"] = sngCarbs;
+                    mealFood["dc_fat"]          = sngFat;
+                    mealFood["dc_protein"]      = sngPro;
+                    mealFood["dc_alcohol"]      = sngAlcohol;
+                    mealFood["dc_kcals"]        = sngKcal;
+                    mealFood["dc_portionsize"]  = sngPortion;
+                }
+                if (adjust)
+                {
+                    decimal sngPro      = orgPro * sngFactor;
+                    decimal sngFat      = orgFats * sngFactor;
+                    decimal sngCarbs    = orgCarbs * sngFactor;
+                    decimal sngAlcohol  = orgAlcohol * sngFactor;
+
+                    decimal sngKcal = CalculateKcals(sngCarbs, sngFat, sngPro, sngAlcohol);//(sngPro * 4) + (sngFat * 9) + (sngCarbs * 4);
+
+                    //Push into mealFood
+                    mealFood["dc_carbohydrate"] = sngCarbs;
+                    mealFood["dc_fat"]          = sngFat;
+                    mealFood["dc_protein"]      = sngPro;
+                    mealFood["dc_alcohol"]      = sngAlcohol;
+                    mealFood["dc_kcals"]        = sngKcal;
+                    mealFood["dc_portionsize"]  = sngPortion;
+                    mealFood["dc_adjusted"]     = true;
+                }
+            }
+            return (adjust);
+        }
+    }
+}

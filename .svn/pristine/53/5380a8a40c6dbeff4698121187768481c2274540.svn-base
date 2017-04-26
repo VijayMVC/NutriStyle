@@ -1,0 +1,66 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+using System.Windows.Media.Imaging;
+
+namespace DynamicConnections.NutriStyle.MenuGenerator.ChildWindows
+{
+    public partial class EditProfile : ChildWindow
+    {
+
+        public event EventHandler SavedClicked;
+
+        public EditProfile()
+        {
+            InitializeComponent();
+        }
+        public EditProfile(Guid contactId)
+        {
+            InitializeComponent();
+        }
+        public EditProfile(Guid contactId, Guid parentContactId)
+        {
+            InitializeComponent();
+            profile.ContactId = contactId;
+            profile.ParentContactId = parentContactId;
+            profile.SavedClicked += profile_SavedClicked;
+            profile.ShowName(true);
+
+        }
+        /// <summary>
+        /// Close the window on sucessful save
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void profile_SavedClicked(object sender, EventArgs e)
+        {
+            SavedClicked(sender, new EventArgs());
+            this.DialogResult = true;
+        }
+
+        void Close_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+        }
+        /// <summary>
+        /// Save Contact
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OKButton_Click(object sender, RoutedEventArgs e)
+        {
+            profile.SaveContact();
+        }
+
+        
+    }
+}
+

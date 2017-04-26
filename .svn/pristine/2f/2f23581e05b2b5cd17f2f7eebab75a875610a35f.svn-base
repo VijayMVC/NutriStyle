@@ -1,0 +1,21 @@
+﻿<navigation:Page x:Class="DynamicConnections.NutriStyle.MenuGenerator.Pages.Profile" 
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:toolkit2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+           xmlns:Controls="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Controls;assembly=DynamicConnections.NutriStyle.MenuGenerator"
+           mc:Ignorable="d"
+           xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+           d:DesignWidth="565" d:DesignHeight="700" 
+           xmlns:helpers="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Engine.Helpers"
+           xmlns:validation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input"
+           xmlns:vsm="clr-namespace:System.Windows;assembly=System.Windows"
+           xmlns:sys="clr-namespace:System;assembly=mscorlib"
+           Title="Login Page" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"  Background="Transparent" NavigationCacheMode="Enabled">
+
+    
+    
+        <Controls:Profile x:Name="profileControl"/>
+
+</navigation:Page>

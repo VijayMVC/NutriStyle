@@ -1,0 +1,355 @@
+﻿<UserControl x:Class="DynamicConnections.NutriStyle.MenuGenerator.Controls.FitnessChartComplete"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit" 
+    xmlns:toolkit1="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
+    xmlns:charting="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"                 
+    xmlns:datavis="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+    xmlns:layout="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit" 
+    xmlns:System_Windows_Controls_DataVisualization_Charting_Primitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+    mc:Ignorable="d"
+    d:DesignHeight="400" d:DesignWidth="500" Height="400" Loaded="UserControl_Loaded">
+
+    <UserControl.Resources>
+
+        <ControlTemplate x:Key="LegendControlTemplate1" TargetType="toolkit1:Legend">
+            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <toolkit1:Title Grid.Row="0" x:Name="HeaderContent" Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" Style="{TemplateBinding TitleStyle}" />
+                    <ItemsPresenter x:Name="Items" Margin="2,0,2,0"  />
+                </Grid>
+            </Border>
+        </ControlTemplate>
+
+
+        <Style x:Key="DataPointStylePositive" TargetType="toolkit1:ColumnDataPoint">
+            <Setter Property="Background" Value="Red"/>
+            <Setter Property="DependentValueStringFormat" Value="{}{0:0,0}"/>
+        </Style>
+
+        <Style x:Key="DataPointStyleDifference" TargetType="toolkit1:ColumnDataPoint">
+            <Setter Property="Background" Value="Yellow"/>
+            <Setter Property="DependentValueStringFormat" Value="{}{0:0,0}"/>
+        </Style>
+
+        <Style x:Key="DataPointStyleNegitive" TargetType="toolkit1:ColumnDataPoint">
+            <Setter Property="Background" Value="Blue"/>
+            <Setter Property="DependentValueStringFormat" Value="{}{0:0,0}"/>
+        </Style>
+
+        <Style x:Key="DataPointStyleActivityLevel" TargetType="toolkit1:ColumnDataPoint">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="DependentValueStringFormat" Value="{}{0:0,0}"/>
+
+        </Style>
+
+        <Style x:Key="newLegend" TargetType="toolkit1:Legend">
+            <Setter Property="toolkit1:Chart.LegendStyle">
+                <Setter.Value>
+                    <Style TargetType="datavis:Legend">
+                        <Setter Property="Margin" Value="5,0,5,0"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="BorderBrush" Value="#FFDBDBDB"/>
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <LinearGradientBrush EndPoint="0.442,0.005" StartPoint="0.558,0.995">
+                                    <GradientStop Color="#FFDBDBDB"/>
+                                    <GradientStop Color="#FFFFFFFF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="ItemsPanel">
+                            <Setter.Value>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+
+
+        </Style>
+
+
+        <ControlTemplate x:Key="ChartLayoutBottom" TargetType="toolkit1:Chart">
+            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" 
+                    Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <toolkit1:Title Content="{TemplateBinding Title}" Style="{TemplateBinding TitleStyle}"/>
+                    <Grid Margin="0,0,0,0" Grid.Row="1">
+                        <!--Original definitions-->
+                        <!--<Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>-->
+                        <!--New definitions for the Legend to be bellow the Chart-->
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <!--Original definition, replaced by Grid.Row="1" on the Legend object-->
+                        <!--Grid.Column="1"-->
+                        <toolkit1:Legend x:Name="Legend" Grid.Row="1" 
+                            Header="{TemplateBinding LegendTitle}" 
+                            HorizontalAlignment="Center" Style="{TemplateBinding LegendStyle}"  
+                            VerticalAlignment="Bottom" Template="{StaticResource LegendControlTemplate1}">
+
+                        </toolkit1:Legend>
+
+
+                        <System_Windows_Controls_DataVisualization_Charting_Primitives:EdgePanel x:Name="ChartArea" Style="{TemplateBinding ChartAreaStyle}">
+                            <Grid Style="{TemplateBinding PlotAreaStyle}" Canvas.ZIndex="-1"/>
+                            <Border BorderBrush="#FF919191" BorderThickness="1" Canvas.ZIndex="10"/>
+                        </System_Windows_Controls_DataVisualization_Charting_Primitives:EdgePanel>
+                    </Grid>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+
+
+
+
+
+        <Style x:Key="LegendItemStyle1" TargetType="charting:LegendItem">
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="charting:LegendItem">
+                        <StackPanel Orientation="Horizontal">
+                            <Rectangle Fill="{Binding Background}" Stroke="{Binding BorderBrush}" StrokeThickness="1" Height="12" Margin="10,0,3,0" Width="12"/>
+                            <TextBlock Text="{TemplateBinding Content}" TextWrapping="Wrap" MaxWidth="300" HorizontalAlignment="Left" />
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LegendItemStyle2" TargetType="charting:LegendItem">
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="charting:LegendItem">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{TemplateBinding Content}" TextWrapping="Wrap" MaxWidth="300" HorizontalAlignment="Left" />
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="chartTitleStyle" TargetType="charting:Chart">
+            <Setter Property="TitleStyle">
+                <Setter.Value>
+                    <Style TargetType="datavis:Title">
+                        <Setter Property="Margin" Value="0" />
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="FontSize" Value="12"/>
+                        <Setter Property="Foreground" Value="{StaticResource defaultFontLabelColor}"/>
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                    </Style>
+                </Setter.Value>
+            </Setter>
+
+        </Style>
+        <Style x:Key="NumericAxisLabelStyle1" TargetType="charting:NumericAxisLabel">
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="StringFormat" Value="{}{0:C0}"/>
+            <Setter Property="Grid.ShowGridLines" Value="True" />
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="charting:NumericAxisLabel">
+                        <sdk:Label Content="{TemplateBinding FormattedContent}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <Style x:Name="HorizontalLabelStyle" TargetType="toolkit1:AxisLabel">
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <RotateTransform Angle="270"></RotateTransform>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+    </UserControl.Resources>
+
+    <Grid x:Name="LayoutRoot" Background="Transparent" Height="400" Width="Auto">
+
+        <toolkit:BusyIndicator Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch"   Margin="0" 
+                        VerticalAlignment="Stretch" BorderThickness="0" Name="busyIndicator" Visibility="Visible" 
+                        IsBusy="True" >
+
+            <StackPanel>
+
+                <toolkit1:Chart 
+                            Name="barChart" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="200"
+                            BorderThickness="0" Title="Burned vs Consumed" Style="{StaticResource chartTitleStyle}">
+                   
+                    <toolkit1:Chart.Axes>
+                        <toolkit1:LinearAxis Orientation="Y"   ShowGridLines="True" />
+                    </toolkit1:Chart.Axes>
+                    <toolkit1:Chart.LegendStyle>
+                        <Style TargetType="toolkit1:Legend">
+                            <Setter Property="Margin" Value="2,0,0,0"/>
+                            <Setter Property="HorizontalAlignment" Value="Left"/>
+                            <Setter Property="Width" Value="140"/>
+                            <Setter Property="VerticalAlignment" Value="Stretch"/>
+                            <Setter Property="BorderBrush" Value="#FFDBDBDB"/>
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="0.442,0.005" StartPoint="0.558,0.995">
+                                        <GradientStop Color="#FFDBDBDB"/>
+                                        <GradientStop Color="#FFFFFFFF" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="TitleStyle">
+                                <Setter.Value>
+                                    <Style TargetType="toolkit1:Title">
+                                        <Setter Property="Margin" Value="5,5,5,5"/>
+                                        <Setter Property="FontWeight" Value="ExtraBlack"/>
+                                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                                    </Style>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="ItemsPanel">
+                                <Setter.Value>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical" Margin="0,0,0,0"   >
+                                        </StackPanel>
+                                    </ItemsPanelTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </toolkit1:Chart.LegendStyle>
+                    <toolkit1:ColumnSeries Name="barSeriesPositive" DependentValueBinding="{Binding Value}" LegendItemStyle="{StaticResource LegendItemStyle1}"
+                                            IndependentValueBinding="{Binding Name}" Title="Calories Burned"  DataPointStyle="{StaticResource DataPointStylePositive}">
+                    </toolkit1:ColumnSeries>
+                    <toolkit1:ColumnSeries Name="barSeriesNegative" DependentValueBinding="{Binding Value}"  LegendItemStyle="{StaticResource LegendItemStyle1}"
+                                            IndependentValueBinding="{Binding Name}" Title="Consumed"  DataPointStyle="{StaticResource DataPointStyleNegitive}">
+                        <toolkit1:ColumnSeries.IndependentAxis>
+                            <toolkit1:CategoryAxis Orientation="X">
+                                <toolkit1:CategoryAxis.AxisLabelStyle>
+                                    <Style TargetType="toolkit1:AxisLabel">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="toolkit1:AxisLabel">
+                                                    <layout:LayoutTransformer>
+                                                        <layout:LayoutTransformer.LayoutTransform>
+                                                            <RotateTransform Angle="-60"/>
+                                                        </layout:LayoutTransformer.LayoutTransform>
+                                                        <TextBlock Text="{TemplateBinding FormattedContent}"/>
+                                                    </layout:LayoutTransformer>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </toolkit1:CategoryAxis.AxisLabelStyle>
+                            </toolkit1:CategoryAxis>
+                        </toolkit1:ColumnSeries.IndependentAxis>
+                    </toolkit1:ColumnSeries>
+                </toolkit1:Chart>
+
+
+
+                <toolkit1:Chart 
+                            Name="barChart2" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="170"
+                            BorderThickness="0" Title="Caloric Surplus/Deficit (Consumed minus Burned)" Style="{StaticResource chartTitleStyle}">
+                    <toolkit1:Chart.Axes>
+                        <toolkit1:LinearAxis Orientation="Y" ShowGridLines="True" />
+                    </toolkit1:Chart.Axes>
+                    <toolkit1:Chart.LegendStyle>
+                        <Style TargetType="toolkit1:Legend">
+                            <Setter Property="Margin" Value="2,0,0,0"/>
+                            <Setter Property="HorizontalAlignment" Value="Left"/>
+                            <Setter Property="Width" Value="140"/>
+                            <Setter Property="VerticalAlignment" Value="Stretch"/>
+                            <Setter Property="BorderBrush" Value="#FFDBDBDB"/>
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush EndPoint="0.442,0.005" StartPoint="0.558,0.995">
+                                        <GradientStop Color="#FFDBDBDB"/>
+                                        <GradientStop Color="#FFFFFFFF" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="TitleStyle">
+                                <Setter.Value>
+                                    <Style TargetType="toolkit1:Title">
+                                        <Setter Property="Margin" Value="5"/>
+                                        <Setter Property="FontWeight" Value="ExtraBlack"/>
+                                        <Setter Property="HorizontalAlignment" Value="Left"/>
+                                    </Style>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="ItemsPanel">
+                                <Setter.Value>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical" Margin="0,0,0,0"   >
+                                        </StackPanel>
+                                    </ItemsPanelTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </toolkit1:Chart.LegendStyle>
+                  
+                    <toolkit1:ColumnSeries Name="barSeriesDifference" DependentValueBinding="{Binding Value}"  LegendItemStyle="{StaticResource LegendItemStyle2}"
+                                            IndependentValueBinding="{Binding Name}" Title=""  DataPointStyle="{StaticResource DataPointStyleDifference}">
+                        <toolkit1:ColumnSeries.IndependentAxis>
+                            <toolkit1:CategoryAxis Orientation="X">
+                                <toolkit1:CategoryAxis.AxisLabelStyle>
+                                    <Style TargetType="toolkit1:AxisLabel">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="toolkit1:AxisLabel">
+                                                    <layout:LayoutTransformer>
+                                                        <layout:LayoutTransformer.LayoutTransform>
+                                                            <RotateTransform Angle="-60"/>
+                                                        </layout:LayoutTransformer.LayoutTransform>
+                                                        <TextBlock Text="{TemplateBinding FormattedContent}"/>
+                                                    </layout:LayoutTransformer>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </toolkit1:CategoryAxis.AxisLabelStyle>
+                            </toolkit1:CategoryAxis>
+                        </toolkit1:ColumnSeries.IndependentAxis>
+                    </toolkit1:ColumnSeries>
+                </toolkit1:Chart>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock  Text="Total Weekly Calorie Surplus/Deficit: " />
+                    <TextBlock Name="weeklyDifference"  Text="{Binding WeeklyTotal, Mode=TwoWay, StringFormat=\{0:n0\}}"/>
+                </StackPanel>
+                <StackPanel  Orientation="Horizontal">
+                    <TextBlock >
+                        <Run Text="Your estimated"/>
+                        <Run Text="{Binding LossGain, Mode=TwoWay}" TextDecorations="Underline" x:Name="gainLoss" />
+                        <Run Text="this week: "/>
+
+                    </TextBlock>
+                    <TextBlock Name="weeklyWeightLoss"  Text="{Binding WeeklyWeightLoss, Mode=TwoWay, StringFormat=\{0:n1\}}"/>
+                    <TextBlock Text=" pound(s) " />
+
+                </StackPanel>
+            </StackPanel>
+           
+        </toolkit:BusyIndicator>
+    </Grid>
+</UserControl>

@@ -1,0 +1,283 @@
+﻿using System;
+using System.Collections.Generic;
+
+
+using Microsoft.Xrm.Sdk;
+using DynamicConnections.CRM2011.CustomAssemblies.Utilities;
+using Microsoft.Xrm.Sdk.Query;
+using System.ServiceModel;
+
+
+
+
+namespace DynamicConnections.NutriStyle.CRM2011.Plugins
+{
+    /// <summary>
+    /// Plugin retrieves fat, protein and carb grams 
+    /// This calculation is then passed back. 
+    /// </summary>
+    public class FoodLog : IPlugin
+    {
+        //Tools tools = new Tools("nutristyle_plugins_output");
+        Logger logger;
+
+        public void Execute(IServiceProvider serviceProvider)
+        {
+
+            logger = new Logger("DEBUG", @"c:\windows\temp\nutristyle_plugins_output.txt", 1);
+            try
+            {
+                // get the execution context from the service provider
+                IPluginExecutionContext pluginExecutionContext = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
+
+                // Obtain the organization service reference.
+                IOrganizationServiceFactory serviceFactory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
+                IOrganizationService crmService = serviceFactory.CreateOrganizationService(pluginExecutionContext.UserId);
+
+                logger.debug("FoodLog: starting: " + pluginExecutionContext.PrimaryEntityName + ":" + pluginExecutionContext.MessageName);//so me know if this is an update or create message
+
+                // initilize the variables                
+                double fat = 0d;
+                double protein = 0d;
+                double carbohydrate = 0d;
+                double portionSize = 0d;
+                double portionamount = 0d;
+                decimal unitGramWeight = 0m;
+                decimal orgPortionAmount = 0m;
+
+                // form - data that the user changed
+                Entity foodLog = (Entity)pluginExecutionContext.InputParameters["Target"];
+                //logger.debug("food: " + foodLog.Attributes.Values);
+                Guid dc_foodsid     = Guid.Empty;
+                Guid menuId         = Guid.Empty;
+                Guid contactId      = Guid.Empty;
+                DateTime date       = DateTime.MinValue;
+                Guid foodLogDayId   = Guid.Empty;
+
+                contactId = foodLog.Contains("dc_contactid") ? ((EntityReference)foodLog["dc_contactid"]).Id : Guid.Empty;
+                logger.debug("contactId: " + contactId);
+                
+                date = foodLog.Contains("dc_date") ? ((DateTime)foodLog["dc_date"]) : DateTime.MinValue;
+                logger.debug("date: " + date.ToString());
+
+                if (date == DateTime.MinValue)
+                {
+                    logger.debug("dc_date must be provided");
+                    throw new InvalidPluginExecutionException("dc_date must be provided");
+                }
+                #region Find default menu
+                String fetchXmlMenuId = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
+                          <entity name='dc_menu'>
+                            <attribute name='dc_menuid' />
+                            <attribute name='dc_name' />
+                            <attribute name='createdon' />
+                            <order attribute='dc_name' descending='false' />
+                            <filter type='and'>
+                              <condition attribute='dc_primarymenu' operator='eq' value='1' />
+                            </filter>
+                            <link-entity name='contact' from='contactid' to='dc_contactid' alias='aa'>
+                              <filter type='and'>
+                                <condition attribute='contactid' operator='eq'  value='@CONTACTID' />
+                              </filter>
+                            </link-entity>
+                          </entity>
+                        </fetch>";
+
+                fetchXmlMenuId = fetchXmlMenuId.Replace("@CONTACTID", contactId.ToString());
+
+                EntityCollection response = null;
+
+                try
+                {
+                    response = crmService.RetrieveMultiple(new FetchExpression(fetchXmlMenuId));
+                }
+                catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> ex)
+                {
+                    logger.debug("Code: " + ex.Detail.ErrorCode);
+                    logger.debug("Message: " + ex.Detail.Message);
+                    logger.debug("Trace: " + ex.Detail.TraceText);
+                    logger.debug("Inner Fault: " + ex.Detail.InnerFault);
+                }
+                if (response != null && response.Entities.Count > 0)
+                {
+                    Entity menu = (Entity)response.Entities[0];
+                    menuId = menu.Id;
+                } 
+                #endregion
+                
+                //menuId found.  Find parent foodlogday entity
+                #region find parent dc_foodlogday entity.  contactid and date
+                String fetchXml = @"<fetch distinct='false' mapping='logical' output-format='xml-platform' version='1.0' >
+                        <entity name='dc_foodlogday'> 
+                            <attribute name='dc_foodlogdayid'/>
+                            <filter type='and'>
+                                <condition attribute='dc_contactid' value='@CONTACTID' operator='eq'/>
+                                <condition attribute='dc_date' value='@DATE' operator='eq'/>
+                                <condition attribute='dc_menuid' value='@MENUID' operator='eq'/>
+
+                            </filter>
+                        </entity> 
+                    </fetch>";
+
+                fetchXml = fetchXml.Replace("@CONTACTID", contactId.ToString());
+                fetchXml = fetchXml.Replace("@DATE", date.ToString("MM/dd/yyyy"));
+                fetchXml = fetchXml.Replace("@MENUID", menuId.ToString());
+
+                response = null;
+                //bool createdParent = false;
+
+                try
+                {
+                    response = crmService.RetrieveMultiple(new FetchExpression(fetchXml));
+                }
+                catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> ex)
+                {
+                    logger.error("Code: " + ex.Detail.ErrorCode);
+                    logger.error("Message: " + ex.Detail.Message);
+                    logger.error("Trace: " + ex.Detail.TraceText);
+                    logger.error("Inner Fault: " + ex.Detail.InnerFault);
+                }
+                if (response != null && response.Entities.Count > 0)
+                {
+                    Entity foodLogDay = (Entity)response.Entities[0];
+                    foodLogDayId = foodLogDay.Id;
+                }
+                else
+                {
+                    //need to create
+                    Entity entity = new Entity("dc_foodlogday");
+                    entity["dc_date"] = new DateTime(date.Year, date.Month, date.Day);
+                    entity["dc_name"] = date.ToString("MM/dd/yyyy");
+                    entity["dc_contactid"] = new EntityReference("contact", contactId);
+                    entity["dc_menuid"] = new EntityReference("dc_menu", menuId);
+
+                    foodLogDayId = crmService.Create(entity);
+                }
+                #endregion
+
+                if (foodLog.Attributes.Contains("dc_foodid") && !foodLog.Attributes.Contains("dc_fat"))
+                {
+                    dc_foodsid = ((EntityReference)foodLog.Attributes["dc_foodid"]).Id;
+                    
+                    fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
+                      <entity name='dc_foods'>
+                        <attribute name='dc_portion_amount' />
+                        <attribute name='dc_unit_gram_weight' />
+                        <filter type='and'>
+                          <condition attribute='dc_foodsid' operator='eq' value='@DC_FOODID' />
+                        </filter>
+                        <link-entity name='dc_food_nutrients' from='dc_food_nutrientsid' to='dc_foodnutrientid' alias='aa'>
+                            <attribute name='dc_fat' />
+                            <attribute name='dc_protein' />
+                            <attribute name='dc_carbohydrate' />
+                            <attribute name='dc_portion_amount' />
+                        </link-entity>
+                      </entity>
+                    </fetch>";
+
+                    fetchXml = fetchXml.Replace("@DC_FOODID", dc_foodsid.ToString());
+                    response = null;
+
+                    try
+                    {
+                        response = crmService.RetrieveMultiple(new FetchExpression(fetchXml));
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.error("fetchxml retrieve");
+                        logger.error(ex.Message);
+                        logger.error(ex.StackTrace);
+                    }
+                    //make sure we have a value
+                    if (response != null && response.Entities.Count > 0)
+                    {
+                        Entity entity = (Entity)response.Entities[0];
+                        //logger.debug("portionsize type: " + foodLog.Attributes["dc_portionsize"].GetType());
+                        if (entity.Attributes.Contains("aa.dc_fat"))
+                        {
+                            fat = entity.Attributes["aa.dc_fat"] == null ? 0.0 : (double)((AliasedValue)entity.Attributes["aa.dc_fat"]).Value;
+                        }
+                        else
+                        {
+
+                            logger.debug("Not able to find related food (dc_fat)");
+                        }
+                        if (entity.Attributes.Contains("aa.dc_protein"))
+                        {
+                            protein = entity.Attributes["aa.dc_protein"] == null ? 0.0 : (double)((AliasedValue)entity.Attributes["aa.dc_protein"]).Value;
+                        }
+                        else
+                        {
+
+                            logger.debug("Not able to find related food (dc_protein)");
+                        }
+                        if (entity.Attributes.Contains("aa.dc_carbohydrate"))
+                        {
+                            carbohydrate = entity.Attributes["aa.dc_carbohydrate"] == null ? 0.0 : (double)((AliasedValue)entity.Attributes["aa.dc_carbohydrate"]).Value;
+                        }
+                        else
+                        {
+
+                            logger.debug("Not able to find related food (dc_carbohydrate)");
+                        }
+
+                        portionSize = foodLog.Attributes.Contains("dc_portionsize") ? Convert.ToDouble((decimal)foodLog["dc_portionsize"]) : 0;
+                        portionamount = entity.Attributes.Contains("dc_portion_amount") ? (double)entity["dc_portion_amount"] : 0;
+
+                        unitGramWeight = foodLog.Attributes.Contains("dc_unit_gram_weight") ? (decimal)foodLog["dc_unit_gram_weight"] : 0m;
+                        orgPortionAmount = entity.Contains("dc_portion_amount") ? (decimal)entity["dc_portion_amount"] : 0m;
+
+                        if (portionSize >0 && portionamount >0)
+                        {
+                            
+                            double kcalMultiplier = portionSize / portionamount;
+                            decimal kcals = Convert.ToDecimal(((fat * 9) + (protein * 4) + (carbohydrate * 4)) * kcalMultiplier);
+
+                            if (fat == 100)
+                            {
+                                
+
+                                decimal sngFactor = ((unitGramWeight) / orgPortionAmount);
+                                sngFactor = sngFactor * (decimal)portionamount;
+                                fat = fat * (double)sngFactor;
+                                kcals = (decimal)fat * 9m;
+
+                                foodLog.Attributes["dc_kcals"] = kcals;//set value back to pre entity
+                                foodLog.Attributes["dc_fat"] = fat;
+                                foodLog.Attributes["dc_protein"] = 0m;
+                                foodLog.Attributes["dc_carbohydrate"] = 0m;
+                            }
+                            else
+                            {
+                                //logger.debug("Setting kcals to: "+ kcals);
+                                //foodLog.Attributes["dc_kcals"] = kcals;//set value back to pre entity
+                                foodLog.Attributes["dc_fat"] = (decimal)(fat * kcalMultiplier);
+                                foodLog.Attributes["dc_protein"] = (decimal)(protein * kcalMultiplier);
+                                foodLog.Attributes["dc_carbohydrate"] = (decimal)(carbohydrate * kcalMultiplier);
+                                
+                            }
+                        }
+                        else
+                        {
+                            logger.debug("Not able to find related food (dc_portionsize) and (dc_portion_amount)");
+                        }
+                        
+                    }
+                    else
+                    {
+                        logger.debug("FoodId not found: " + dc_foodsid.ToString());
+                    }
+                }//end of check for dc_foodsid and dc_kcal
+                foodLog["dc_foodlogdayid"] = new EntityReference("dc_foodlogday", foodLogDayId);
+            }
+            catch (Exception ex)
+            {
+                logger.error("Execute Method");
+                logger.error(ex.Message);
+                logger.error(ex.StackTrace);
+            }
+
+        }
+
+    }
+}

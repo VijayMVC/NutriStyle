@@ -1,0 +1,85 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+
+using DynamicConnections.CRM2011.Common.Utility;
+using Microsoft.Xrm.Sdk;
+
+namespace DynamicConnections.NutriStyle.CRM2011.MenuGenerator
+{
+    public abstract class General
+    {
+        public enum GramToKcalMultipler {Carbohydrate =4, Fat = 9, Protein = 4, Alcohol = 7}
+        public enum Days { Monday = 948170001, Tuesday = 948170002, Wednesday = 948170003, Thursday=948170004, Friday = 948170005, Saturday = 948170006, Sunday = 948170000 }
+        public enum Meals { Breakfast = 948170000, Morning_Snack = 948170001, Lunch = 948170002, Afternoon_Snack = 948170003, Dinner = 948170004, Evening_Snack = 948170005 }
+        
+        public General() { }
+
+        /// <summary>
+        /// Method determines kcals based on grams of protein (4x), fat (9x) and carbohydrate (4x)
+        /// </summary>
+        /// <param name="carbohydrate"></param>
+        /// <param name="fat"></param>
+        /// <param name="protein"></param>
+        /// <returns></returns>
+        protected static decimal CalculateKcals(decimal carbohydrate, decimal fat, decimal protein)
+        {
+            return ((carbohydrate * (decimal)GramToKcalMultipler.Carbohydrate) + (fat * (decimal)GramToKcalMultipler.Fat) + (protein * (decimal)GramToKcalMultipler.Protein)); 
+        }
+        /// <summary>
+        /// Method determines kcals based on grams of protein (4x), fat (9x), carbohydrate (4x) and alcohol (7x)
+        /// </summary>
+        /// <param name="carbohydrate"></param>
+        /// <param name="fat"></param>
+        /// <param name="protein"></param>
+        /// <param name="alcohol"></param>
+        /// <returns></returns>
+        protected static decimal CalculateKcals(decimal carbohydrate, decimal fat, decimal protein, decimal alcohol)
+        {
+            return ((carbohydrate * (decimal)GramToKcalMultipler.Carbohydrate) + (fat * (decimal)GramToKcalMultipler.Fat) + (protein * (decimal)GramToKcalMultipler.Protein) + (alcohol * (decimal)GramToKcalMultipler.Alcohol));
+        }
+
+        protected static decimal CalculatePercent(decimal value1Decimal, decimal value2Decimal, int numberDigits)
+        {
+            Logger logger = GetLogger();
+            decimal percentDecimal;
+            try
+            {
+                if (value2Decimal > 0.0m)
+                {
+                    percentDecimal = (value1Decimal / value2Decimal) * (decimal)100;
+                    percentDecimal = Decimal.Round(percentDecimal, numberDigits, MidpointRounding.AwayFromZero);
+                }
+                else
+                {
+                    percentDecimal = 0.0m;
+                }
+                return (percentDecimal);
+            }
+            catch (Exception ex)
+            {
+                string errorMessageString = "An error occurred in General: CalculatePercent method. " + "Message: " + ex.Message + " StackTrace: " + ex.StackTrace;
+                logger.error(errorMessageString);
+                percentDecimal = 0.0m;
+                return (percentDecimal);
+            }
+        }// end CalculatePercent
+
+        protected static Logger GetLogger()
+        {
+            try
+            {
+                string LogLevel = ConfigurationManager.AppSettings["LogLevel"];
+                string LogLocation = ConfigurationManager.AppSettings["LogLocation"];            
+                Logger logger = new Logger(LogLevel, LogLocation);
+                return (logger);
+            }
+            catch (Exception)
+            {
+                return (null);
+            }
+        }// end GetLogger
+
+
+    }
+}

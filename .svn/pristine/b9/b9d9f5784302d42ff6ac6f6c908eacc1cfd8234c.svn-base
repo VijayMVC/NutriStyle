@@ -1,0 +1,179 @@
+﻿<UserControl xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"  
+			 xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
+			 x:Class="DynamicConnections.NutriStyle.MenuGenerator.Controls.AddARecipe"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:helpers="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Engine.Helpers"
+             xmlns:toolkit1="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit" Background="Transparent"
+             xmlns:toolkit2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+             xmlns:validation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input"
+             mc:Ignorable="d"
+             xmlns:Controls="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Controls;assembly=DynamicConnections.NutriStyle.MenuGenerator"
+             xmlns:charting="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" 
+               d:DesignWidth="750" d:DesignHeight="700" Loaded="Page_Loaded">
+
+    <UserControl.Resources>
+        <helpers:RowIndexConverter x:Key="rowConvertor" />
+        <helpers:RadioButtonConverterMenuFood x:Key="radioButtonConverter" />
+        <helpers:RadioButtonConverterRecipeAvailableToAllUsers x:Key="radioButtonConverterAvailable" />
+    </UserControl.Resources>
+
+    <Grid x:Name="LayoutRoot" Style="{StaticResource gridStyle}" Height="700">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <!-- 1 -->
+
+
+        </Grid.RowDefinitions>
+        <Border Style="{StaticResource borderStyle}"  Height="700">
+
+            <toolkit2:BusyIndicator Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch"   Margin="0,0,0,0" 
+                        VerticalAlignment="Stretch" BorderThickness="0" Name="busyIndicator" Visibility="Visible" 
+                        IsBusy="False" >
+                <StackPanel Height="694">
+                    <Grid Height="Auto" Name="FormData">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="36"></RowDefinition>
+                            <!-- 0 -->
+                            <RowDefinition Height="40"></RowDefinition>
+                            <!-- 1: for validation errors-->
+
+
+                            <RowDefinition Height="460"></RowDefinition>
+                            <RowDefinition Height="36"></RowDefinition>
+                            <RowDefinition Height="36"></RowDefinition>
+                            <RowDefinition Height="36"></RowDefinition>
+
+
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="125"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="125"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <Grid Height="Auto" Grid.Row="0" Grid.ColumnSpan="4" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <sdk:Label Content="Add A Recipe" Style="{StaticResource textHeaderStyle}" Grid.Column="0"/>
+                            <TextBlock  Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Style="{StaticResource TextBlockLabel}">
+                                <Run Text="(" />
+                                <Run Text="*" Foreground="Red"/>
+                                <Run Text=" required)" />
+                            </TextBlock>
+                        </Grid>
+
+                        <validation:ValidationSummary  Name="ValidationSummary" Canvas.Top="50"  Grid.Row="1" Grid.ColumnSpan="34" Margin="0,20,0,0" />
+
+                        <StackPanel Grid.Row="1" Grid.ColumnSpan="4"  Orientation="Vertical">
+                            <sdk:Label Foreground="#878787" Content="Please fill out the below form to add a recipe to the system" FontSize="12" FontWeight="Bold"/>
+                        </StackPanel>
+
+
+                        <Grid   VerticalAlignment="Top" Name="Grid" Grid.ColumnSpan="4" Grid.Row="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="42"></RowDefinition>
+                                <!-- 1 -->
+                                <RowDefinition Height="42"></RowDefinition>
+                                <!-- 2 -->
+                                <RowDefinition Height="42"></RowDefinition>
+                                <!-- 3 -->
+                                <RowDefinition Height="42"></RowDefinition>
+                                <!-- 4 -->
+                                <RowDefinition Height="90"></RowDefinition>
+                                <!-- 5 -->
+                                <!-- 3 -->
+                                <RowDefinition Height="36"></RowDefinition>
+                                <RowDefinition Height="190"></RowDefinition>
+                                <!-- 6 -->
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="125"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="125"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Form data -->
+                            <TextBlock Text="Food Display Name" Name="dc_nameLabel" Grid.Row="0" Grid.Column="0" Style="{StaticResource TextBlockLabel}" TextWrapping="Wrap"/>
+                            <Controls:WatermarkTextBox x:Name="dc_name" Grid.Row="0" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                    Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}" 
+                                />
+
+                            <TextBlock Text="Source of Information" Name="dc_sourceofinformationdateobtainedLabel" Grid.Row="0" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                            <Controls:WatermarkTextBox x:Name="dc_sourceofinformationdateobtained" Grid.Row="0" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                    Text="{Binding SourceOfInformation, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}" 
+                                />
+                        
+                            <!--
+                            <TextBlock Text="Shopping List Category" Name="dc_shoppinglistcategoryLabel" Grid.Row="1" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                            <Controls:WatermarkTextBox x:Name="dc_shoppinglistcategory" Grid.Row="1" Grid.Column="1" Margin="2" />
+                            -->
+                            <TextBlock Text="Prep Time (minutes)" Name="dc_preparationtimeLabel" Grid.Row="1" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                            <Controls:WatermarkTextBox x:Name="dc_preparationtime" Grid.Row="1" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                        Text="{Binding PreparationTime, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"     
+                                    />
+
+                            <TextBlock Text="Serving Size: Amount " Name="dc_portion_amountLabel" Grid.Row="2" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                            <Controls:WatermarkTextBox x:Name="dc_portion_amount" Grid.Row="2" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                     Text="{Binding PortionAmount, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}" 
+                                />
+
+                            <TextBlock Text="Units" Name="dc_portiontypeidLabel" Grid.Row="2" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                            <Controls:ComboBoxWithValidation x:Name="dc_portiontypeid" Grid.Row="2" Grid.Column="3" Margin="2"
+                                    SelectedPair="{Binding PortionTypeId, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"     
+                                />
+
+                            <TextBlock Text="About How Many Servings per Recipe" Name="dc_numberofservingsLabel" Grid.Row="3" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                            <Controls:WatermarkTextBox x:Name="dc_numberofservings" Grid.Row="3" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                     Text="{Binding NumberOfServings, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}" 
+                                />
+
+                            <TextBlock Text="Recipe Directions" Name="dc_directionsLabel" Grid.Row="4" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                            <Controls:WatermarkTextBox x:Name="dc_directions" Grid.Row="4" Grid.Column="1" Margin="2" Grid.ColumnSpan="3" AcceptsReturn="True"
+                                            Text="{Binding Directions, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+                            <StackPanel  Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" VerticalAlignment="Center" Margin="2">
+                                <Button Name="AddIngredient" Height="23" Width="115" VerticalAlignment="Center" Content="Add Ingredient" HorizontalAlignment="Left" Click="AddIngredient_Click" ToolTipService.ToolTip="Add Ingredient" Cursor="Hand"></Button>
+                            </StackPanel>
+                            <sdk:DataGrid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" Name="DataGrid" AutoGenerateColumns="False" Height="Auto"
+                                VerticalAlignment="Stretch" HorizontalAlignment="Stretch" GridLinesVisibility="None" 
+                                AlternatingRowBackground="White" RowBackground="White" Style="{StaticResource dataGridCustom}"
+                                ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle1}">
+                            </sdk:DataGrid>
+
+                        </Grid>
+
+                        <TextBlock Text="Make this Recipe available to all users:" Name="dc_availabletoallusersLabel" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                        <StackPanel Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center">
+                            <RadioButton Name="availableToAllUsersYes" GroupName="AvailableToUsersOptions" Content="Yes" Margin="0,0,10,0" Cursor="Hand" ToolTipService.ToolTip="Yes"
+                                    IsChecked="{Binding AvailableToAllUsers, Mode=TwoWay, ValidatesOnExceptions=True, 
+                                    NotifyOnValidationError=True, UpdateSourceTrigger=Explicit,
+                                    ConverterParameter=True, Converter={StaticResource radioButtonConverterAvailable}}"            
+                                />
+                            <RadioButton Name="availableToAllUsersNo" GroupName="AvailableToUsersOptions" Content="No"  Cursor="Hand" ToolTipService.ToolTip="No"
+                                    IsChecked="{Binding AvailableToAllUsers, Mode=TwoWay, ValidatesOnExceptions=True, 
+                                    NotifyOnValidationError=True, UpdateSourceTrigger=Explicit,
+                                    ConverterParameter=False, Converter={StaticResource radioButtonConverterAvailable}}"             
+                                />
+                        </StackPanel>
+
+                        <Button Content="Save" Grid.Row="5" Grid.Column="0" Width="75" HorizontalAlignment="Left" ToolTipService.ToolTip="Save" 
+                            Cursor="Hand"  Height="24" VerticalAlignment="Center" Margin="0,0,0,0" Click="SaveFood"/>
+                    </Grid>
+
+
+
+                </StackPanel>
+            </toolkit2:BusyIndicator>
+        </Border>
+    </Grid>
+</UserControl>

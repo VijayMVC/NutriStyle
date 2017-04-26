@@ -1,0 +1,512 @@
+﻿using System;
+using System.Collections.Generic;
+
+using Microsoft.Xrm.Sdk;
+using DynamicConnections.CRM2011.CustomAssemblies.Utilities;
+
+namespace DynamicConnections.NutriStyle.CRM2011.Plugins
+{
+    public class ContactPreUpdate_Kcals : IPlugin
+    {
+        //Tools tools = new Tools("nutristyle_plugins_output");
+        Logger logger;
+        public enum ActivityLevel { Sedentary = 948170000, LightlyActive = 948170001, ModeratelyActive = 948170002, HighlyActive = 948170003 }
+
+        public enum PoundsPerWeek { HalfPound = 948170000, OnePound = 948170001, OneAndAHalfPound = 948170002, TwoPounds = 948170003 }
+
+        public void Execute(IServiceProvider serviceProvider)
+        {
+            logger = new Logger("DEBUG", @"c:\windows\temp\nutristyle_plugins_output.txt", 1);
+
+            // get the execution context from the service provider
+            IPluginExecutionContext pluginExecutionContext = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
+            try
+            {
+                logger.debug("ContactPreUpdate_Kcals: starting: " + pluginExecutionContext.PrimaryEntityName + " : " + pluginExecutionContext.MessageName);
+
+                // initilize the variables 
+                string gendeName            = string.Empty;
+                int gendeCodeValue          = 0;
+                decimal weightKgValue       = (decimal)0.0;
+                decimal heightCmValue       = (decimal)0.0;
+                int ageValue                = 0;
+                int activityLevel           = 0;
+                bool maintainWeight         = true;
+                decimal kcalPerHalfPound    = 1750m;
+                decimal targetWeight        = 0m;
+                decimal currentWeight       = 0m;
+                int poundsPerWeek           = 0;
+
+                // get the Entity contact
+                Entity contact = (Entity)pluginExecutionContext.InputParameters["Target"];
+
+                // get the Entity preContact
+                Entity preContact = new Entity();
+                if (pluginExecutionContext.PreEntityImages.Contains("preimage"))
+                {
+                    preContact = (Entity)pluginExecutionContext.PreEntityImages["preimage"];
+                }
+
+
+                logger.debug("Found entities.  Starting gathering of variables");
+
+                if (contact.Contains("gendercode") ||
+                    contact.Contains("dc_weightkg") ||
+                    contact.Contains("dc_heightcm") ||
+                    contact.Contains("dc_age") ||
+                    contact.Contains("dc_activitylevel") ||
+                    contact.Contains("dc_poundsperweek") ||
+                    contact.Contains("dc_currentweight") ||
+                    contact.Contains("dc_targetweight") ||
+                    contact.Contains("dc_poundsperweek")
+                    )
+                {
+                    // gendercode
+                    if (contact.Contains("gendercode"))
+                    {
+                        gendeCodeValue = ((OptionSetValue)contact["gendercode"]).Value;
+                    }
+                    else if (preContact.Contains("gendercode"))
+                    {
+                        gendeCodeValue = ((OptionSetValue)preContact["gendercode"]).Value;
+                    }
+                    logger.debug("gendercode: " + gendeCodeValue);
+                    // dc_weightkg
+                    if (contact.Contains("dc_weightkg"))
+                    {
+                        weightKgValue = (decimal)contact["dc_weightkg"];
+                    }
+                    else if (preContact.Contains("dc_weightkg"))
+                    {
+                        weightKgValue = (decimal)preContact["dc_weightkg"];
+                    }
+                    logger.debug("dc_weightkg: " + weightKgValue);
+                    // dc_heightcm
+                    if (contact.Contains("dc_heightcm"))
+                    {
+                        heightCmValue = (decimal)contact["dc_heightcm"];
+                    }
+                    else if (preContact.Contains("dc_heightcm"))
+                    {
+                        heightCmValue = (decimal)preContact["dc_heightcm"];
+                    }
+                    logger.debug("dc_heightcm: " + heightCmValue);
+                    // dc_age
+                    if (contact.Contains("dc_age"))
+                    {
+                        ageValue = (int)contact["dc_age"];
+                    }
+                    else if (preContact.Contains("dc_age"))
+                    {
+                        ageValue = (int)preContact["dc_age"];
+                    }
+                    logger.debug("dc_age: " + ageValue);
+
+                    // activity level
+                    if (contact.Contains("dc_activitylevel"))
+                    {
+                        activityLevel = ((OptionSetValue)contact["dc_activitylevel"]).Value;
+                    }
+                    else if (preContact.Contains("dc_activitylevel"))
+                    {
+                        activityLevel = ((OptionSetValue)preContact["dc_activitylevel"]).Value;
+                    }
+                    logger.debug("activityLevel: " + activityLevel);
+                    // maintain
+                    if (contact.Contains("dc_maintaintargetweight"))
+                    {
+                        maintainWeight = (bool)contact["dc_maintaintargetweight"];
+                    }
+                    else if (preContact.Contains("dc_maintaintargetweight"))
+                    {
+                        maintainWeight = (bool)preContact["dc_maintaintargetweight"];
+                    }
+                    logger.debug("maintainWeight: " + maintainWeight);
+
+                    if (contact.Contains("dc_targetweight"))
+                    {
+                        targetWeight = (int)contact["dc_targetweight"];
+                    }
+                    else if (preContact.Contains("dc_targetweight"))
+                    {
+                        targetWeight = (int)preContact["dc_targetweight"];
+                    }
+                    logger.debug("targetWeight: " + targetWeight);
+
+                    if (contact.Contains("dc_currentweight"))
+                    {
+                        currentWeight = (int)contact["dc_currentweight"];
+                    }
+                    else if (preContact.Contains("dc_currentweight"))
+                    {
+                        currentWeight = (int)preContact["dc_currentweight"];
+                    }
+                    logger.debug("currentWeight: " + currentWeight);
+
+                    if (contact.Contains("dc_poundsperweek"))
+                    {
+                        poundsPerWeek = ((OptionSetValue)contact["dc_poundsperweek"]).Value;
+                    }
+                    else if (preContact.Contains("dc_poundsperweek"))
+                    {
+                        poundsPerWeek = ((OptionSetValue)preContact["dc_poundsperweek"]).Value;
+                    }
+                    logger.debug("pounds Per Week: " + poundsPerWeek);
+                }
+
+                if (gendeCodeValue > 0)
+                {
+                    if (gendeCodeValue == 1)
+                    {
+                        gendeName = "Male";
+                    }
+                    else if (gendeCodeValue == 2)
+                    {
+                        gendeName = "Female";
+                    }
+
+                    logger.debug("gendeCodeValue: " + gendeCodeValue);
+                    logger.debug("gendeName: " + gendeName);
+
+                    //Start by calculating the BMI
+
+                    decimal BMI = CalculateBMI(weightKgValue, heightCmValue / 100m);
+                    logger.debug("BMI: " + BMI);
+                    //overweight?
+                    bool overweight = IsOverWeight(BMI);
+                    logger.debug("overweight: " + overweight);
+                    decimal PA = CalculatePA(gendeCodeValue, ageValue, overweight, activityLevel);
+                    logger.debug("PA: " + PA);
+                    decimal kcals = CalculateKcals(gendeCodeValue, ageValue, PA, weightKgValue, heightCmValue / 100m, overweight);
+                    logger.debug("kcals: " + kcals);
+                    
+                    contact["dc_kcalcalculatedtarget"] = kcals;
+                    logger.debug("dc_kcalcalculatedtarget :" + kcals);
+                    //Now determine weight loss
+                    if (!maintainWeight)
+                    {
+                        if (targetWeight > currentWeight)//gain
+                        {
+                            if (poundsPerWeek == (int)PoundsPerWeek.HalfPound)
+                            {
+                                kcals += kcalPerHalfPound / 7m;
+                            }
+                            else if (poundsPerWeek == (int)PoundsPerWeek.OnePound)
+                            {
+                                kcals += (kcalPerHalfPound * 2) / 7m;
+                            }
+                            else if (poundsPerWeek == (int)PoundsPerWeek.OneAndAHalfPound)
+                            {
+                                kcals += (kcalPerHalfPound * 3) / 7m;
+                            }
+                            else if (poundsPerWeek == (int)PoundsPerWeek.TwoPounds)
+                            {
+                                kcals += (kcalPerHalfPound * 4) / 7m;
+                            }
+                        }
+                        else
+                        {
+                            if (poundsPerWeek == (int)PoundsPerWeek.HalfPound)
+                            {
+                                kcals -= kcalPerHalfPound / 7m;
+                            }
+                            else if (poundsPerWeek == (int)PoundsPerWeek.OnePound)
+                            {
+                                kcals -= (kcalPerHalfPound * 2) / 7m;
+                            }
+                            else if (poundsPerWeek == (int)PoundsPerWeek.OneAndAHalfPound)
+                            {
+                                kcals -= (kcalPerHalfPound * 3) / 7m;
+                            }
+                            else if (poundsPerWeek == (int)PoundsPerWeek.TwoPounds)
+                            {
+                                kcals -= (kcalPerHalfPound * 4) / 7m;
+                            }
+                        }
+                    }
+                    logger.debug("kcals, after weight/gain calculations: " + kcals);
+                    //contact["dc_kcaltarget"] = kcals;
+                    contact["dc_dee"] = kcals;
+                    contact["dc_bmi"] = BMI;
+
+                    logger.debug("dc_dee :" + kcals);
+                    logger.debug("dc_bmi :" + BMI);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.error("Execute Method:" + pluginExecutionContext.PrimaryEntityName + " : " + pluginExecutionContext.MessageName);
+                logger.error(ex.Message);
+                logger.error(ex.StackTrace);
+            }
+        }
+        /// <summary>
+        /// Calculate Kcals
+        /// </summary>
+        /// <param name="genderCode"></param>
+        /// <param name="ageValue"></param>
+        /// <param name="PA"></param>
+        /// <param name="weightKgValue"></param>
+        /// <param name="heightMValue"></param>
+        /// <param name="overweight"></param>
+        /// <returns></returns>
+        private decimal CalculateKcals(int genderCode, int ageValue, decimal PA, decimal weightKgValue, decimal heightMValue, bool overweight)
+        {
+            //males
+            if (genderCode == 1)
+            {
+                if (ageValue >= 3 && ageValue <= 8 && !overweight)
+                {
+                    return (88.5m - (61.9m * ageValue) + PA * ((26.7m * weightKgValue) + (903m * heightMValue)) + 20m);
+                }
+                else if (ageValue >= 9 && ageValue <= 18 && !overweight)
+                {
+                    return (88.5m - (61.9m * ageValue) + PA * ((26.7m * weightKgValue) + (903m * heightMValue)) + 25m);
+                }
+                else if (ageValue >= 3 && ageValue <= 18 && overweight)
+                {
+                    return (114m - (50.9m * ageValue) + PA * ((19.5m * weightKgValue) + (1161.4m * heightMValue)));
+                }
+                else if (ageValue >= 19 && !overweight)
+                {
+                    return (662m - (9.53m * ageValue) + PA * ((15.91m * weightKgValue) + (539.6m * heightMValue)));
+                }
+                else if (ageValue >= 19 && overweight)
+                {
+                    return (864m - (9.72m * ageValue) + PA * ((14.2m * weightKgValue) + (503m * heightMValue)));
+                }
+            }
+            //females
+            else if (genderCode == 2)
+            {
+                if (ageValue >= 3 && ageValue <= 8 && !overweight)
+                {
+                    return (135.3m - (30.8m * ageValue) + PA * ((10.0m * weightKgValue) + (934m * heightMValue)) + 20m);
+                }
+                else if (ageValue >= 9 && ageValue <= 18 && !overweight)
+                {
+                    return (135.3m - (30.8m * ageValue) + PA * ((10.0m * weightKgValue) + (934m * heightMValue)) + 25m);
+                }
+                else if (ageValue >= 3 && ageValue <= 18 && overweight)
+                {
+                    return (389m - (41.2m * ageValue) + PA * ((15.0m * weightKgValue) + (701.6m * heightMValue)));
+                }
+                else if (ageValue >= 19 && !overweight)
+                {
+                    return (354m - (6.91m * ageValue) + PA * ((9.36m * weightKgValue) + (726m * heightMValue)));
+                }
+                else if (ageValue >= 19 && overweight)
+                {
+                    return (387m - (7.31m * ageValue) + PA * ((10.9m * weightKgValue) + (660.7m * heightMValue)));
+                }
+            }
+            return (1);
+        }
+        /// <summary>
+        /// Calculate the PA value
+        /// </summary>
+        /// <param name="gendeCodeValue"></param>
+        /// <param name="ageValue"></param>
+        /// <param name="overweight"></param>
+        /// <returns></returns>
+        private decimal CalculatePA(int gendeCodeValue, int ageValue, bool overweight, int activityLevel)
+        {
+            //Male
+            if (gendeCodeValue == 1)
+            {
+                if (ageValue >= 3 && ageValue <= 18 && !overweight)
+                {
+                    if (activityLevel == (int)ActivityLevel.Sedentary)
+                    {
+                        return (1m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.LightlyActive)
+                    {
+                        return (1.13m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.ModeratelyActive)
+                    {
+                        return (1.26m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.HighlyActive)
+                    {
+                        return (1.42m);
+                    }
+                }
+                else if (ageValue >= 3 && ageValue <= 18 && overweight)
+                {
+                    if (activityLevel == (int)ActivityLevel.Sedentary)
+                    {
+                        return (1m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.LightlyActive)
+                    {
+                        return (1.12m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.ModeratelyActive)
+                    {
+                        return (1.24m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.HighlyActive)
+                    {
+                        return (1.45m);
+                    }
+                }
+
+                if (ageValue >= 19 && !overweight)
+                {
+                    if (activityLevel == (int)ActivityLevel.Sedentary)
+                    {
+                        return (1m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.LightlyActive)
+                    {
+                        return (1.11m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.ModeratelyActive)
+                    {
+                        return (1.25m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.HighlyActive)
+                    {
+                        return (1.48m);
+                    }
+                }
+                else if (ageValue >= 19 && overweight)
+                {
+                    if (activityLevel == (int)ActivityLevel.Sedentary)
+                    {
+                        return (1m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.LightlyActive)
+                    {
+                        return (1.12m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.ModeratelyActive)
+                    {
+                        return (1.27m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.HighlyActive)
+                    {
+                        return (1.54m);
+                    }
+                }
+            }
+            //Female
+            else if (gendeCodeValue == 2)
+            {
+                if (ageValue >= 3 && ageValue <= 18 && !overweight)
+                {
+                    if (activityLevel == (int)ActivityLevel.Sedentary)
+                    {
+                        return (1m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.LightlyActive)
+                    {
+                        return (1.16m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.ModeratelyActive)
+                    {
+                        return (1.31m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.HighlyActive)
+                    {
+                        return (1.56m);
+                    }
+                }
+                else if (ageValue >= 3 && ageValue <= 18 && overweight)
+                {
+                    if (activityLevel == (int)ActivityLevel.Sedentary)
+                    {
+                        return (1m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.LightlyActive)
+                    {
+                        return (1.18m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.ModeratelyActive)
+                    {
+                        return (1.35m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.HighlyActive)
+                    {
+                        return (1.60m);
+                    }
+                }
+
+                if (ageValue >= 19 && !overweight)
+                {
+                    if (activityLevel == (int)ActivityLevel.Sedentary)
+                    {
+                        return (1m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.LightlyActive)
+                    {
+                        return (1.12m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.ModeratelyActive)
+                    {
+                        return (1.27m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.HighlyActive)
+                    {
+                        return (1.45m);
+                    }
+                }
+                else if (ageValue >= 19 && overweight)
+                {
+                    if (activityLevel == (int)ActivityLevel.Sedentary)
+                    {
+                        return (1m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.LightlyActive)
+                    {
+                        return (1.14m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.ModeratelyActive)
+                    {
+                        return (1.27m);
+                    }
+                    else if (activityLevel == (int)ActivityLevel.HighlyActive)
+                    {
+                        return (1.45m);
+                    }
+                }
+            }
+            return (1m);
+        }
+        /// <summary>
+        /// Calculate BMI
+        /// </summary>
+        /// <param name="weightKgValue"></param>
+        /// <param name="heightInMeters"></param>
+        /// <returns></returns>
+        private decimal CalculateBMI(decimal weightKgValue, decimal heightInMeters)
+        {
+            if (weightKgValue > 0 && ((heightInMeters * heightInMeters) > 0))
+            {
+                return (weightKgValue / (heightInMeters * heightInMeters));
+            }
+            else
+            {
+                return (0);
+            }
+        }
+        /// <summary>
+        /// Figure out if person is overweight
+        /// </summary>
+        /// <param name="BMI"></param>
+        /// <returns></returns>
+        private bool IsOverWeight(decimal BMI)
+        {
+            if (BMI > 25)
+            {
+                return (true);
+            }
+            else
+            {
+                return (false);
+            }
+        }
+    }
+}

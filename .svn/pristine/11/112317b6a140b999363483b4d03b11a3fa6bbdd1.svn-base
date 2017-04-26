@@ -1,0 +1,391 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml;
+using DynamicConnections.CRM2011.Common.Utility;
+
+using System.ServiceModel;
+using Microsoft.Xrm.Sdk.Client;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+using DynamicConnections.NutriStyle.CRM2011.MenuGenerator;
+using DynamicConnections.NutriStyle.CRM2011.MenuGenerator.Wrappers;
+
+namespace DynamicConnections.NutriStyle.CRM2011.MenuGenerator
+{
+    public class SubstituteFood : General
+    {
+        private static Logger logger = GetLogger();
+
+        public SubstituteFood() { }
+
+        /// <summary>
+        /// This method updates the kcal, protein and fat actuals.  It properly takes into account the portion size and uses the correct gram weight
+        /// </summary>
+        /// <param name="entityMeal">Meal in question</param>
+        /// <param name="mealFoods">Collection of related meal foods</param>
+        /// <returns></returns>
+        public static List<MealFoodWrapper> Execute(Entity meal, List<MealFoodWrapper> mealFoods, Dictionary<Guid, List<MealFoodWrapper>> foodComponents)
+        {
+            decimal preSubScore = 0m;
+            try
+            {
+                logger.debug("SubsitituteFood: STARTING SUBSTITUTION PROCESS: " + mealFoods.Count());
+                preSubScore = Meal.Score(meal);
+                logger.debug("MEAL SCORE (PRE): " + preSubScore);
+
+                List<MealFoodWrapper> orgMeal = new List<MealFoodWrapper>();
+                //deep copy
+                orgMeal = MealFoodWrapper.Copy(mealFoods);
+                
+                meal = Meal.UpdateTotals(meal, orgMeal);
+                decimal test3 = Meal.Score(meal);
+                
+                int count = mealFoods.Count;
+                decimal currentScore = preSubScore;
+                for (int x = 0; x < count; x++)
+                {
+                    MealFoodWrapper mfw = mealFoods[x];
+                    //Check to see if food can be substituted.  Food favorites can not be
+                    //Get meal Score 
+                    preSubScore = Meal.Score(meal);
+                    //remove the food
+                    if (!mfw.IsFavorite)
+                    {
+                        mealFoods.RemoveAt(x);
+                        bool foundSubstitute = false;
+                        for (int y = 5; y < 35; y = y + 5)
+                        {
+
+                            MealFoodWrapper substitute = GetSubstituteFoodId(foodComponents, y, mfw, meal);
+                            if (substitute != null)
+                            {
+                                logger.debug("Found food to substitute.  Removing: " + mfw.Name + ". Adding: " + substitute.Name);
+
+                                mealFoods.Insert(x, substitute);
+                                //logger.debug("Inserted food: " + substitute.Name);
+                                MealFood.CalculateKcal(substitute.MealFood);
+                                //logger.debug("CalculateKcal");
+                                MealFood.ResetAdjust(mealFoods);
+                                //logger.debug("ResetAdjust");
+                                GetFoodRatios.Execute(meal, mealFoods);
+                                //logger.debug("Execute");
+                                //Perform PerformRatioGapAnalysis
+                                if (PerformRatioGapAnalysis.Execute(meal, mealFoods))
+                                {
+                                    logger.debug("SubstituteFood2: Generated a meal within acceptable parameters.  Moving to next meal");
+                                    return (mealFoods);
+                                }
+                                //logger.debug("PerformRatioGapAnalysis");
+                                //Score meal to see if change should be kept
+                                meal = Meal.UpdateTotals(meal, mealFoods);
+                                //logger.debug("UpdateTotals");
+                                decimal postSubScore = Meal.Score(meal);
+                                //logger.debug("postSubScore: " + postSubScore);
+
+                                if (postSubScore < currentScore)
+                                {
+                                    logger.debug("Substitution worked.  Keeping it:" + postSubScore + ":" + preSubScore);
+                                    foundSubstitute = true;
+
+                                    //deep copy
+                                    orgMeal = MealFoodWrapper.Copy(mealFoods);
+
+                                    meal = Meal.UpdateTotals(meal, mealFoods);
+                                    postSubScore = Meal.Score(meal);
+                                    //logger.debug("New meal score: " + postSubScore);
+                                    currentScore = postSubScore;
+                                    break;
+                                }
+                                else
+                                {
+                                    //logger.debug("Substitution failed.  Removing it: " + postSubScore + ":" + preSubScore);
+                                    mealFoods.RemoveAt(x);
+                                    //logger.debug("Removed food");
+                                }
+                            }
+                        }
+                        if (!foundSubstitute)
+                        {
+                            //logger.debug("Did not find food to substitute.  Adding orgianal back in");
+                            //deep copy
+                            mealFoods = MealFoodWrapper.Copy(orgMeal);
+
+                            meal = Meal.UpdateTotals(meal, mealFoods);
+                            preSubScore = Meal.Score(meal);
+                        }
+                        //Now try second method
+                        //logger.debug("Second sub method");
+                        //Get the food component
+                        List<MealFoodWrapper> list = foodComponents[mfw.Category];
+                        GetSubstituteFoodId2(list, mfw, meal);
+
+                        //deep copy
+                        orgMeal = MealFoodWrapper.Copy(mealFoods);
+                        //logger.debug("Copy");
+                        String foodName = mfw.Name;
+                        mealFoods.RemoveAt(x);
+                        //logger.debug("remove");
+                        //List is now ordered
+                        bool foundSub = false;
+                        foreach (MealFoodWrapper mealFoodWrapper in list)
+                        {
+                            //Add food
+                            //mealFoods.Add(mealFoodWrapper);
+                            mealFoods.Insert(x, mealFoodWrapper);
+                            //logger.debug("Insert (2)");
+                            MealFood.CalculateKcal(mealFoodWrapper.MealFood);
+                            //logger.debug("CalculateKcal (2)");
+                            MealFood.ResetAdjust(mealFoods);
+                            //logger.debug("ResetAdjust (2)");
+                            GetFoodRatios.Execute(meal, mealFoods);
+                            //logger.debug("Execute (2)");
+                            //Perform analysis
+                            if (PerformRatioGapAnalysis.Execute(meal, mealFoods))
+                            {
+                                logger.debug("SubstituteFood1: Generated a meal within acceptable parameters.  Moving to next meal");
+                                return (mealFoods);
+                            }
+                            else
+                            {
+                                meal = Meal.UpdateTotals(meal, mealFoods);
+                                //logger.debug("UpdateTotals (2)");
+                                decimal newSubScore = Meal.Score(meal);
+                                //logger.debug("newSubScore (2): " + newSubScore);
+                                //remove food
+                                if (newSubScore < currentScore)
+                                {
+                                    logger.debug("Substitution worked.  Keeping it.  Removed " + foodName + ".  Added: " + mealFoodWrapper.Name + ":" + newSubScore);
+                                    foodName = mealFoodWrapper.Name;
+
+                                    currentScore = newSubScore;
+                                    //Keeping foods - deep copy
+                                    orgMeal = MealFoodWrapper.Copy(mealFoods);
+
+                                    //remove so we can try another food
+                                    //mealFoods.RemoveAt(x);
+                                    foundSub = true;
+                                    //stop
+                                    break;
+                                }
+                                else
+                                {
+                                    mealFoods.RemoveAt(x);
+                                }
+                            }
+                        }
+                        if (!foundSub)
+                        {
+                            mealFoods.Add(mfw);
+                        }
+                        MealFood.CalculateKcal(mfw.MealFood);
+                        if (currentScore < preSubScore)
+                        {
+                            mealFoods = MealFoodWrapper.Copy(orgMeal);
+                            meal = Meal.UpdateTotals(meal, mealFoods);
+                            preSubScore = Meal.Score(meal);
+                        }
+                    }
+                    else
+                    {
+                        logger.debug("Not subbing favorite");
+                    }
+                    //Copy in from ORG values = really best meal
+
+                    mealFoods = MealFoodWrapper.Copy(orgMeal);
+                    meal = Meal.UpdateTotals(meal, mealFoods);
+
+                    preSubScore = Meal.Score(meal);
+                    logger.debug("MEAL SCORE (POST): " + preSubScore);
+                }
+                return (mealFoods);
+            }
+            catch (Exception ex)
+            {
+                //Logger needed
+                //errorMessageString = "An error occurred in CalculateGAP method. " + "Message: " + ex.Message + " StackTrace: " + ex.StackTrace;
+                logger.error(ex.Message);
+                logger.error(ex.StackTrace);
+                return (null);
+            }
+        }
+        /// <summary>
+        /// Returns mealfoodwrapper for substitute food.  Returns null if nothing is found
+        /// </summary>
+        /// <param name="foodComponents"></param>
+        /// <param name="gap"></param>
+        /// <param name="mfw"></param>
+        /// <param name="meal"></param>
+        /// <returns></returns>
+        private static MealFoodWrapper GetSubstituteFoodId(Dictionary<Guid, List<MealFoodWrapper>> foodComponents, int gap, MealFoodWrapper mfw, Entity meal)
+        {
+            
+           
+            MealFoodWrapper substituteFood = null;
+            try
+            {
+                List<MealFoodWrapper> foods = foodComponents[mfw.Category];
+                //logger.debug("SubstituteFood.getSubstituteFoodID(ComponentFoods, " + gap + ", " + (String)mfw.MealFood["dc_name"] + "): vector.size(): " + foods.Count);
+                if (foods.Count < 2)
+                {
+                    //logger.debug("SubstituteFood.getSubstituteFoodID(ComponentFoods, " + gap + ", " + (String)mfw.MealFood["dc_name"] + "): food can't be substituted...");
+                    return (null);
+                }
+                //Not sure why ratio is used as a name.  Really macro percent
+                decimal proRatio = 100m - (decimal)meal["dc_protein_actuals_percent"];
+                decimal fatRatio = 100m - (decimal)meal["dc_fat_actuals_percent"];
+                decimal choRatio = 100m - (decimal)meal["dc_carbohydrate_actuals_percent"];
+                bool match = false;
+
+                //Loop through all the foods in the proper category
+
+                foreach (MealFoodWrapper food in foods)
+                {
+                    /*
+                    decimal foodProtein             = food.Attributes.Contains("fn.dc_protein") ? Convert.ToDecimal(((AliasedValue)food["fn.dc_protein"]).Value) : 0m;
+                    decimal foodFat                 = food.Attributes.Contains("fn.dc_fat") ? Convert.ToDecimal(((AliasedValue)food["fn.dc_fat"]).Value) : 0m;
+                    decimal foodCarbohydrate        = food.Attributes.Contains("fn.dc_carbohydrate") ? Convert.ToDecimal(((AliasedValue)food["fn.dc_carbohydrate"]).Value) : 0m;
+                    */
+                    decimal foodProteinRatio = food.ProteinRatio;
+                    decimal foodFatRatio = food.FatRatio;
+                    decimal foodCarbohydrateRatio = food.CarbohydrateRatio;
+
+                    /*
+                    Look for two matches.  IE pro and pro, fat and fat.  Or fat and fat , carb and carb
+                    */
+                    //Check pro and fat
+                    match = false;
+                    if (food.Id == mfw.Id)
+                    {
+                        //logger.debug("SubstituteFood.getSubstituteFoodID(ComponentFoods, " + gap + ", " + (String)mfw.MealFood["dc_name"] + "): Can't use food  --  It's the same on that was removed");
+                    }
+                    else if (((((proRatio + gap) > foodProteinRatio) && ((proRatio + gap) < (foodProteinRatio + gap)))
+                       || (((proRatio - gap) < foodProteinRatio) && ((proRatio - gap) > (foodProteinRatio - gap))))
+
+                       && ((((fatRatio + gap) > foodFatRatio) && ((fatRatio + gap) < (foodFatRatio + gap)))
+                       || (((fatRatio - gap) < foodFatRatio) && ((fatRatio - gap) > (foodFatRatio - gap)))))
+                    {
+                        match = true;
+                    }
+                    //Check pro and carb
+                    else if ((((((proRatio + gap) > foodProteinRatio) && ((proRatio + gap) < (foodProteinRatio + gap)))
+                        || (((proRatio - gap) < foodProteinRatio) && ((proRatio - gap) > (foodProteinRatio - gap))))
+
+                        && ((((choRatio + gap) > foodCarbohydrateRatio) && ((choRatio + gap) < (foodCarbohydrateRatio + gap)))
+                        || (((choRatio - gap) < foodCarbohydrateRatio) && ((choRatio - gap) > (foodCarbohydrateRatio - gap)))))
+                        && match == false)
+                    {
+                        match = true;
+                    }
+                    //Check  and carb
+                    else if ((((((fatRatio + gap) > foodFatRatio) && ((fatRatio + gap) < (foodFatRatio + gap)))
+                        || (((fatRatio - gap) < foodFatRatio) && ((fatRatio - gap) > (foodFatRatio - gap))))
+
+                        && ((((choRatio + gap) > foodCarbohydrateRatio) && ((choRatio + gap) < (foodCarbohydrateRatio + gap)))
+                        || (((choRatio - gap) < foodCarbohydrateRatio) && ((choRatio - gap) > (foodCarbohydrateRatio - gap)))))
+                        && match == false)
+                    {
+                        match = true;
+                    }
+                    if (match)
+                    {
+                        //Found match
+                        substituteFood = food;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //Logger needed
+                //errorMessageString = "An error occurred in CalculateGAP method. " + "Message: " + ex.Message + " StackTrace: " + ex.StackTrace;
+                logger.error(ex.Message);
+                logger.error(ex.StackTrace);
+                return (null);
+            }
+            return (substituteFood);
+        }
+        /// <summary>
+        /// Firgures out the lowest marco nutrient and then orders the foods by it
+        /// </summary>
+        /// <param name="foodComponents"></param>
+        /// <param name="mfw"></param>
+        /// <param name="meal"></param>
+        private static void GetSubstituteFoodId2(List<MealFoodWrapper> list,  MealFoodWrapper mfw, Entity meal)
+        {
+            decimal pro = 0;
+            decimal fat = 0;
+            decimal cho = 0;
+            String target = "";
+
+            decimal proteinPercent = (decimal)meal["dc_protein_actuals_percent"];
+            decimal fatPercent = (decimal)meal["dc_fat_actuals_percent"];
+            decimal carbohydratePercent = (decimal)meal["dc_carbohydrate_actuals_percent"];
+
+            //setup ratio
+            decimal proRatio = 100m - proteinPercent;
+            decimal fatRatio = 100m - fatPercent;
+            decimal choRatio = 100m - carbohydratePercent;
+
+            if ((proteinPercent >= 85) && (proteinPercent <= 115)) { pro = 0; }
+            else
+            {
+                if (proteinPercent < 85)
+                    pro = Math.Abs(proteinPercent - 85);
+                else if (proteinPercent > 115)
+                    pro = (-1) * (proteinPercent - 115);
+            }
+            if ((fatPercent >= 85) && (fatPercent <= 115))
+                fat = 0;
+            else
+            {
+                if (fatPercent < 85)
+                    fat = Math.Abs(fatPercent - 85);
+                else if (fatPercent > 115)
+                    fat = (-1) * (fatPercent - 115);
+            }
+            if ((carbohydratePercent >= 85) && (carbohydratePercent <= 115))
+                cho = 0;
+            else
+            {
+                if (carbohydratePercent < 85)
+                    cho = Math.Abs(carbohydratePercent - 85);
+                else if (carbohydratePercent > 115)
+                    cho = (-1) * (carbohydratePercent - 115);
+            }
+            //logger.debug("SubstituteFoodID2: " + pro + ":" + fat + ":" + cho);
+            //Find smallest value...
+            if (pro > fat)
+            {
+                target = "pro";
+                if (cho > pro) { target = "cho"; }
+            }
+            if (fat > pro)
+            {
+                target = "fat";
+                if (cho > fat) { target = "cho"; }
+            }
+            if (fat > cho)
+            {
+                target = "fat";
+                if (pro > fat) { target = "pro"; }
+            }
+            
+            //logger.debug("SubstituteFoodID2: order componentFoods by: " + target);
+            //Order ComponentFood by target value
+           
+            if (target.Equals("cho"))  
+            {
+                list.Sort(new CarbohydrateRatioSort());
+            }
+            else if (target.Equals("fat"))
+            {
+                list.Sort(new FatRatioSort());
+            }
+            else if (target.Equals("pro"))
+            {
+                list.Sort(new ProteinRatioSort());
+            }
+        }
+    }
+}

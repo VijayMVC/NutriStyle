@@ -1,0 +1,313 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+using System.Windows.Controls.DataVisualization.Charting;
+using System.Globalization;
+using System.Xml.Linq;
+using DynamicConnections.NutriStyle.MenuGenerator.Engine.Helpers;
+
+namespace DynamicConnections.NutriStyle.MenuGenerator.Controls
+{
+
+    public partial class FitnessChartComplete : UserControl
+    {
+        App app = null;
+        DateTime currentDate;
+
+        List<BarChartData> listDifference;
+
+        public FitnessChartComplete()
+        {
+            InitializeComponent();
+            listDifference = new List<BarChartData>();
+            if (App.Current.GetType() == typeof(DynamicConnections.NutriStyle.MenuGenerator.App))
+            {
+                app = (App)App.Current;
+
+                //barSeriesPositive.ItemsSource = listP;
+                ((ColumnSeries)barChart.Series[1]).ItemsSource = app.listConsumed;
+                ((ColumnSeries)barChart.Series[0]).ItemsSource = app.activityLog.Burned;
+                ((ColumnSeries)barChart2.Series[0]).ItemsSource = app.activityLog.Difference;
+                weeklyDifference.Text = Math.Round(app.activityLog.WeeklyTotal, 0).ToString();
+                weeklyWeightLoss.Text = Math.Round(app.activityLog.WeeklyWeightLoss, 1).ToString();
+            }
+
+        }
+        public bool IsBusy
+        {
+            get
+            {
+                return (busyIndicator.IsBusy);
+            }
+            set
+            {
+                busyIndicator.IsBusy = value;
+            }
+        }
+        private void RetrieveFitnessLog(DateTime currentDate)
+        {
+
+            this.currentDate = currentDate;
+            RetrieveFitnessLogPostContact();
+            
+        }
+        private void RetrieveFitnessLogPostContact()
+        {
+            String fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical'>
+                  <entity name='dc_fitnesslogday'>
+                    <attribute name='dc_kcals' />
+                    <attribute name='dc_date' />
+                    <filter type='and'>
+                      <condition attribute='statecode' operator='eq' value='0' />
+                      <condition attribute='dc_contactid' operator='eq' value='@CONTACTID' />
+                      <condition attribute='dc_date' operator='gt' value='@START' />
+                      <condition attribute='dc_date' operator='le' value='@END' />
+                      <condition attribute='dc_menuid' operator='eq' value='@MENUID' />
+                    </filter>
+                  </entity>
+                </fetch>";
+            if (App.Current.GetType() == typeof(DynamicConnections.NutriStyle.MenuGenerator.App))
+            {
+                fetchXml = fetchXml.Replace("@CONTACTID", app.contactId);
+                fetchXml = fetchXml.Replace("@START", this.currentDate.AddDays(-1).ToString("MM/dd/yyyy"));
+                fetchXml = fetchXml.Replace("@END", this.currentDate.AddDays(7).ToString("MM/dd/yyyy"));
+                fetchXml = fetchXml.Replace("@MENUID", app.contact.MenuId.ToString());
+
+
+                XElement orderXml = new XElement("ColumnOrder");
+                orderXml.Add(new XElement("Column", "dc_date"));
+                orderXml.Add(new XElement("Column", "dc_kcals"));
+
+                CrmSdk.WebServicesSoapClient cms = new CrmSdk.WebServicesSoapClient(((App)App.Current).webServicesName);
+                cms.RetrieveFetchXmlCompleted += new EventHandler<CrmSdk.RetrieveFetchXmlCompletedEventArgs>(cms_RetrieveFitnessLog);
+                cms.RetrieveFetchXmlAsync(fetchXml, orderXml.ToString());
+            }
+        }
+
+        private void cms_RetrieveFitnessLog(object sender, CrmSdk.RetrieveFetchXmlCompletedEventArgs e)
+        {
+            String entityName = "dc_fitnesslogday";
+            var element = e.Result;
+            var dtf = CultureInfo.CurrentCulture.DateTimeFormat;
+            try
+            {
+                //For default values
+                App app = (App)App.Current;
+                Contact c = app.contact;
+                bool overweight = Fitness.IsOverWeight(c.BMI) ? true : false;
+
+                decimal percentRange = 0m;
+                var activityLevel = Fitness.IncrementalActivityLevel.Sedentary;
+
+                decimal incrementalPA = Fitness.CalculateIncrementalPA(Convert.ToInt32(c.Gender.Id), c.Age, overweight, activityLevel);
+                decimal lowRange = Fitness.RetrieveLowValuePA(Convert.ToInt32(c.Gender.Id), c.Age, overweight, activityLevel);
+
+                decimal PA = (percentRange * incrementalPA) + lowRange;
+                decimal total = Fitness.CalculateKcals(Convert.ToInt32(c.Gender.Id), c.Age, PA, c.WeightKG, c.HeightM, overweight);
+
+                foreach (BarChartData bcd in app.listBurned)//Setting the burned level based on fitness log
+                {
+                    bcd.Value = total;
+                    app.activityLog.SetBurned(bcd.Name, total);
+                }
+                foreach (BarChartData bcd in app.activityLevelConsumed)//Setting the activity level based on profile
+                {
+                    bcd.Value = app.kcalCalculatedTarget;
+                }
+                if (element.Descendants(entityName).Count() > 0)
+                {
+                    //Bind data
+                    var rows = element.Descendants(entityName);
+
+                    foreach (var row in rows)
+                    {
+                        Row rowData = new Row();
+                        decimal kcals = 0m;
+                        int dayNumber = 0;
+                        DateTime date = DateTime.MinValue;
+
+                        foreach (XElement xe in row.Elements())
+                        {
+                            if (xe.Name.LocalName.Equals("dc_kcals", StringComparison.OrdinalIgnoreCase))
+                            {
+                                kcals = Convert.ToDecimal(xe.Value);
+                            }
+                            else if (xe.Name.LocalName.Equals("dc_date", StringComparison.OrdinalIgnoreCase))
+                            {
+                                dayNumber = (Convert.ToDateTime(xe.Value)).Day;
+                                DateTime.TryParse(xe.Value, out date);
+                            }
+                        }
+                        //DateTime date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, dayNumber);
+                        //Get day name
+                        if (date != DateTime.MinValue)
+                        {
+                            String dayName = dtf.GetAbbreviatedDayName(date.DayOfWeek);
+                            //app.listBurned = kcals;
+                            foreach (BarChartData bcd in app.listBurned)
+                            {
+                                if (bcd.Name.Equals(dayName, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    bcd.Value = kcals;
+                                    app.activityLog.SetBurned(dayName, kcals);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                app.activityLog.CalculateWeekly();
+                busyIndicator.IsBusy = false;
+            }
+            catch (Exception err)
+            {
+                ChildWindows.Error errorWindow = new ChildWindows.Error(err.Message + " " + err.StackTrace);
+                errorWindow.Show();
+            }
+        }
+
+        private void RetrieveFoodLog(DateTime currentDate)
+        {
+            currentDate = General.ZeroOutDateHHMMSS(currentDate);
+
+            String fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical'  aggregate='true'>
+                  <entity name='dc_foodlog'>
+                    <attribute name='dc_date' groupby='true' dategrouping='day' alias='dc_date'/>
+
+                    <attribute alias='dc_fat' name='dc_fat' aggregate='sum'/>
+                    <attribute alias='dc_protein' name='dc_protein' aggregate='sum'/>
+                    <attribute alias='dc_carbohydrate' name='dc_carbohydrate' aggregate='sum' />
+                    <filter type='and'>
+                      <condition attribute='statecode' operator='eq' value='0' />
+                    </filter>
+                    <link-entity name='dc_foodlogday' from='dc_foodlogdayid' to='dc_foodlogdayid' alias='aa'>
+                      <filter type='and'>
+                        <condition attribute='dc_menuid' operator='eq' value='@MENUID' />
+                         <condition attribute='dc_contactid' operator='eq' value='@CONTACTID' />
+                         <condition attribute='dc_date' operator='gt' value='@START' />
+                         <condition attribute='dc_date' operator='le' value='@END' />
+                      </filter>
+                    </link-entity>
+                  </entity>
+                </fetch>";
+            if (App.Current.GetType() == typeof(DynamicConnections.NutriStyle.MenuGenerator.App))
+            {
+                fetchXml = fetchXml.Replace("@CONTACTID", app.contactId);
+                fetchXml = fetchXml.Replace("@START", currentDate.AddDays(-1).ToString("MM/dd/yyyy"));
+                fetchXml = fetchXml.Replace("@END", General.RetrieveLastSunday(currentDate).AddDays(7).ToString("MM/dd/yyyy"));
+                fetchXml = fetchXml.Replace("@MENUID", app.contact.MenuId.ToString());
+
+                XElement orderXml = new XElement("ColumnOrder");
+                orderXml.Add(new XElement("Column", "dc_date"));
+                orderXml.Add(new XElement("Column", "dc_fat"));
+                orderXml.Add(new XElement("Column", "dc_protein"));
+                orderXml.Add(new XElement("Column", "dc_carbohydrate"));
+
+                CrmSdk.WebServicesSoapClient cms = new CrmSdk.WebServicesSoapClient(((App)App.Current).webServicesName);
+                cms.RetrieveFetchXmlCompleted += new EventHandler<CrmSdk.RetrieveFetchXmlCompletedEventArgs>(cms_RetrieveFoodLog);
+                cms.RetrieveFetchXmlAsync(fetchXml, orderXml.ToString());
+            }
+        }
+
+        private void cms_RetrieveFoodLog(object sender, CrmSdk.RetrieveFetchXmlCompletedEventArgs e)
+        {
+            String entityName = "dc_foodlog";
+            var element = e.Result;
+            var dtf = CultureInfo.CurrentCulture.DateTimeFormat;
+            try
+            {
+                if (element.Descendants(entityName).Count() > 0)
+                {
+                    //Bind data
+                    var rows = element.Descendants(entityName);
+
+                    foreach (var row in rows)
+                    {
+                        Row rowData = new Row();
+                        decimal kcals = 0m;
+                        decimal fat = 0m;
+                        decimal protein = 0m;
+                        decimal carbs = 0m;
+                        int dayNumber = 0;
+
+                        foreach (XElement xe in row.Elements())
+                        {
+                            if (xe.Name.LocalName.Equals("dc_fat", StringComparison.OrdinalIgnoreCase))
+                            {
+                                fat = Convert.ToDecimal(xe.Value);
+                            }
+                            else if (xe.Name.LocalName.Equals("dc_protein", StringComparison.OrdinalIgnoreCase))
+                            {
+                                protein = Convert.ToDecimal(xe.Value);
+                            }
+                            else if (xe.Name.LocalName.Equals("dc_carbohydrate", StringComparison.OrdinalIgnoreCase))
+                            {
+                                carbs = Convert.ToDecimal(xe.Value);
+                            }
+                            else if (xe.Name.LocalName.Equals("dc_date", StringComparison.OrdinalIgnoreCase))
+                            {
+                                dayNumber = Convert.ToInt32(xe.Value);
+                            }
+                        }
+
+                        DateTime date = DateTime.MaxValue;
+                        //DateTime date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, dayNumber);//bad code.  Doesn't span month or year
+                        for (int x = 0; x < 7; x++)
+                        {
+                            date = currentDate.AddDays(x);
+                            if (date.Day == dayNumber)
+                            {
+                                break;
+                            }
+                        }
+                        //Verify that date falls between currentDate and currentDate + 7 days
+                        
+                        kcals = (fat * Convert.ToDecimal(App.GramToKcalMultipler.Fat) + protein * Convert.ToDecimal(App.GramToKcalMultipler.Protein) + carbs * Convert.ToDecimal(App.GramToKcalMultipler.Carbohydrate));
+                        kcals = Math.Round(kcals, 0);
+                        //Get day name
+                        String dayName = dtf.GetAbbreviatedDayName(date.DayOfWeek);
+                        //app.listBurned = kcals;
+                        foreach (BarChartData bcd in app.listConsumed)
+                        {
+                            if (bcd.Name.Equals(dayName, StringComparison.OrdinalIgnoreCase))
+                            {
+                                bcd.Value = kcals;
+                                app.activityLog.SetConsumed(dayName, kcals);
+                                break;
+                            }
+                        }
+                    }
+                    
+                    app.activityLog.CalculateWeekly();
+                    
+                    busyIndicator.IsBusy = false;
+                }
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.Message);
+                MessageBox.Show(err.StackTrace);
+            }
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            DateTime currentDate    = DateTime.Now;
+            LayoutRoot.DataContext  = app.activityLog;
+            //get to sunday
+            int dayOfWeek           = (int)currentDate.DayOfWeek;
+            var dtf                 = CultureInfo.CurrentCulture.DateTimeFormat;
+            currentDate             = currentDate.AddDays(-dayOfWeek);
+            RetrieveFitnessLog(currentDate);
+            RetrieveFoodLog(currentDate);
+        }
+    }
+}

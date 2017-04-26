@@ -1,0 +1,9 @@
+C:\Builds\NutriStyle\Applications\Webservices\bin\DynamicConnections.NutriStyle.CRM2011.Webservices.dll
+C:\Builds\NutriStyle\Applications\Webservices\bin\DynamicConnections.NutriStyle.CRM2011.Webservices.pdb
+C:\Builds\NutriStyle\Applications\Webservices\bin\MenuGenerator.dll
+C:\Builds\NutriStyle\Applications\Webservices\bin\microsoft.crm.sdk.proxy.dll
+C:\Builds\NutriStyle\Applications\Webservices\bin\microsoft.xrm.sdk.dll
+C:\Builds\NutriStyle\Applications\Webservices\bin\MenuGenerator.pdb
+C:\Builds\NutriStyle\Applications\Webservices\obj\Debug\Webservices.csprojResolveAssemblyReference.cache
+C:\Builds\NutriStyle\Applications\Webservices\obj\Debug\DynamicConnections.NutriStyle.CRM2011.Webservices.dll
+C:\Builds\NutriStyle\Applications\Webservices\obj\Debug\DynamicConnections.NutriStyle.CRM2011.Webservices.pdb

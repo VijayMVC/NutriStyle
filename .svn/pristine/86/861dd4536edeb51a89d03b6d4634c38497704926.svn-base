@@ -1,0 +1,61 @@
+﻿<navigation:Page x:Class="DynamicConnections.NutriStyle.MenuGenerator.Pages.AdditionalProfiles" 
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit" 
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:toolkit2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+           xmlns:Controls="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Controls;assembly=DynamicConnections.NutriStyle.MenuGenerator"
+           mc:Ignorable="d"
+           xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+            d:DesignWidth="565" d:DesignHeight="700" 
+           xmlns:helpers="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Engine.Helpers"
+           Title="Login Page" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" 
+           xmlns:toolkit1="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit" Background="White" NavigationCacheMode="Enabled" Loaded="Page_Loaded" >
+
+    <navigation:Page.Resources>
+        <helpers:RowIndexConverter x:Key="rowConvertor" />
+    </navigation:Page.Resources>
+
+    <Grid x:Name="LayoutRoot" Style="{StaticResource gridStyle}"  Height="700">
+
+
+        <Border Style="{StaticResource borderStyle}"  >
+            
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"></RowDefinition> <!--0, heading-->
+                    <RowDefinition Height="*"></RowDefinition><!--4, favorite food description-->
+                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Height="Auto" Grid.Row="0" Grid.ColumnSpan="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="30"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <sdk:Label Grid.Row="0" Content="Additional Profiles" Style="{StaticResource textHeaderStyle}" Grid.Column="0"/>
+                    <sdk:Label Grid.Row="0" Content="" Name="name" FontSize="16" FontWeight="Bold" Foreground="#3099C8" Grid.Column="1"/>
+                    <Button Content="New Profile" Name="newProfile" Height="24" Width="75" Grid.Row="1" HorizontalAlignment="Left" ToolTipService.ToolTip="New Profile" Cursor="Hand" Click="newProfile_Click"></Button>
+                    
+                </Grid>
+
+                <toolkit:BusyIndicator   Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch" BorderThickness="1" Name="busyIndicator" Visibility="Visible" BorderBrush="#62B0D7"
+                                    IsBusy="True" Height="auto">
+                    <sdk:DataGrid AutoGenerateColumns="False" Name="dataGrid1" Height="Auto"
+                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch" GridLinesVisibility="None" 
+                        AlternatingRowBackground="White" RowBackground="White" Style="{StaticResource dataGridCustom}"
+                        ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle1}"/>
+                </toolkit:BusyIndicator>
+            </Grid>
+        </Border>
+    </Grid>
+</navigation:Page>

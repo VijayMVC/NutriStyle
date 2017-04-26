@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <appSettings>
+
+        <add key="LogLocation" value="C:\\Builds\\NutriStyle\\Log\\NutriStyle.log" />        
+
+        <add key="LogLevel" value="DEBUG" />
+        <add key="CrmOrganization" value="NS" />
+        <add key="CrmUser" value="administrator" />
+        <add key="Password" value="P@ssw0rd" />
+        <add key="Domain" value="launchpad" />
+        <add key="Hostname" value="10.1.10.3" />
+        <add key="Portnumber" value="5555" />
+
+        <add key="PostgreServer" value="127.0.0.1;" />
+        <add key="PostgreDatabase" value="nutristyle;" />
+        <add key="PostgreUserId" value="postgres;" />
+        <add key="PostgrePassword" value="ana2011;" />
+        <add key="PostgrePort" value="5432;" />
+
+    </appSettings>
+
+</configuration>

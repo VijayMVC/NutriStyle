@@ -1,0 +1,750 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7AB52E15-ED91-48FF-ACD6-653C7470806F}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DynamicConnections.NutriStyle.MenuGenerator</RootNamespace>
+    <AssemblyName>DynamicConnections.NutriStyle.MenuGenerator</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>true</SilverlightApplication>
+    <SupportedCultures>
+    </SupportedCultures>
+    <XapOutputs>true</XapOutputs>
+    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
+    <XapFilename>Silverlight.xap</XapFilename>
+    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
+    <SilverlightAppEntry>DynamicConnections.NutriStyle.MenuGenerator.App</SilverlightAppEntry>
+    <TestPageFileName>SilverlightTestPage.html</TestPageFileName>
+    <CreateTestPage>true</CreateTestPage>
+    <ValidateXaml>true</ValidateXaml>
+    <EnableOutOfBrowser>false</EnableOutOfBrowser>
+    <OutOfBrowserSettingsFile>Properties\OutOfBrowserSettings.xml</OutOfBrowserSettingsFile>
+    <UsePlatformExtensions>false</UsePlatformExtensions>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <LinkedServerProject>
+    </LinkedServerProject>
+  </PropertyGroup>
+  <!-- This property group is only here to support building this project using the 
+       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
+       to set the TargetFrameworkVersion to v3.5 -->
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoStdLib>true</NoStdLib>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Divelements.SilverlightTools">
+      <HintPath>..\..\Include\Divelements.SilverlightTools.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="mscorlib" />
+    <Reference Include="System.ComponentModel.DataAnnotations, Version=2.0.5.0, Culture=neutral, PublicKeyToken=ddd0da4d3e678217" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Controls, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.Data.Input, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.DataVisualization.Toolkit, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.Input, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.Input.Toolkit, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Navigation, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Toolkit, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.Toolkit.Internals, Version=4.0.5.0, Culture=neutral, PublicKeyToken=2c5c654d367bf4a7" />
+    <Reference Include="System.Windows.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Windows.Browser" />
+    <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="adds\page1.xaml.cs">
+      <DependentUpon>page1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\ActivityLevelsPopup.xaml.cs">
+      <DependentUpon>ActivityLevelsPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\AddAFood.xaml.cs">
+      <DependentUpon>AddAFood.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\AddARecipe.xaml.cs">
+      <DependentUpon>AddARecipe.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\CompareFoods.xaml.cs">
+      <DependentUpon>CompareFoods.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\AdditionalProfiiles.xaml.cs">
+      <DependentUpon>AdditionalProfiiles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\EditProfiile.xaml.cs">
+      <DependentUpon>EditProfiile.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\Error.xaml.cs">
+      <DependentUpon>Error.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\FoodNutrients.xaml.cs">
+      <DependentUpon>FoodNutrients.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\FeedBack.xaml.cs">
+      <DependentUpon>FeedBack.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\EditMenu.xaml.cs">
+      <DependentUpon>EditMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\Recipe.xaml.cs">
+      <DependentUpon>Recipe.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\Nutrients.xaml.cs">
+      <DependentUpon>Nutrients.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\EditFoodLog.xaml.cs">
+      <DependentUpon>EditFoodLog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\EditFitnessLog.xaml.cs">
+      <DependentUpon>EditFitnessLog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\GenericPopup.xaml.cs">
+      <DependentUpon>GenericPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\EditShoppingList.xaml.cs">
+      <DependentUpon>EditShoppingList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\MenuEditor.xaml.cs">
+      <DependentUpon>MenuEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\PostMenuGeneration.xaml.cs">
+      <DependentUpon>PostMenuGeneration.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildWindows\Status.xaml.cs">
+      <DependentUpon>Status.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ComboBox.xaml.cs">
+      <DependentUpon>ComboBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ComboBoxWithList.xaml.cs">
+      <DependentUpon>ComboBoxWithList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ComboBoxWithValidation.cs" />
+    <Compile Include="Controls\AddAFood.xaml.cs">
+      <DependentUpon>AddAFood.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AddARecipe.xaml.cs">
+      <DependentUpon>AddARecipe.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AdditionalProfiles.xaml.cs">
+      <DependentUpon>AdditionalProfiles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\GridHelper\Columns.cs" />
+    <Compile Include="Controls\GridHelper\Data.cs" />
+    <Compile Include="Controls\Profile.xaml.cs">
+      <DependentUpon>Profile.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FitnessChartComplete.xaml.cs">
+      <DependentUpon>FitnessChartComplete.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\WatermarkRichTextBox.cs" />
+    <Compile Include="Controls\MacroChart.xaml.cs">
+      <DependentUpon>MacroChart.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FitnessChart.xaml.cs">
+      <DependentUpon>FitnessChart.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FitnessLog.xaml.cs">
+      <DependentUpon>FitnessLog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MaskTextBoxBehavior.cs" />
+    <Compile Include="Controls\Scroll\DataGridScrollExtensions.cs" />
+    <Compile Include="Controls\Scroll\ScrollDataGrid.cs" />
+    <Compile Include="Controls\Scroll\ScrollMode.cs" />
+    <Compile Include="Controls\TabbedFitnessLog.xaml.cs">
+      <DependentUpon>TabbedFitnessLog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ShoppingList.xaml.cs">
+      <DependentUpon>ShoppingList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TabbedFoodLog.xaml.cs">
+      <DependentUpon>TabbedFoodLog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FoodLog.xaml.cs">
+      <DependentUpon>FoodLog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TabbedMenu.xaml.cs">
+      <DependentUpon>TabbedMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Meals.xaml.cs">
+      <DependentUpon>Meals.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CustomTextBox.xaml.cs">
+      <DependentUpon>CustomTextBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MealFooter.xaml.cs">
+      <DependentUpon>MealFooter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MealHeader.xaml.cs">
+      <DependentUpon>MealHeader.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\WatermarkTextBox.cs" />
+    <Compile Include="Engine\FormData\ActivityLog.cs" />
+    <Compile Include="Engine\FormData\Recipe.cs" />
+    <Compile Include="Engine\FormData\Food.cs" />
+    <Compile Include="Engine\Helpers\AngledHeaders.cs" />
+    <Compile Include="Engine\Helpers\BarChartData.cs" />
+    <Compile Include="Engine\Helpers\CalendarEventArgs.cs" />
+    <Compile Include="Engine\Helpers\Contact.cs" />
+    <Compile Include="Engine\Helpers\FeedBack.cs" />
+    <Compile Include="Engine\Helpers\Extensions.cs" />
+    <Compile Include="Engine\Helpers\Login.cs" />
+    <Compile Include="Engine\Helpers\RadioButtonConverter.cs" />
+    <Compile Include="Engine\Helpers\Fitness.cs" />
+    <Compile Include="Engine\Helpers\General.cs" />
+    <Compile Include="Engine\Helpers\Menu.cs" />
+    <Compile Include="Engine\Helpers\PairWithList.cs" />
+    <Compile Include="Engine\Helpers\PhysicalActivity.cs" />
+    <Compile Include="Engine\Helpers\Food.cs" />
+    <Compile Include="Engine\Helpers\StyleController.cs" />
+    <Compile Include="Engine\Helpers\SyncRun.cs" />
+    <Compile Include="Engine\Helpers\VisualTreeEnumeration.cs" />
+    <Compile Include="Engine\PopulateTip.cs" />
+    <Compile Include="Engine\Helpers\ItemType.cs" />
+    <Compile Include="Engine\Helpers\PropertyValueChange.cs" />
+    <Compile Include="Engine\Helpers\Row.cs" />
+    <Compile Include="Engine\Helpers\RowIndexConverter.cs" />
+    <Compile Include="Engine\Helpers\SortableCollectionView.cs" />
+    <Compile Include="Engine\PopulateHelp.cs" />
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\AdditionalProfiles.xaml.cs">
+      <DependentUpon>AdditionalProfiles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\YourFoods.xaml.cs">
+      <DependentUpon>YourFoods.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\DailyFitnessLog.xaml.cs">
+      <DependentUpon>DailyFitnessLog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\EditShoppingList.xaml.cs">
+      <DependentUpon>EditShoppingList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\DailyFoodLog.xaml.cs">
+      <DependentUpon>DailyFoodLog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\DailyMenu.xaml.cs">
+      <DependentUpon>DailyMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\FoodLog.xaml.cs">
+      <DependentUpon>FoodLog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\FitnessLog.xaml.cs">
+      <DependentUpon>FitnessLog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\MenuEditor.xaml.cs">
+      <DependentUpon>MenuEditor.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Pages\Menus.xaml.cs">
+      <DependentUpon>Menus.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ShoppingList.xaml.cs">
+      <DependentUpon>ShoppingList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\GenerateMenu.xaml.cs">
+      <DependentUpon>GenerateMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\FoodDislikes.xaml.cs">
+      <DependentUpon>FoodDislikes.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\FoodLikes.xaml.cs">
+      <DependentUpon>FoodLikes.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\MenuOptions.xaml.cs">
+      <DependentUpon>MenuOptions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Profile.xaml.cs">
+      <DependentUpon>Profile.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Login.xaml.cs">
+      <DependentUpon>Login.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\CrmSdk\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DC.build.proj">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\AppManifest.xml" />
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.CreateFoodLogFromMenuResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.CreateUpdateMealFoodResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.CreateUpdateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.CreateUpdateReturnEntitiesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.CreateUpdateReturnEntityResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.CreateUserResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.DeleteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.FoodNutrientsFoodIdPortionSizeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.FoodNutrientsFoodIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.FoodNutrientsForEachFoodResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.FoodNutrientsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.GenerateMenuResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.GenerateShoppingListFromMenuResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.LoginResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.RemoveFromShippingListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.ResendPasswordResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.ResetShoppingListResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.RetrieveAdditionalProfilesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.RetrieveContactIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.RetrieveDailyTipResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.RetrieveFetchXmlResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.RetrieveFetchXmlRowIdResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.RetrieveFoodDislikesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.RetrieveFoodIngredientsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.RetrieveFoodLikesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.RetrieveFoodsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.RetrieveMetadataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.RetrieveOptionSetValuesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.SessionValidResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\DynamicConnections.NutriStyle.MenuGenerator.CrmSdk.SetPrimaryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\CrmSdk\WebServices1.wsdl" />
+    <Resource Include="Images\success.png" />
+    <Resource Include="Images\delete.png" />
+    <Resource Include="Images\background.png" />
+    <Resource Include="Images\breakfast_off.png" />
+    <Resource Include="Images\breakfast_on.png" />
+    <Resource Include="Images\dinner_off.png" />
+    <Resource Include="Images\dinner_on.png" />
+    <Resource Include="Images\female_off.png" />
+    <Resource Include="Images\female_on.png" />
+    <Resource Include="Images\friday_off.png" />
+    <Resource Include="Images\friday_on.png" />
+    <Resource Include="Images\lunch_off.png" />
+    <Resource Include="Images\lunch_on.png" />
+    <Resource Include="Images\male_off.png" />
+    <Resource Include="Images\male_on.png" />
+    <Resource Include="Images\monday_off.png" />
+    <Resource Include="Images\monday_on.png" />
+    <Resource Include="Images\saturday_off.png" />
+    <Resource Include="Images\saturday_on.png" />
+    <Resource Include="Images\snack_off.png" />
+    <Resource Include="Images\snack_on.png" />
+    <Resource Include="Images\sunday_off.png" />
+    <Resource Include="Images\sunday_on.png" />
+    <Resource Include="Images\thursday_off.png" />
+    <Resource Include="Images\thursday_on.png" />
+    <Resource Include="Images\tuesday_off.png" />
+    <Resource Include="Images\tuesday_on.png" />
+    <Resource Include="Images\wednesday_off.png" />
+    <Resource Include="Images\wednesday_on.png" />
+    <Resource Include="Images\lightActivity.PNG" />
+    <Resource Include="Images\moderateActivity.PNG" />
+    <Resource Include="Images\Sedentary.PNG" />
+    <Resource Include="Images\veryActive.PNG" />
+    <Resource Include="Images\downarrow.png" />
+    <None Include="Service References\CrmSdk\WebServices1.disco" />
+    <Resource Include="Images\minus.png" />
+    <Resource Include="Images\plus.png" />
+    <Resource Include="Images\recipe-icon.png" />
+    <Resource Include="Images\nutrition-icon.png" />
+    <Resource Include="Images\scales.png" />
+    <Resource Include="Engine\transparent_spacer[1].gif" />
+    <Resource Include="Images\sad-face.png" />
+    <Resource Include="Images\shoppinglisticon.png" />
+    <Resource Include="Images\ShoppingListIcon2.png" />
+    <Resource Include="Images\shoppingListIcon3.png" />
+    <Content Include="ServiceReferences.ClientConfig">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="adds\page1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildWindows\ActivityLevelsPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\AddAFood.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\AddARecipe.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\CompareFoods.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\AdditionalProfiiles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\EditProfiile.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\Error.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\FoodNutrients.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\FeedBack.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\EditMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\Recipe.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\Nutrients.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\EditFoodLog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\EditFitnessLog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\GenericPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\EditShoppingList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildWindows\MenuEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildWindows\PostMenuGeneration.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildWindows\Status.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ComboBoxWithList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\AddAFood.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\AddARecipe.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\AdditionalProfiles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Profile.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\FitnessChartComplete.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MacroChart.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\FitnessChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\FitnessLog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TabbedFitnessLog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ShoppingList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TabbedFoodLog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\FoodLog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TabbedMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Meals.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\CustomTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MealFooter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MealHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\AdditionalProfiles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\YourFoods.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\DailyFitnessLog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\EditShoppingList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\DailyFoodLog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\DailyMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\FoodLog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\FitnessLog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\MenuEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Menus.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\ShoppingList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\GenerateMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\FoodDislikes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\FoodLikes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\MenuOptions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\Profile.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\Login.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CrmSdk\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\CrmSdk\configuration.svcinfo" />
+    <None Include="Service References\CrmSdk\configuration91.svcinfo" />
+    <Resource Include="Images\warning.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="index.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\CrmSdk\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

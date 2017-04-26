@@ -1,0 +1,56 @@
+﻿<controls:ChildWindow x:Class="DynamicConnections.NutriStyle.MenuGenerator.ChildWindows.FeedBack"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+           xmlns:Controls="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Controls;assembly=DynamicConnections.NutriStyle.MenuGenerator"
+           xmlns:toolkit2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+           Width="400" Height="300" 
+           xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" Loaded="ChildWindow_Loaded"
+           >
+
+    <sdk:ChildWindow.Style>
+        <StaticResource ResourceKey="CustomChildWindow"/>
+    </sdk:ChildWindow.Style>
+    <Border Style="{StaticResource borderGridStyle}"  Grid.Row="0" Padding="0">
+        <toolkit2:BusyIndicator   BorderThickness="0" Name="busyIndicator" IsBusy="false" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0">
+            <Grid x:Name="LayoutRoot" Margin="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10"></ColumnDefinition>
+                    <ColumnDefinition Width="75"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="40"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="170"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.Background>
+                    <ImageBrush x:Name="backgroundImage"  ImageSource="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/background.png"/>
+                </Grid.Background>
+
+
+
+
+                <sdk:Label Height="28" Content="Please leave us some feedback!" HorizontalAlignment="Left" Style="{StaticResource labelCustom}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"/>
+                <Button Content="Close" Cursor="Hand" ToolTipService.ToolTip="Close Window" Grid.Column="3" Height="24" Click="CLoseForm" VerticalAlignment="Top" Margin="0,2,2,2"/>
+
+                <sdk:Label Height="28" Content="Title" Width="120" HorizontalAlignment="Left" Style="{StaticResource labelCustom}" Grid.Row="1" Grid.Column="1"/>
+                <Controls:WatermarkTextBox  x:Name="title" Style="{StaticResource textBoxStyleCustom}" Grid.Row="1" 
+                    Grid.Column="2" Height="24" Grid.ColumnSpan="2" Margin="0,0,2,0"
+                    Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"                           
+                />
+
+                <sdk:Label Height="28" Content="Description" Width="120" VerticalAlignment="Top" HorizontalAlignment="Left" Style="{StaticResource labelCustom}" Grid.Row="2" Grid.Column="1"/>
+                <Controls:WatermarkTextBox TextWrapping="Wrap" x:Name="description"  VerticalAlignment="Top" Height="165" Style="{StaticResource textBoxStyleCustom}" 
+                    Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Margin="0,0,2,0"
+                    Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                />
+
+                <Button x:Name="OKButton" Content="Save" Click="OKButton_Click" Width="75" Height="24" HorizontalAlignment="Right" Margin="0,2,1,2" Grid.Row="3"  Grid.Column="2" Grid.ColumnSpan="2" Cursor="Hand" ToolTipService.ToolTip="Close Window" />
+
+            </Grid>
+        </toolkit2:BusyIndicator>
+    </Border>
+</controls:ChildWindow>

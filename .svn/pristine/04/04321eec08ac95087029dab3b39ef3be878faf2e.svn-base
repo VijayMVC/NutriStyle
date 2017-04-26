@@ -1,0 +1,173 @@
+﻿using System;
+using System.Net;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+namespace DynamicConnections.NutriStyle.MenuGenerator.Controls.GridHelper
+{
+    public class Columns
+    {
+
+
+        /// <summary>
+        /// Builds template for Combobox with validation
+        /// header: xe.Attribute("LabelName").Value, sortPath: xe.Name.LocalName
+        /// </summary>
+        /// <param name="header"></param>
+        /// <param name="sortPath"></param>
+        /// <returns></returns>
+        public static DataGridTemplateColumn ComboBoxWothValidation(String header, String sortPath)
+        {
+            DataGridTemplateColumn dg = new DataGridTemplateColumn();
+            dg.Header = header;//xe.Attribute("LabelName").Value;
+            dg.SortMemberPath = sortPath;//xe.Name.LocalName;
+            dg.CanUserSort = true;
+            StringBuilder CellETempPickList = new StringBuilder();
+            CellETempPickList.Append("<DataTemplate ");
+            CellETempPickList.Append("xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' ");
+            CellETempPickList.Append("xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' ");
+            CellETempPickList.Append("xmlns:basics2='clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Controls;");
+            CellETempPickList.Append("assembly=DynamicConnections.NutriStyle.MenuGenerator' >");
+
+            CellETempPickList.Append("<basics2:ComboBoxWithValidation TagName='" + sortPath+ "' SelectedPair='{Binding Path=Data, Converter={StaticResource rowConvertor}, ConverterParameter=" + sortPath + ", Mode=TwoWay}' />");
+            CellETempPickList.Append("</DataTemplate>");
+            dg.CellEditingTemplate = (DataTemplate)XamlReader.Load(CellETempPickList.ToString());
+
+            return (dg);
+        }
+
+        public static DataGridTemplateColumn ButtonWithImage(String imgSrc, String name, String tooltip)
+        {
+            DataGridTemplateColumn dgImage = new DataGridTemplateColumn();
+            dgImage.Header = String.Empty;
+            dgImage.CanUserSort = false;
+
+            StringBuilder CellETemp = new StringBuilder();
+            CellETemp.Append("<DataTemplate ");
+            CellETemp.Append("xmlns='http://schemas.microsoft.com/winfx/");
+            CellETemp.Append("2006/xaml/presentation' ");
+            CellETemp.Append("xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' >");
+            CellETemp.Append("<Button Cursor='Hand' ToolTipService.ToolTip='" + tooltip + "' Width='24' Height='24' Name='" + name + "'>");
+            CellETemp.Append("<Image Stretch='Fill' Name='"+name+"' Source='"+imgSrc+"/>");
+            CellETemp.Append("</Button>");
+            CellETemp.Append("</DataTemplate>");
+            dgImage.CellEditingTemplate = (DataTemplate)XamlReader.Load(CellETemp.ToString());
+
+            return (dgImage);
+        }
+        /// <summary>
+        /// Creates the default delete image for the grid.  Name is 'Delete'
+        /// </summary>
+        /// <param name="tooltip"></param>
+        /// <returns></returns>
+        public static DataGridTemplateColumn Delete(String tooltip)
+        {
+            DataGridTemplateColumn dgImage = new DataGridTemplateColumn();
+
+            StringBuilder CellETemp2 = new StringBuilder();
+            CellETemp2.Append("<DataTemplate ");
+            CellETemp2.Append("xmlns='http://schemas.microsoft.com/winfx/");
+            CellETemp2.Append("2006/xaml/presentation' ");
+            CellETemp2.Append("xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' >");
+            CellETemp2.Append("<Button Cursor='Hand' ToolTipService.ToolTip='" + tooltip + "' Width='26' Height='26' HorizontalAlignment='Left'>");
+            CellETemp2.Append("<Image  Stretch='Fill' Name='Delete' Source='/DynamicConnections.NutriStyle.MenuGenerator;component/images/delete.png'/>");// MouseLeftButtonDown='ImageDelete_MouseLeftButtonDown'
+            CellETemp2.Append("</Button>");
+            CellETemp2.Append("</DataTemplate>");
+
+            dgImage.Header = "Del";//.ToString();//new BitmapImage(new Uri("/DynamicConnections.NutriStyle.MenuGenerator;component/images/delete.png", UriKind.Relative));
+            //dgImage.HeaderStyle = (Style)App.Current.Resources["DataGridColumnHeaderDelete"];
+            //dgImage.SortMemberPath = xe.Name.LocalName;
+            dgImage.CanUserSort = false;
+
+            StringBuilder CellETemp = new StringBuilder();
+            CellETemp.Append("<DataTemplate ");
+            CellETemp.Append("xmlns='http://schemas.microsoft.com/winfx/");
+            CellETemp.Append("2006/xaml/presentation' ");
+            CellETemp.Append("xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' >");
+            CellETemp.Append("<Button Cursor='Hand' ToolTipService.ToolTip='"+tooltip+"' Width='26' Height='26' HorizontalAlignment='Left'>");
+            CellETemp.Append("<Image  Stretch='Fill' Name='Delete' Source='/DynamicConnections.NutriStyle.MenuGenerator;component/images/delete.png'/>");// MouseLeftButtonDown='ImageDelete_MouseLeftButtonDown'
+            CellETemp.Append("</Button>");
+            CellETemp.Append("</DataTemplate>");
+            dgImage.CellEditingTemplate = (DataTemplate)XamlReader.Load(CellETemp.ToString());
+
+            dgImage.IsReadOnly = false;
+            dgImage.Width = new DataGridLength(34);
+            //visable?
+            dgImage.Visibility = System.Windows.Visibility.Visible;
+
+            return (dgImage);
+        }
+        /// <summary>
+        /// Creates a button on the grid
+        /// </summary>
+        /// <param name="tooltip"></param>
+        /// <param name="content"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static DataGridTemplateColumn Button(String tooltip, String content, String name)
+        {
+            DataGridTemplateColumn dgImage = new DataGridTemplateColumn();
+            dgImage.Header = "Edit";
+            //dgImage.SortMemberPath = xe.Name.LocalName;
+            dgImage.CanUserSort = false;
+
+            StringBuilder CellETemp = new StringBuilder();
+            CellETemp.Append("<DataTemplate ");
+            CellETemp.Append("xmlns='http://schemas.microsoft.com/winfx/");
+            CellETemp.Append("2006/xaml/presentation' ");
+            CellETemp.Append("xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' >");
+            CellETemp.Append("<Button Cursor='Hand' ToolTipService.ToolTip='"+tooltip+"' Width='45' Height='23' HorizontalAlignment='Left' Name='"+name+"' Content='"+content+"'>");
+            CellETemp.Append("</Button>");
+            CellETemp.Append("</DataTemplate>");
+            dgImage.CellEditingTemplate = (DataTemplate)XamlReader.Load(CellETemp.ToString());
+
+            dgImage.IsReadOnly = false;
+            dgImage.Width = new DataGridLength(50);
+            //visable?
+            dgImage.Visibility = System.Windows.Visibility.Visible;
+
+            return (dgImage);
+        }
+
+
+        /// <summary>
+        /// Creates a checkbox in the grid
+        /// </summary>
+        /// <param name="tooltip"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static DataGridTemplateColumn CheckBox(String tooltip, String name, String sortPath)
+        {
+            DataGridTemplateColumn checkbox = new DataGridTemplateColumn();
+            checkbox.Header = String.Empty;
+            checkbox.SortMemberPath = sortPath;
+            checkbox.CanUserSort = false;
+
+            StringBuilder CellETemp = new StringBuilder();
+            CellETemp.Append("<DataTemplate ");
+            CellETemp.Append("xmlns='http://schemas.microsoft.com/winfx/");
+            CellETemp.Append("2006/xaml/presentation' ");
+            CellETemp.Append("xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' >");
+            CellETemp.Append("<CheckBox Cursor='Hand' ToolTipService.ToolTip='" + tooltip + "' Width='18' Height='18' Name='" + name + "' HorizontalAlignment='Center' IsChecked='{Binding Path=Data, Converter={StaticResource rowConvertor}, ConverterParameter=" + sortPath + ", Mode=TwoWay}'>");
+            CellETemp.Append("</CheckBox>");
+            CellETemp.Append("</DataTemplate>");
+            checkbox.CellEditingTemplate = (DataTemplate)XamlReader.Load(CellETemp.ToString());
+            checkbox.Width = new DataGridLength(18);
+            checkbox.IsReadOnly = false;
+            
+            //visable?
+            checkbox.Visibility = System.Windows.Visibility.Visible;
+
+            return (checkbox);
+        }
+    }
+}

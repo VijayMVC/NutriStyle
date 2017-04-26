@@ -1,0 +1,1 @@
+C:\Builds\NutriStyle\Applications\SyncDatabases\bin\Release\SyncDatabases.exe.config

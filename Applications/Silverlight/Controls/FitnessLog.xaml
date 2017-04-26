@@ -1,0 +1,213 @@
+﻿<UserControl xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"  
+			 xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
+			 x:Class="DynamicConnections.NutriStyle.MenuGenerator.Controls.FitnessLog"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:helpers="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Engine.Helpers"
+             xmlns:toolkit1="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit" Background="Transparent"
+             mc:Ignorable="d"
+             xmlns:Controls="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Controls;assembly=DynamicConnections.NutriStyle.MenuGenerator"
+             xmlns:charting="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" 
+               d:DesignWidth="650" d:DesignHeight="550" Loaded="UserControl_Loaded">
+
+
+    <UserControl.Resources>
+        <helpers:RowIndexConverter x:Key="rowConvertor" />
+
+        <ControlTemplate x:Key="pi" TargetType="charting:PieDataPoint">
+            <Grid x:Name="Root" Opacity="0">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualStateGroup.Transitions>
+                            <VisualTransition GeneratedDuration="0:0:0.1"/>
+                        </VisualStateGroup.Transitions>
+                        <VisualState x:Name="Normal"/>
+                        <VisualState x:Name="MouseOver">
+                            <Storyboard>
+                                <DoubleAnimation
+                                        Storyboard.TargetName="MouseOverHighlight"
+                                        Storyboard.TargetProperty="Opacity"
+                                        To="0.6"
+                                        Duration="0"/>
+                            </Storyboard>
+                        </VisualState>
+                    </VisualStateGroup>
+                    <VisualStateGroup x:Name="SelectionStates">
+                        <VisualStateGroup.Transitions>
+                            <VisualTransition GeneratedDuration="0:0:0.1"/>
+                        </VisualStateGroup.Transitions>
+                        <VisualState x:Name="Unselected"/>
+                        <VisualState x:Name="Selected">
+                            <Storyboard>
+                                <DoubleAnimation
+                                        Storyboard.TargetName="SelectionHighlight"
+                                        Storyboard.TargetProperty="Opacity"
+                                        To="0.6"
+                                        Duration="0"/>
+                            </Storyboard>
+                        </VisualState>
+                    </VisualStateGroup>
+                    <VisualStateGroup x:Name="RevealStates">
+                        <VisualStateGroup.Transitions>
+                            <VisualTransition GeneratedDuration="0:0:0.5"/>
+                        </VisualStateGroup.Transitions>
+                        <VisualState x:Name="Shown">
+                            <Storyboard>
+                                <DoubleAnimation
+                                        Storyboard.TargetName="Root"
+                                        Storyboard.TargetProperty="Opacity"
+                                        To="1"
+                                        Duration="0"/>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="Hidden">
+                            <Storyboard>
+                                <DoubleAnimation
+                                        Storyboard.TargetName="Root"
+                                        Storyboard.TargetProperty="Opacity"
+                                        To="0"
+                                        Duration="0"/>
+                            </Storyboard>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                <Path x:Name="Slice"
+                Data="{TemplateBinding Geometry}"
+                Fill="{TemplateBinding Background}"
+                Stroke="{TemplateBinding BorderBrush}"
+                StrokeMiterLimit="1">
+                    <ToolTipService.ToolTip>
+                        <StackPanel>
+                            <ContentControl>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{TemplateBinding IndependentValue}" />
+
+                                </StackPanel>
+                            </ContentControl>
+                            <ContentControl Content="{TemplateBinding FormattedRatio}"/>
+                        </StackPanel>
+                    </ToolTipService.ToolTip>
+                </Path>
+                <Path x:Name="SelectionHighlight"
+                Data="{TemplateBinding GeometrySelection}"
+                Fill="Blue"
+                StrokeMiterLimit="1"
+                IsHitTestVisible="False"
+                Opacity="0"/>
+                <Path x:Name="MouseOverHighlight"
+                Data="{TemplateBinding GeometryHighlight}"
+                Fill="White"
+                StrokeMiterLimit="1"
+                IsHitTestVisible="False"
+                Opacity="0"/>
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="pieChartSeriesStyle" TargetType="toolkit1:PieSeries">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+
+        </Style>
+
+        <Style x:Key="pieChartStyle" TargetType="charting:Chart">
+            <Setter Property="Padding" Value="10,0,0,0"/>
+        </Style>
+
+        <Style x:Key="pieChartTitleStyle" TargetType="toolkit1:Title">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Setter Property="Foreground" Value="#6B6A6D"/>
+        </Style>
+
+        <Style x:Key="LegendItemStyle1PieChart" TargetType="charting:LegendItem">
+            <Setter Property="IsTabStop" Value="False"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="charting:LegendItem">
+                        <StackPanel Orientation="Horizontal" >
+                            <Rectangle Fill="{Binding Background}" Stroke="{Binding BorderBrush}" StrokeThickness="1" Height="8" Margin="10,0,3,0" Width="8"/>
+                            <TextBlock Text="{TemplateBinding Content}" Width="400"  TextTrimming="WordEllipsis" />
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid x:Name="LayoutRoot" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+        <toolkit:BusyIndicator Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch"   Margin="0,10,0,0" 
+                        VerticalAlignment="Stretch" BorderThickness="0" Name="busyIndicator" Visibility="Visible" 
+                        IsBusy="True" >
+
+            <StackPanel Orientation="Vertical">
+                <Grid>
+                    <StackPanel>
+                        <sdk:Label Content="Please select how you would like to enter your fitness log information" Foreground="#878787" FontWeight="Bold" />
+                        <RadioButton Content="General Fitness information" GroupName="fitnessinfo" IsChecked="True" Click="RadioButton_Click" Name="generalFitness"></RadioButton>
+                        <RadioButton Content="Detailed Fitness information" GroupName="fitnessinfo" IsChecked="False" Click="RadioButton_Click" Name="detailedFitness"></RadioButton>
+                    </StackPanel>
+
+                </Grid>
+                <StackPanel Name="generalFitnessStackPanel" Visibility="Visible">
+                  
+                    <StackPanel  Orientation="Horizontal">
+                        <sdk:Label Content="Choose option that best describes" Foreground="#878787" FontWeight="Bold" />
+                        <sdk:Label Content="your activity level" Foreground="#0DB1D4" FontWeight="Bold" Margin="5,0,5,0" 
+                            MouseLeftButtonUp="ActivityLabel_MouseLeftButtonUp" Cursor="Hand" />
+                        <sdk:Label  Foreground="#D55354" Content="*" FontSize="12" FontWeight="Bold" Margin="5,0,0,0"/>
+                    </StackPanel>
+                  
+                    <StackPanel Orientation="Horizontal">
+                        <Controls:ComboBoxWithValidation  x:Name="ActivityLevel" Height="25" Width="230" Margin="0,0,0,0"
+                                HorizontalAlignment="Left" 
+                                SelectedPair='{Binding ActivityLevel, Mode=TwoWay,
+                                ValidatesOnExceptions=True, NotifyOnValidationError=True}'/>
+                        <Button Content="Save" ToolTipService.ToolTip="Save" Cursor="Hand" Margin="10,2,0,2" Click="SaveButton_Click"></Button>
+                    </StackPanel>
+                  
+                </StackPanel>
+                <StackPanel Name="detailedFitnessStackPanel" Visibility="Collapsed">
+                    <Grid  VerticalAlignment="Stretch" Background="#D3E9FF" Height="23" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Click="Save_Click" Name="Save" Content="Save" Grid.Column="0" ToolTipService.ToolTip="Save" Cursor="Hand" Width="50"  HorizontalAlignment="Left"/>
+                        <Button Click="Button_Click" Content="Add Fitness" Grid.Column="1" ToolTipService.ToolTip="Add Fitness" Cursor="Hand"/>
+                    </Grid>
+
+                    <sdk:DataGrid AutoGenerateColumns="False"  Height="Auto" 
+                        HorizontalAlignment="Stretch" Name="dataGrid1" VerticalAlignment="Stretch" Style="{StaticResource dataGridCustom}"
+                        ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle1}"              
+                    />
+                </StackPanel>
+                <StackPanel Height="20"  Orientation="Horizontal">
+                    <StackPanel.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0.5">
+                            <GradientStop Color="#FFFFFF" Offset="0"/>
+                            <GradientStop Color="#D3E9FF" Offset=".85"/>
+                        </LinearGradientBrush>
+                    </StackPanel.Background>
+                    <TextBlock Text="Kcals:" Name="kcalTotals" TextAlignment="Right" Margin="5,2,5,0" Foreground="#6B6A6D"/>
+                </StackPanel>
+
+                
+            </StackPanel>
+
+
+        </toolkit:BusyIndicator>
+        <StackPanel Height="400" VerticalAlignment="Bottom" Margin="0,0,0,2">
+            <Controls:FitnessChartComplete Height="Auto" x:Name="fitnessChartComplete"/>
+        </StackPanel>
+
+
+
+
+
+
+    </Grid>
+</UserControl>

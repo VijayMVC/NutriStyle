@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<configuration>
+  <startup>
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0" />
+  </startup>
+  <appSettings>
+    <add key="LogLocation" value="c:\\windows\\temp\\nutristyle-testing.txt" />
+    <add key="LogLevel" value="DEBUG" />
+    <add key="CrmOrganization" value="NS" />
+    <add key="CrmUser" value="crmadmin" />
+    <add key="Password" value="P@ssw0rd" />
+    <add key="Domain" value="DC" />
+    <add key="Hostname" value="https://crmdev.dynamiconnections.com" />
+    <add key="Portnumber" value="443" />
+    <add key="ClientSettingsProvider.ServiceUri" value="" />
+  </appSettings>
+  <system.serviceModel>
+    <bindings>
+      <basicHttpBinding>
+        <binding name="WebServicesSoap" />
+      </basicHttpBinding>
+    </bindings>
+    <client>
+      <endpoint address="http://dynamiconnections.com/Nutristyle/WebservicesDEV/Pages/WebServices.asmx" binding="basicHttpBinding" bindingConfiguration="WebServicesSoap" contract="NSWS.WebServicesSoap" name="WebServicesSoap" />
+    </client>
+  </system.serviceModel>
+  <system.web>
+    <membership defaultProvider="ClientAuthenticationMembershipProvider">
+      <providers>
+        <add name="ClientAuthenticationMembershipProvider" type="System.Web.ClientServices.Providers.ClientFormsAuthenticationMembershipProvider, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" serviceUri="" />
+      </providers>
+    </membership>
+    <roleManager defaultProvider="ClientRoleProvider" enabled="true">
+      <providers>
+        <add name="ClientRoleProvider" type="System.Web.ClientServices.Providers.ClientRoleProvider, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" serviceUri="" cacheTimeout="86400" />
+      </providers>
+    </roleManager>
+  </system.web>
+</configuration>

@@ -1,0 +1,52 @@
+﻿using DynamicConnections.CRM2011.Common.Utility;
+using Microsoft.Xrm.Sdk;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace DynamicConnections.NutriStyle.CRM2011.MenuGenerator.Helpers 
+{
+    class Clone : General
+    {
+        private static Logger logger = GetLogger();
+
+        public Clone()
+        {
+
+        }
+
+        public Entity Execute(Entity toClone)
+        {
+            Entity entity       = new Entity();
+            entity.LogicalName  = toClone.LogicalName;
+            entity.Id           = Guid.NewGuid();
+
+            //copy in attributes
+            foreach (KeyValuePair<string, object> pair in toClone.Attributes)
+            {
+                if (!entity.Attributes.Contains(pair.Key))
+                {
+                    entity.Attributes.Add(pair);
+                }
+            }
+            //Clone in relationships
+
+            foreach (KeyValuePair<Relationship, EntityCollection> pair in toClone.RelatedEntities)
+            {
+                logger.debug("Processing relationship: "+ ((Relationship)pair.Key).SchemaName);
+
+                EntityCollection collection = new EntityCollection();
+                foreach (Entity e in ((EntityCollection)pair.Value).Entities)
+                {
+                    Entity child = Execute(e);
+                    collection.Entities.Add(child);
+                }
+
+                entity.RelatedEntities.Add((Relationship)pair.Key, collection);
+
+            }
+            return (entity);
+        }
+    }
+}

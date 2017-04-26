@@ -1,0 +1,146 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Configuration;
+using DynamicConnections.CRM2011.Common.Utility;
+using Microsoft.Xrm.Sdk.Client;
+using System.Xml;
+using System.Xml.Serialization;
+using Microsoft.Xrm.Sdk.Metadata;
+using System.IO;
+using System.Runtime.Serialization;
+
+using Microsoft.Xrm.Sdk;
+using System.Web.Services.Protocols;
+
+using System.ServiceModel;
+using System.ServiceModel.Description;
+using Microsoft.Xrm.Sdk.Query;
+
+using System.Text;
+
+
+namespace DynamicConnections.NutriStyle.CRM2011.WebServices.Engine
+{
+    public class Menus
+    {
+        
+        Logger logger;
+        public static OrganizationServiceProxy crmService = null;
+        String level    = ConfigurationManager.AppSettings["LogLevel"];
+
+        String location;
+        String user;
+        String password;
+        String orgName;
+        String hostname;
+        String domain;
+        String portnumber;
+
+        public Menus()
+        {
+
+            String level = ConfigurationManager.AppSettings["LogLevel"];
+            String location = ConfigurationManager.AppSettings["LogLocation"];
+            logger = new Logger(level, location);
+            String user = ConfigurationManager.AppSettings["CrmUser"];
+            String password = ConfigurationManager.AppSettings["Password"];
+            String orgName = ConfigurationManager.AppSettings["CrmOrganization"];
+            String hostname = ConfigurationManager.AppSettings["Hostname"];
+            String domain = ConfigurationManager.AppSettings["Domain"];
+            String portnumber = ConfigurationManager.AppSettings["Portnumber"];
+
+            try
+            {
+
+                logger.debug("orgName:" + orgName);
+                logger.debug("user:" + user);
+                logger.debug("password:" + password);
+                logger.debug("domain:" + domain);
+                logger.debug("hostname:" + hostname);
+                logger.debug("portnumber:" + portnumber);
+
+                if (crmService == null)
+                {
+                    crmService = CrmHelper.CreateCrmService(user, password, domain, hostname, orgName, Convert.ToInt32(portnumber));
+
+
+                    logger.debug("Built crm service object");
+                }
+                else
+                {
+                    logger.debug("Value was set");
+                    logger.debug(crmService.CallerId.ToString());
+                }
+            }
+            catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.StackTrace);
+            }
+
+            catch (SoapException e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.Detail.InnerText);
+                logger.debug(e.StackTrace);
+            }
+            catch (Exception e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.StackTrace);
+            }
+        }
+        
+        public XmlDocument SetPrimaryMenu(Guid menuId, Guid contactId)
+        {
+            XmlDocument xml = Success.Create("worked");
+            try
+            {
+                
+                //Set all previous menus to inactive
+                String menuFetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
+                  <entity name='dc_menu'>
+                    <attribute name='dc_menuid' />
+                    <filter type='and'> <condition attribute='statecode' value='0' operator='eq'/> </filter>
+                    <link-entity name='contact' from='contactid' to='dc_contactid' alias='aa'>
+                      <filter type='and'>
+                        <condition attribute='contactid' operator='eq' value='@CONTACTID' />
+                      </filter>
+                    </link-entity>
+                  </entity>
+                </fetch>";
+
+                menuFetchXml = menuFetchXml.Replace("@CONTACTID", contactId.ToString());
+                logger.debug("ContactId:" + contactId.ToString());
+                EntityCollection menuCollection = crmService.RetrieveMultiple(new FetchExpression(menuFetchXml));
+
+                logger.debug("Found " + menuCollection.Entities.Count + " entities");
+                foreach (Entity m in menuCollection.Entities)
+                {
+                    Entity menu2 = new Entity("dc_menu");
+                    menu2["dc_menuid"] = m.Id;
+                    menu2["dc_primarymenu"] = false;
+
+                    crmService.Update(menu2);
+                    logger.debug("Set primary to false");
+                }
+
+                Entity menu = new Entity("dc_menu");
+                menu["dc_menuid"] = menuId;
+                menu["dc_primarymenu"] = true;
+                crmService.Update(menu);
+                xml = Success.Create(menuId.ToString());
+            }
+            catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> ex)
+            {
+                logger.error("Code: " + ex.Detail.ErrorCode);
+                logger.error("Message: " + ex.Detail.Message);
+                logger.error("Trace: " + ex.Detail.TraceText);
+                logger.error("Inner Fault: " + ex.Detail.InnerFault);
+            }
+            return (xml);
+        }
+    }
+}

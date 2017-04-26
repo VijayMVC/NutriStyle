@@ -1,0 +1,93 @@
+<Project DefaultTargets="build"   ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- 
+    Always setup the path to the root and also the orders root folder.
+    We then include the orders properties, which includes the root properties
+    For this project the orders folder is in the same folder as this build file
+    so can just reference the ms build project directory property as the orders_root.
+  -->
+  <PropertyGroup>
+    <root>$(MSBuildProjectDirectory)\..\..</root>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+
+  </PropertyGroup>
+  
+  <Import Project="$(root)\DC.properties.proj"/>
+  
+  <ItemGroup>
+
+    <Files Include="$(drop)\Server\DataMigration\**\*.*"/>
+   
+    <ConfigFiles  Include="$(MSBuildProjectDirectory)\**\*.exe.config;"/> 
+                  
+    <SourceFiles Include="$(root)\CommonAssemblyInfo.cs;$(MSBuildProjectDirectory)\**\*.cs;"/>
+    <IncludeDlls Include="$(common)\Server\bin\assembly\DynamicConnections.CRM2011.Common.*;
+                 $(root)\include\microsoft.xrm.sdk.dll;
+                 $(root)\include\microsoft.crm.sdk.proxy.dll;
+                 $(root)\include\Devart.Data.PostgreSql.dll;
+                 $(root)\include\Devart.Data.dll;
+                 
+                 "/>
+    <ReferenceFiles Include="$(common)\Server\bin\assembly\DynamicConnections.CRM2011.Common.dll;
+                    $(root)\include\microsoft.xrm.sdk.dll;
+                    $(root)\include\microsoft.crm.sdk.proxy.dll;
+                    $(root)\include\Devart.Data.PostgreSql.dll;
+                    $(root)\include\Devart.Data.dll;
+                    
+                    "/>
+  </ItemGroup>
+  
+  <!--
+      Once we have the roots configured we can now include all the standard properties,
+      this also includes the root.properties also.
+  -->
+   
+  <Target Name="clean">
+    <Message Text="drop is $(drop)"/>
+    <Exec Command="rmdir $(drop)\Server\DataMigration /s /q" />
+  </Target>
+
+  <Target Name="build">
+    <Message Text="drop is $(drop)"/>
+    <Message Text="Project dir is $(MSBuildProjectDirectory)"/>
+    <MakeDir Directories="$(drop)\Server\DataMigration\bin\"/>
+     
+    <Csc TargetType="exe"
+          Sources="@(SourceFiles)"
+          References="@(ReferenceFiles)"
+          OutputAssembly="$(drop)\Server\DataMigration\bin\DynamicConnections.NutriStyle.CRM.Sync.exe" EmitDebugInformation="true"  Optimize="false" KeyFile="..\..\Include\CommonStrongKey.snk"/>
+
+    <Copy SourceFiles="@(IncludeDlls)"
+         DestinationFolder="$(drop)\Server\DataMigration\bin"/>
+    <Copy SourceFiles="@(ConfigFiles)"
+         DestinationFolder="$(drop)\Server\DataMigration\bin"/>
+  </Target>
+
+  <Target Name="buildWeb">
+    <Message Text="drop is $(drop)"/>
+    <Message Text="Project dir is $(MSBuildProjectDirectory)"/>
+    <MakeDir Directories="$(drop)\Server\DataMigration\bin\"/>
+
+    <Csc TargetType="library"
+          Sources="@(SourceFiles)"
+          References="@(ReferenceFiles)"
+          OutputAssembly="$(drop)\Server\DataMigration\bin\DynamicConnections.NutriStyle.CRM.Sync.dll" Optimize="false" KeyFile="..\..\Include\CommonStrongKey.snk"/>
+
+    <Copy SourceFiles="@(IncludeDlls)"
+         DestinationFolder="$(drop)\Server\DataMigration\bin"/>
+    <Copy SourceFiles="@(ConfigFiles)"
+         DestinationFolder="$(drop)\Server\DataMigration\bin"/>
+  </Target>
+  
+  <Target Name="cs" DependsOnTargets="build">
+    <Copy SourceFiles="@(Files)"
+         DestinationFolder="\\accuranmks\apps\CRM2011\DataMigration\%(RecursiveDir)"/>
+  </Target>
+
+  <Target Name="copy" DependsOnTargets="build">
+    <Copy SourceFiles="@(Files)"
+         DestinationFolder="\\crmdev2011\CRM2011\DataMigration\%(RecursiveDir)"/>
+  </Target>
+  
+</Project>

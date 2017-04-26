@@ -1,0 +1,178 @@
+﻿<navigation:Page x:Class="DynamicConnections.NutriStyle.MenuGenerator.Pages.FoodLikes" 
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit" 
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:toolkit2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+           xmlns:Controls="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Controls;assembly=DynamicConnections.NutriStyle.MenuGenerator"
+           mc:Ignorable="d"
+           xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+            d:DesignWidth="565" d:DesignHeight="700" 
+           xmlns:helpers="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Engine.Helpers"
+           Title="Login Page" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" 
+           xmlns:toolkit1="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit" Background="White" NavigationCacheMode="Enabled" Loaded="Page_Loaded">
+
+    <navigation:Page.Resources>
+        <helpers:RowIndexConverter x:Key="rowConvertor" />
+    </navigation:Page.Resources>
+
+    <Grid x:Name="LayoutRoot" Style="{StaticResource gridStyle}"  Height="700">
+
+
+        <Border Style="{StaticResource borderStyle}"  >
+            
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"></RowDefinition> <!--0, heading-->
+                    <RowDefinition Height="120"></RowDefinition><!--1, select meal-->
+                    <RowDefinition Height="70"></RowDefinition><!--2, select days-->
+                    <RowDefinition Height="30"></RowDefinition><!--3 select food/add fovorite-->
+                    <RowDefinition Height="*"></RowDefinition><!--4, favorite food description-->
+                    <RowDefinition Height="30"></RowDefinition><!--5, next-->
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="75"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Height="Auto" Grid.Row="0" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="40"/>
+                    </Grid.ColumnDefinitions>
+                    <sdk:Label Content="Food Likes" Style="{StaticResource textHeaderStyle}" Grid.Column="0"/>
+                    <sdk:Label Content="" Name="name" FontSize="16" FontWeight="Bold" Foreground="#3099C8" Grid.Column="1"/>
+                    <Button Content="Next"  Width="35" ToolTipService.ToolTip="Next: Food Dislikes" Cursor="Hand" Click="Button_Click" Height="24" Grid.Column="2"/>
+                </Grid>
+
+                <!--
+                <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+                    <sdk:Label Content="Food Likes" Style="{StaticResource textHeaderStyle}"/>
+                    <sdk:Label Content="" Name="name" FontSize="16" FontWeight="Bold" Foreground="#3099C8" Padding="20,0,0,0"/>
+                </StackPanel>
+                -->
+                
+                <sdk:Label Content="Select Meal" Grid.Row="1" Grid.Column="0" Margin="5,0,0,0"/>
+               
+                
+                <Grid Grid.Row="1" Grid.Column="1" Height="75"> 
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75"/>
+                        <ColumnDefinition Width="75"/>
+                        <ColumnDefinition Width="75"/>
+                        <ColumnDefinition Width="75"/>
+                        <ColumnDefinition Width="75"/>
+                        <ColumnDefinition Width="75"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button BorderThickness="0" Grid.Column="0"  Background="Transparent" Name="breakfast" Click="meal_Click"  Margin="2" ToolTipService.ToolTip="Breakfast" Cursor="Hand">
+                        <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/breakfast_off.png" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    </Button>
+
+                    <Button Grid.Column="1" BorderThickness="0" Background="Transparent" Name="morningSnack" Margin="2" Click="meal_Click" ToolTipService.ToolTip="Morning Snack" Cursor="Hand">
+                        <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/snack_off.png" />
+                    </Button>
+
+                    <Button Grid.Column="2" BorderThickness="0" Background="Transparent" Name="lunch" Margin="2" Click="meal_Click" ToolTipService.ToolTip="Lunch" Cursor="Hand">
+                    <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/lunch_off.png"   />
+                    </Button>
+
+                    <Button Grid.Column="3" BorderThickness="0" Background="Transparent" Name="afternoonSnack" Margin="2" Click="meal_Click" ToolTipService.ToolTip="Afternoon Snack" Cursor="Hand">
+                        <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/snack_off.png" />
+                    </Button>
+
+                    <Button Grid.Column="4" BorderThickness="0" Background="Transparent" Name="dinner" Margin="2" Click="meal_Click" ToolTipService.ToolTip="Dinner" Cursor="Hand">
+                        <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/dinner_off.png" />
+                    </Button>
+                    
+                    <Button Grid.Column="5" BorderThickness="0" Background="Transparent" Name="eveningSnack" Margin="2" Click="meal_Click" ToolTipService.ToolTip="Evening Snack" Cursor="Hand">
+                        <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/snack_off.png" />
+                    </Button>
+                </Grid>
+                
+                <sdk:Label Content="Select Day" Grid.Row="2" Grid.Column="0" Margin="5,0,0,0"/>
+                <CheckBox Content="All?"  Grid.Row="2" Grid.Column="0"  
+                    Margin="5,30,0,0"
+                    Click="CheckBox_Click" ToolTipService.ToolTip="Select All Days" Cursor="Hand"      
+                    VerticalAlignment="Center"></CheckBox>
+                
+                <Grid Grid.Row="2" Grid.Column="1" Name="dayGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="63"/>
+                        <ColumnDefinition Width="63"/>
+                        <ColumnDefinition Width="63"/>
+                        <ColumnDefinition Width="63"/>
+                        <ColumnDefinition Width="63"/>
+                        <ColumnDefinition Width="63"/>
+                        <ColumnDefinition Width="63"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button BorderThickness="0" Grid.Column="0"  Background="Transparent" Name="sunday" Click="day_Click"  Margin="2" ToolTipService.ToolTip="Sunday" Cursor="Hand">
+                        <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/sunday_off.png" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    </Button>
+                    <Button Grid.Column="1" BorderThickness="0" Background="Transparent" Name="monday" Margin="2" Click="day_Click" ToolTipService.ToolTip="Monday" Cursor="Hand">
+                        <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/monday_off.png"/>
+                    </Button>
+                    <Button Grid.Column="2" BorderThickness="0" Background="Transparent" Name="tuesday" Margin="2" Click="day_Click" ToolTipService.ToolTip="Tuesday" Cursor="Hand">
+                        <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/tuesday_off.png" />
+                    </Button>
+                    <Button Grid.Column="3" BorderThickness="0" Background="Transparent" Name="wednesday" Margin="2" Click="day_Click" ToolTipService.ToolTip="Wednesday" Cursor="Hand">
+                        <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/wednesday_off.png" />
+                    </Button>
+                    <Button Grid.Column="4" BorderThickness="0" Background="Transparent" Name="thursday" Margin="2" Click="day_Click" ToolTipService.ToolTip="Thursday" Cursor="Hand">
+                        <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/thursday_off.png" />
+                    </Button>
+                    <Button Grid.Column="5" BorderThickness="0" Background="Transparent" Name="friday" Margin="2" Click="day_Click" ToolTipService.ToolTip="Friday" Cursor="Hand">
+                        <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/friday_off.png" />
+                    </Button>
+                    <Button Grid.Column="6" BorderThickness="0" Background="Transparent" Name="saturday" Margin="2" Click="day_Click" ToolTipService.ToolTip="Saturday" Cursor="Hand">
+                        <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/saturday_off.png" />
+                    </Button>
+                </Grid>
+
+
+
+
+                <Button  Margin="320,0,0,0"  Grid.Row="3" Grid.Column="1" Name="AddFavorite" Click="AddFavorite_Click" 
+                            Width="85" Height="24" HorizontalAlignment="left" Content="Add Favorite" ToolTipService.ToolTip="Add Favorite" />
+
+                <Button  Margin="410,0,0,0"  Grid.Row="3" Grid.Column="1" Name="Clear" Click="Clear_Click" 
+                            Width="45" Height="24" HorizontalAlignment="left" Content="Clear" ToolTipService.ToolTip="Clear Selection" />
+
+                <sdk:Label Content="Search Food" Grid.Row="3" Grid.Column="0" Margin="5,0,0,0" Foreground="#65A3E2" MouseLeftButtonUp="Label_MouseLeftButtonUp" Cursor="Hand"/>
+
+                <Controls:ComboBoxWithValidation Watermark="Type part of Food Name and Select from list"  x:Name="food" Height="25" Width="310" Grid.Row="3" Grid.Column="1"
+                        HorizontalAlignment="Left" Margin="5,0,0,0" SelectedPair='{Binding Path=Data, Converter={StaticResource rowConvertor}, 
+                        ConverterParameter=dc_foodid, Mode=TwoWay}' KeyDown="food_KeyDown" >
+                </Controls:ComboBoxWithValidation>
+
+
+
+                <toolkit:BusyIndicator   Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch" BorderThickness="1" Name="busyIndicator" Visibility="Visible" BorderBrush="#62B0D7"
+                                    IsBusy="True" Height="auto">
+                    <sdk:DataGrid AutoGenerateColumns="False" Name="dataGrid1" Height="Auto"
+                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch" GridLinesVisibility="None" 
+                        AlternatingRowBackground="White" RowBackground="White" Style="{StaticResource dataGridCustom}"
+                        ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle1}"/>
+                    
+                </toolkit:BusyIndicator>
+
+
+
+                
+
+                <StackPanel Grid.Row="5" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Stretch" Height="30" Background="White" Grid.ColumnSpan="2">
+                    <Button Content="Next: Food Dislikes"   Width="125"  Height="24" Click="Button_Click" 
+                            VerticalAlignment="Center"  ToolTipService.ToolTip="Next: Food Dislikes" Cursor="Hand"/>
+                    <Button Content="Generate Menu"   Width="95"  Height="24" Click="GenerateMenu_Click" Name="GenerateMenu" Margin="10,0,0,0"
+                            VerticalAlignment="Center"  ToolTipService.ToolTip="Generate Menu" Cursor="Hand" />
+                </StackPanel>
+                
+            </Grid>
+
+        </Border>
+    </Grid>
+</navigation:Page>

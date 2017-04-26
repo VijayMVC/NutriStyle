@@ -1,0 +1,155 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Configuration;
+using DynamicConnections.CRM2011.Common.Utility;
+using Microsoft.Xrm.Sdk.Client;
+using System.Xml;
+using System.Xml.Serialization;
+using Microsoft.Xrm.Sdk.Metadata;
+using System.IO;
+using System.Runtime.Serialization;
+
+using Microsoft.Xrm.Sdk;
+using System.Web.Services.Protocols;
+
+using System.ServiceModel;
+using System.ServiceModel.Description;
+using Microsoft.Xrm.Sdk.Query;
+
+using System.Text;
+
+
+namespace DynamicConnections.NutriStyle.CRM2011.WebServices.Engine
+{
+    public class TipsofTheDay
+    {
+        
+        Logger logger;
+        public static OrganizationServiceProxy crmService = null;
+
+        public TipsofTheDay()
+        {
+
+            String level    = ConfigurationManager.AppSettings["LogLevel"];
+            String location = ConfigurationManager.AppSettings["LogLocation"];
+            logger = new Logger(level, location);
+            String user     = ConfigurationManager.AppSettings["CrmUser"];
+            String password = ConfigurationManager.AppSettings["Password"];
+            String orgName  = ConfigurationManager.AppSettings["CrmOrganization"];
+            String hostname = ConfigurationManager.AppSettings["Hostname"];
+            String domain   = ConfigurationManager.AppSettings["Domain"];
+            String portnumber = ConfigurationManager.AppSettings["Portnumber"];
+
+            try
+            {
+                
+                logger.debug("orgName:" + orgName);
+                logger.debug("user:" + user);
+                logger.debug("password:" + password);
+                logger.debug("domain:" + domain);
+                logger.debug("hostname:" + hostname);
+                logger.debug("portnumber:" + portnumber);
+
+                if (crmService == null)
+                {
+                    crmService = CrmHelper.CreateCrmService(user, password, domain, hostname, orgName, Convert.ToInt32(portnumber));
+
+                    
+                    logger.debug("Built crm service object");
+                }
+                else
+                {
+                    logger.debug("Value was set");
+                    logger.debug(crmService.CallerId.ToString());
+                }
+            }
+            catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.StackTrace);
+            }
+
+            catch (SoapException e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.Detail.InnerText);
+                logger.debug(e.StackTrace);
+            }
+            catch (Exception e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.StackTrace);
+            }
+        }
+        
+        public XmlDocument Retrieve()
+        {
+            XmlDocument results = Success.Create("worked");
+           
+            try
+            {
+                Dictionary<String, int> columnOrder = new Dictionary<String, int>();
+                columnOrder.Add("dc_comments", 1);
+                columnOrder.Add("dc_tipofthedayid", 2);
+                columnOrder.Add("dc_titletopic", 3);
+                columnOrder.Add("dc_sourcedate", 4);
+
+
+                QueryExpression qe = new QueryExpression();
+                qe.EntityName = "dc_tipoftheday";
+                qe.ColumnSet = new ColumnSet(new String[] { "dc_comments", "dc_tipofthedayid", "dc_titletopic", "dc_sourcedate" });
+
+                qe.Criteria = new FilterExpression();
+
+                //password
+                ConditionExpression ce = new ConditionExpression();
+                ce.AttributeName = "statecode";
+                ce.Operator = ConditionOperator.Equal;
+                ce.Values.Add(1);
+
+                //qe.Criteria.AddCondition(ce);
+               
+                EntityCollection response = crmService.RetrieveMultiple(qe);
+
+                if (response != null && response.Entities.Count > 0)
+                {
+                    //Randomly generate a number and return that value in the collection
+                    Random random = new Random();
+                    int x = random.Next(0, response.Entities.Count);
+                    EntityCollection ec = new EntityCollection();
+                    ec.Entities.Add(response.Entities[x]);
+                    results = DatabaseHelper.BuildXml(ec, "dc_tipoftheday", results, crmService, columnOrder);
+                }
+
+            }
+            catch (FaultException<Microsoft.Xrm.Sdk.OrganizationServiceFault> ex)
+            {
+
+                logger.error("Code: " + ex.Detail.ErrorCode);
+                logger.error("Message: " + ex.Detail.Message);
+                logger.error("Trace: " + ex.Detail.TraceText);
+                logger.error("Inner Fault: " + ex.Detail.InnerFault);
+                logger.error("Stack Trace: " + ex.StackTrace);
+                results = Error.Create(ex.Message + "\n" + ex.StackTrace);
+            }
+
+            catch (SoapException e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.Detail.InnerText);
+                logger.debug(e.StackTrace);
+                results = Error.Create(e.Message + "\n" + e.StackTrace);
+            }
+            catch (Exception e)
+            {
+                logger.debug(e.Message);
+                logger.debug(e.StackTrace);
+                results = Error.Create(e.Message + "\n" + e.StackTrace);
+            }
+
+            return (results);
+        }
+    }
+}

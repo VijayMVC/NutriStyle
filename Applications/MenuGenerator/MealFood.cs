@@ -1,0 +1,116 @@
+﻿using System;
+using System.Collections.Generic;
+
+using DynamicConnections.CRM2011.Common.Utility;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Client;
+using DynamicConnections.NutriStyle.CRM2011.MenuGenerator.Wrappers;
+using System.Text;
+
+namespace DynamicConnections.NutriStyle.CRM2011.MenuGenerator
+{
+    public class MealFood : General
+    {
+        private static Logger logger = GetLogger();
+
+
+        public MealFood()
+        {
+
+        }
+
+        /// <summary>
+        /// Calculates the kcals for the meal food
+        /// </summary>
+        /// <param name="mealFood"></param>
+        /// <returns></returns>
+        public static Entity CalculateKcal(Entity mealFood)
+        {
+            try
+            {
+                //retreive
+                decimal fat             = mealFood.Attributes.Contains("dc_fatoriginal") ? (decimal)mealFood.Attributes["dc_fatoriginal"] : 0m;
+                decimal alcohol         = mealFood.Attributes.Contains("dc_alcoholoriginal") ? (decimal)mealFood.Attributes["dc_alcoholoriginal"] : 0m;
+                decimal protein         = mealFood.Attributes.Contains("dc_proteinoriginal") ? (decimal)mealFood.Attributes["dc_proteinoriginal"] : 0m;
+                decimal carb            = mealFood.Attributes.Contains("dc_carbohydrateoriginal") ? (decimal)mealFood.Attributes["dc_carbohydrateoriginal"] : 0m;
+                decimal unitGramWeight  = mealFood.Attributes.Contains("dc_unit_gram_weight") ? (decimal)mealFood.Attributes["dc_unit_gram_weight"] : 0m;
+                decimal orgAmount       = mealFood.Attributes.Contains("dc_portion_amount") ? (decimal)mealFood.Attributes["dc_portion_amount"] : 0m;
+                decimal amount          = mealFood.Attributes.Contains("dc_portionsize") ? (decimal)mealFood.Attributes["dc_portionsize"] : 0m;
+
+                decimal orgFats = (decimal)mealFood["dc_fatoriginal"];
+                decimal sngFactor = ((unitGramWeight) / orgAmount);
+                decimal sngPortion = 0.0m;
+                
+                //calculate
+                decimal carbCalc    = carb * (amount / orgAmount);
+                decimal fatCalc     = fat * (amount / orgAmount);
+                decimal proteinCalc = protein * (amount / orgAmount);
+                decimal alcoholCalc = alcohol * (amount / orgAmount);
+
+                if (orgFats == 100m)
+                {
+                    sngPortion = amount;
+                    sngFactor = sngFactor * sngPortion;
+
+                    proteinCalc = 0;
+                    fatCalc = orgFats * sngFactor;
+                    carbCalc = 0m;
+                    alcoholCalc = 0m;
+                }
+                else
+                {
+                    carbCalc    = carb * (amount / orgAmount);
+                    fatCalc     = fat * (amount / orgAmount);
+                    proteinCalc = protein * (amount / orgAmount);
+                    alcoholCalc = alcohol * (amount / orgAmount);
+                }
+
+                decimal kcalTotal = (fatCalc * (decimal)GramToKcalMultipler.Fat) + (carbCalc * (decimal)GramToKcalMultipler.Carbohydrate) + (proteinCalc * (decimal)GramToKcalMultipler.Protein);
+
+                //Set values
+                mealFood["dc_carbohydrate"] = carbCalc;
+                mealFood["dc_fat"] = fatCalc;
+                mealFood["dc_protein"] = proteinCalc;
+                mealFood["dc_alcohol"] = alcoholCalc;
+                mealFood["dc_kcals"] = kcalTotal;
+            }
+            catch (Exception e)
+            {
+                GetLogger().error(e.Message);
+                GetLogger().error(e.StackTrace);
+            }
+            return (mealFood);
+        }
+        public static void ResetAdjust(List<MealFoodWrapper> mealFoods)
+        {
+            try
+            {
+                foreach (MealFoodWrapper mfw in mealFoods)
+                {
+                    Entity mealFood = mfw.MealFood;
+                    mealFood["dc_adjusted"] = false;
+                    mealFood["dc_canbeadjusted"] = true;
+                }
+            }
+            catch (Exception e)
+            {
+                GetLogger().error(e.Message);
+                GetLogger().error(e.StackTrace);
+            }
+        }
+        public static String ToString(Entity mealFood)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("\nName: " + mealFood["dc_name"]);
+            sb.Append("\nCarbohydrate: " + mealFood["dc_carbohydrate"]);
+            sb.Append("\nFat: " + mealFood["dc_fat"]);
+            sb.Append("\nProtein: " + mealFood["dc_protein"]);
+            sb.Append("\nAlcohol: " + mealFood["dc_alcohol"]);
+            sb.Append("\nUnit Gram Weight: " + mealFood["dc_unit_gram_weight"]);
+            sb.Append("\nPortion Size: " + mealFood["dc_portionsize"]);
+            return (sb.ToString());
+
+        }
+        
+    }
+}

@@ -1,0 +1,61 @@
+﻿<navigation:Page x:Class="DynamicConnections.NutriStyle.MenuGenerator.Pages.ShoppingList" 
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit" 
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:toolkit2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+           xmlns:Controls="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Controls;assembly=DynamicConnections.NutriStyle.MenuGenerator"
+           mc:Ignorable="d"
+           xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+           d:DesignWidth="640" d:DesignHeight="700"
+           xmlns:helpers="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Engine.Helpers"
+           Title="Login Page" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" 
+           xmlns:toolkit1="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit">
+
+    <navigation:Page.Resources>
+        <helpers:RowIndexConverter x:Key="rowConvertor" />
+    </navigation:Page.Resources>
+
+
+    <Grid x:Name="LayoutRoot" Style="{StaticResource gridStyle}" Height="700">
+
+
+        <Border Style="{StaticResource borderStyle}"  >
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" >
+                    <sdk:Label Content="Shopping List: " Style="{StaticResource textHeaderStyle}"/>
+                    <sdk:Label Content="" Name="menuName" Style="{StaticResource textHeaderStyle}"/>
+                </StackPanel>
+
+
+                <toolkit:BusyIndicator Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch"   Margin="0,10,0,0" 
+                        VerticalAlignment="Stretch" BorderThickness="0" Name="busyIndicator" Visibility="Visible" 
+                        IsBusy="True" >
+                    <sdk:DataGrid AutoGenerateColumns="False"  Height="Auto" 
+                                  HorizontalAlignment="Stretch" Name="dataGrid1" VerticalAlignment="Stretch" 
+                                  AlternatingRowBackground="White" RowBackground="White"
+                        ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle1}"
+                                  
+                                  />
+
+                </toolkit:BusyIndicator>
+
+                
+            </Grid>
+        </Border>
+
+        <StackPanel Orientation="Vertical" Margin="10,0,0,0" ></StackPanel>
+
+
+       
+
+
+    </Grid>
+</navigation:Page>

@@ -1,0 +1,1052 @@
+DEBUG 10/14/2011 7:18:23 PM Created connection
+ERROR 10/14/2011 7:19:21 PM Could not load file or assembly 'Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35' or one of its dependencies. The system cannot find the file specified.
+DEBUG 10/14/2011 7:26:54 PM Created connection
+DEBUG 10/14/2011 7:32:54 PM Created connection
+DEBUG 10/14/2011 7:35:55 PM Created connection
+ERROR 10/14/2011 7:35:56 PM Code: -2147217150
+ERROR 10/14/2011 7:35:56 PM Message: The entity with a name = 'tbl_foods' was not found in the MetadataCache.
+ERROR 10/14/2011 7:35:56 PM Trace: 
+ERROR 10/14/2011 7:35:56 PM Inner Fault: 
+ERROR 11/15/2011 12:22:26 AM An error occurred in CalcGAP - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 33
+ERROR 11/15/2011 12:22:26 AM An error occurred in CalcGAP - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 31
+INFO 11/15/2011 12:22:26 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 11
+INFO 11/15/2011 12:22:26 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 12:22:26 AM GetFoodRatios - Execute - mealFoodProtein = 0.0
+INFO 11/15/2011 12:22:26 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/15/2011 12:22:26 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/15/2011 12:22:26 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+ERROR 11/15/2011 12:22:26 AM An error occurred in GetFoodRatios - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.GetFoodRatios.Execute(Entity entityMeal, List`1 entityMealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\GetFoodRatios.cs:line 62
+ERROR 11/15/2011 12:22:26 AM An error occurred in CheckPercentages - setActualsPercents method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+INFO 11/15/2011 12:22:26 AM CheckPercentages - finalTarget - rangeValue = False
+ERROR 11/15/2011 12:22:26 AM An error occurred in PerformRatioGapAnalysis - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.getFoodToAnalyze(List`1 mealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 61
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.Execute(Entity entityMeal, List`1 entityMealFood, OrganizationServiceProxy organizationServiceProxy) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 41
+ERROR 11/15/2011 12:22:28 AM An error occurred in CalcGAP - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 33
+ERROR 11/15/2011 12:22:28 AM An error occurred in CalcGAP - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 31
+INFO 11/15/2011 12:22:28 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 4
+INFO 11/15/2011 12:22:28 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 12:22:28 AM GetFoodRatios - Execute - mealFoodProtein = 0.0
+INFO 11/15/2011 12:22:28 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/15/2011 12:22:28 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/15/2011 12:22:28 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+ERROR 11/15/2011 12:22:28 AM An error occurred in GetFoodRatios - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.GetFoodRatios.Execute(Entity entityMeal, List`1 entityMealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\GetFoodRatios.cs:line 62
+ERROR 11/15/2011 12:22:28 AM An error occurred in CheckPercentages - setActualsPercents method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+INFO 11/15/2011 12:22:28 AM CheckPercentages - finalTarget - rangeValue = False
+ERROR 11/15/2011 12:22:28 AM An error occurred in PerformRatioGapAnalysis - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.getFoodToAnalyze(List`1 mealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 61
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.Execute(Entity entityMeal, List`1 entityMealFood, OrganizationServiceProxy organizationServiceProxy) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 41
+ERROR 11/15/2011 12:22:30 AM An error occurred in CalcGAP - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 33
+ERROR 11/15/2011 12:22:30 AM An error occurred in CalcGAP - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 31
+INFO 11/15/2011 12:22:30 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 25
+INFO 11/15/2011 12:22:30 AM GetFoodRatios - Execute - mealFoodFat = 1
+INFO 11/15/2011 12:22:30 AM GetFoodRatios - Execute - mealFoodProtein = 0.0
+INFO 11/15/2011 12:22:30 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 96.15
+INFO 11/15/2011 12:22:30 AM GetFoodRatios - Execute - mealFoodFatRatio = 3.85
+INFO 11/15/2011 12:22:30 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+ERROR 11/15/2011 12:22:30 AM An error occurred in GetFoodRatios - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.GetFoodRatios.Execute(Entity entityMeal, List`1 entityMealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\GetFoodRatios.cs:line 62
+ERROR 11/15/2011 12:22:30 AM An error occurred in CheckPercentages - setActualsPercents method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+INFO 11/15/2011 12:22:30 AM CheckPercentages - finalTarget - rangeValue = False
+ERROR 11/15/2011 12:22:30 AM An error occurred in PerformRatioGapAnalysis - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.getFoodToAnalyze(List`1 mealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 61
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.Execute(Entity entityMeal, List`1 entityMealFood, OrganizationServiceProxy organizationServiceProxy) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 41
+ERROR 11/15/2011 12:22:31 AM An error occurred in CalcGAP - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 33
+ERROR 11/15/2011 12:22:31 AM An error occurred in CalcGAP - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 31
+INFO 11/15/2011 12:22:31 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 74
+INFO 11/15/2011 12:22:31 AM GetFoodRatios - Execute - mealFoodFat = 2
+INFO 11/15/2011 12:22:31 AM GetFoodRatios - Execute - mealFoodProtein = 0.0
+INFO 11/15/2011 12:22:31 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 97.37
+INFO 11/15/2011 12:22:31 AM GetFoodRatios - Execute - mealFoodFatRatio = 2.63
+INFO 11/15/2011 12:22:31 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+ERROR 11/15/2011 12:22:31 AM An error occurred in GetFoodRatios - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.GetFoodRatios.Execute(Entity entityMeal, List`1 entityMealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\GetFoodRatios.cs:line 62
+ERROR 11/15/2011 12:22:31 AM An error occurred in CheckPercentages - setActualsPercents method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+INFO 11/15/2011 12:22:31 AM CheckPercentages - finalTarget - rangeValue = False
+ERROR 11/15/2011 12:22:31 AM An error occurred in PerformRatioGapAnalysis - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.getFoodToAnalyze(List`1 mealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 61
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.Execute(Entity entityMeal, List`1 entityMealFood, OrganizationServiceProxy organizationServiceProxy) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 41
+ERROR 11/15/2011 12:23:18 AM An error occurred in CalcGAP - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 33
+ERROR 11/15/2011 12:23:42 AM An error occurred in CalcGAP - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 31
+ERROR 11/15/2011 12:24:21 AM An error occurred in CalcGAP - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 33
+ERROR 11/15/2011 12:26:12 AM An error occurred in CalcGAP - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 33
+ERROR 11/15/2011 12:26:24 AM An error occurred in CalcGAP - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CalcGAP.Execute(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CalcGAP.cs:line 31
+INFO 11/15/2011 12:26:24 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 11
+INFO 11/15/2011 12:26:24 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 12:26:24 AM GetFoodRatios - Execute - mealFoodProtein = 0.0
+INFO 11/15/2011 12:26:24 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/15/2011 12:26:24 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/15/2011 12:26:24 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+ERROR 11/15/2011 12:26:24 AM An error occurred in GetFoodRatios - Execute method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.GetFoodRatios.Execute(Entity entityMeal, List`1 entityMealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\GetFoodRatios.cs:line 62
+ERROR 11/15/2011 12:26:24 AM An error occurred in CheckPercentages - setActualsPercents method. Message: Object reference not set to an instance of an object. StackTrace:    at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+INFO 11/15/2011 12:26:24 AM CheckPercentages - finalTarget - rangeValue = False
+ERROR 11/15/2011 12:26:24 AM An error occurred in PerformRatioGapAnalysis - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.getFoodToAnalyze(List`1 mealFoods) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 61
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.Execute(Entity entityMeal, List`1 entityMealFood, OrganizationServiceProxy organizationServiceProxy) in C:\Builds\NutriStyle\Applications\MenuGenerator\PerformRatioGapAnalysis.cs:line 41
+INFO 11/15/2011 12:29:57 AM CalcGAP - Execute - carbohydrateGap = 41.02775000000000000000
+INFO 11/15/2011 12:29:57 AM CalcGAP - Execute - fatGap = 7.006166666666666666666666667
+INFO 11/15/2011 12:30:03 AM CalcGAP - Execute - proteinGap = 30.97612500000000000000
+INFO 11/15/2011 12:30:09 AM CalcGAP -  Execute - carbohydrateRatio = 51.93
+INFO 11/15/2011 12:30:10 AM CalcGAP - Execute - fatRatio = 8.87
+INFO 11/15/2011 12:30:10 AM CalcGAP - Execute - proteinRatio = 39.21
+INFO 11/15/2011 12:30:41 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 50.78
+INFO 11/15/2011 12:30:43 AM CalcGAP - Execute - fatGapPercentDecimal = 39.02
+INFO 11/15/2011 12:30:44 AM CalcGAP - Execute - proteinGapPercentDecimal = 76.68
+INFO 11/15/2011 12:31:45 AM CalcGAP - Execute - carbohydrateGap = 41.02775000000000000000
+INFO 11/15/2011 12:31:50 AM CalcGAP - Execute - fatGap = 7.006166666666666666666666667
+INFO 11/15/2011 12:31:50 AM CalcGAP - Execute - proteinGap = 30.97612500000000000000
+INFO 11/15/2011 12:31:51 AM CalcGAP -  Execute - carbohydrateRatio = 51.93
+INFO 11/15/2011 12:31:51 AM CalcGAP - Execute - fatRatio = 8.87
+INFO 11/15/2011 12:31:51 AM CalcGAP - Execute - proteinRatio = 39.21
+INFO 11/15/2011 12:32:00 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 50.78
+INFO 11/15/2011 12:32:00 AM CalcGAP - Execute - fatGapPercentDecimal = 39.02
+INFO 11/15/2011 12:32:00 AM CalcGAP - Execute - proteinGapPercentDecimal = 76.68
+INFO 11/15/2011 12:32:48 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 11
+INFO 11/15/2011 12:32:48 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 12:32:50 AM GetFoodRatios - Execute - mealFoodProtein = 0.0
+INFO 11/15/2011 12:32:54 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/15/2011 12:33:15 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/15/2011 12:33:16 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 12:33:57 AM CalcGAP - Execute - carbohydrateGap = 41.02775000000000000000
+INFO 11/15/2011 12:33:57 AM CalcGAP - Execute - fatGap = 7.006166666666666666666666667
+INFO 11/15/2011 12:33:57 AM CalcGAP - Execute - proteinGap = 30.97612500000000000000
+INFO 11/15/2011 12:33:57 AM CalcGAP -  Execute - carbohydrateRatio = 51.93
+INFO 11/15/2011 12:33:57 AM CalcGAP - Execute - fatRatio = 8.87
+INFO 11/15/2011 12:33:57 AM CalcGAP - Execute - proteinRatio = 39.21
+INFO 11/15/2011 12:33:57 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 50.78
+INFO 11/15/2011 12:33:57 AM CalcGAP - Execute - fatGapPercentDecimal = 39.02
+INFO 11/15/2011 12:33:57 AM CalcGAP - Execute - proteinGapPercentDecimal = 76.68
+INFO 11/15/2011 12:34:28 AM CalcGAP - Execute - carbohydrateGap = 41.02775000000000000000
+INFO 11/15/2011 12:34:34 AM CalcGAP - Execute - fatGap = 7.006166666666666666666666667
+INFO 11/15/2011 12:34:34 AM CalcGAP - Execute - proteinGap = 30.97612500000000000000
+INFO 11/15/2011 12:34:45 AM CalcGAP -  Execute - carbohydrateRatio = 51.93
+INFO 11/15/2011 12:34:46 AM CalcGAP - Execute - fatRatio = 8.87
+INFO 11/15/2011 12:34:46 AM CalcGAP - Execute - proteinRatio = 39.21
+INFO 11/15/2011 12:34:53 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 50.78
+INFO 11/15/2011 12:34:54 AM CalcGAP - Execute - fatGapPercentDecimal = 39.02
+INFO 11/15/2011 12:34:54 AM CalcGAP - Execute - proteinGapPercentDecimal = 76.68
+INFO 11/15/2011 12:36:30 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 11
+INFO 11/15/2011 12:36:31 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 12:36:31 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/15/2011 12:36:36 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/15/2011 12:36:36 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/15/2011 12:36:37 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 12:36:39 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 0.0
+INFO 11/15/2011 12:36:39 AM GetFoodRatios - Execute - mealFatRatio = 0.0
+INFO 11/15/2011 12:36:39 AM GetFoodRatios - Execute - mealProteinRatio = 0.0
+INFO 11/15/2011 12:36:40 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 100.0
+INFO 11/15/2011 12:36:40 AM GetFoodRatios - Execute - mealFoodFatVariant = 0.0
+INFO 11/15/2011 12:36:43 AM GetFoodRatios - Execute - mealFoodProteinVariant = 0.0
+INFO 11/15/2011 12:36:43 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 0.0
+INFO 11/15/2011 12:36:44 AM GetFoodRatios - Execute - mealFatRatio = 0.0
+INFO 11/15/2011 12:36:44 AM GetFoodRatios - Execute - mealProteinRatio = 0.0
+INFO 11/15/2011 12:36:46 AM GetFoodRatios - Execute - mealFoodVariantTtl = 100.0
+INFO 11/15/2011 12:37:05 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 54
+INFO 11/15/2011 12:37:06 AM GetFoodRatios - Execute - mealFoodFat = 14
+INFO 11/15/2011 12:37:06 AM GetFoodRatios - Execute - mealFoodProtein = 3
+INFO 11/15/2011 12:37:07 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 76.06
+INFO 11/15/2011 12:37:08 AM GetFoodRatios - Execute - mealFoodFatRatio = 19.72
+INFO 11/15/2011 12:37:08 AM GetFoodRatios - Execute - mealFoodProteinRatio = 4.23
+INFO 11/15/2011 12:37:08 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 0.0
+INFO 11/15/2011 12:37:08 AM GetFoodRatios - Execute - mealFatRatio = 0.0
+INFO 11/15/2011 12:37:10 AM GetFoodRatios - Execute - mealProteinRatio = 0.0
+INFO 11/15/2011 12:37:11 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 76.06
+INFO 11/15/2011 12:37:11 AM GetFoodRatios - Execute - mealFoodFatVariant = 19.72
+INFO 11/15/2011 12:37:11 AM GetFoodRatios - Execute - mealFoodProteinVariant = 4.23
+INFO 11/15/2011 12:37:11 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 0.0
+INFO 11/15/2011 12:37:11 AM GetFoodRatios - Execute - mealFatRatio = 0.0
+INFO 11/15/2011 12:37:11 AM GetFoodRatios - Execute - mealProteinRatio = 0.0
+INFO 11/15/2011 12:44:38 AM CalcGAP - Execute - carbohydrateGap = 41.02775000000000000000
+INFO 11/15/2011 12:44:38 AM CalcGAP - Execute - fatGap = 7.006166666666666666666666667
+INFO 11/15/2011 12:44:38 AM CalcGAP - Execute - proteinGap = 30.97612500000000000000
+INFO 11/15/2011 12:44:38 AM CalcGAP -  Execute - carbohydrateRatio = 51.93
+INFO 11/15/2011 12:44:38 AM CalcGAP - Execute - fatRatio = 8.87
+INFO 11/15/2011 12:44:38 AM CalcGAP - Execute - proteinRatio = 39.21
+INFO 11/15/2011 12:44:38 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 50.78
+INFO 11/15/2011 12:44:38 AM CalcGAP - Execute - fatGapPercentDecimal = 39.02
+INFO 11/15/2011 12:44:38 AM CalcGAP - Execute - proteinGapPercentDecimal = 76.68
+INFO 11/15/2011 12:44:45 AM CalcGAP - Execute - carbohydrateGap = 41.02775000000000000000
+INFO 11/15/2011 12:44:45 AM CalcGAP - Execute - fatGap = 7.006166666666666666666666667
+INFO 11/15/2011 12:44:45 AM CalcGAP - Execute - proteinGap = 30.97612500000000000000
+INFO 11/15/2011 12:44:45 AM CalcGAP -  Execute - carbohydrateRatio = 51.93
+INFO 11/15/2011 12:44:45 AM CalcGAP - Execute - fatRatio = 8.87
+INFO 11/15/2011 12:44:45 AM CalcGAP - Execute - proteinRatio = 39.21
+INFO 11/15/2011 12:44:45 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 50.78
+INFO 11/15/2011 12:44:45 AM CalcGAP - Execute - fatGapPercentDecimal = 39.02
+INFO 11/15/2011 12:44:45 AM CalcGAP - Execute - proteinGapPercentDecimal = 76.68
+INFO 11/15/2011 12:44:57 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 11
+INFO 11/15/2011 12:45:03 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 12:45:03 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/15/2011 12:45:09 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/15/2011 12:45:09 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/15/2011 12:45:10 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 12:45:11 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 0.0
+INFO 11/15/2011 12:45:11 AM GetFoodRatios - Execute - mealFatRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealProteinRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 100.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodFatVariant = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodProteinVariant = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFatRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealProteinRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodVariantTtl = 100.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 54
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodFat = 14
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodProtein = 3
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 76.06
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodFatRatio = 19.72
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodProteinRatio = 4.23
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFatRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealProteinRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 76.06
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodFatVariant = 19.72
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodProteinVariant = 4.23
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFatRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealProteinRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodVariantTtl = 100.01
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 14
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFatRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealProteinRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 100.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodFatVariant = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodProteinVariant = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFatRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealProteinRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodVariantTtl = 100.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 10
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodFat = 1
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodProtein = 3
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 71.43
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodFatRatio = 7.14
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodProteinRatio = 21.43
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFatRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealProteinRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 71.43
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodFatVariant = 7.14
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodProteinVariant = 21.43
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFatRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealProteinRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodVariantTtl = 100.00
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodFat = 100
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodFatRatio = 100
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFatRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealProteinRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodFatVariant = 100.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodProteinVariant = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFatRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealProteinRatio = 0.0
+INFO 11/15/2011 12:47:22 AM GetFoodRatios - Execute - mealFoodVariantTtl = 100.0
+ERROR 11/15/2011 12:47:22 AM An error occurred in CheckPercentages - setActualsPercents method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal)
+INFO 11/15/2011 12:47:22 AM CheckPercentages - finalTarget - rangeValue = False
+ERROR 11/15/2011 12:47:22 AM An error occurred in PerformRatioGapAnalysis - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.getFoodToAnalyze(List`1 mealFoods)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.Execute(Entity entityMeal, List`1 entityMealFood, OrganizationServiceProxy organizationServiceProxy)
+INFO 11/15/2011 12:47:25 AM CalcGAP - Execute - carbohydrateGap = 53.81762500000000000000
+INFO 11/15/2011 12:47:25 AM CalcGAP - Execute - fatGap = 6.606138888888888888888888889
+INFO 11/15/2011 12:47:25 AM CalcGAP - Execute - proteinGap = 43.38881250000000000000
+INFO 11/15/2011 12:47:25 AM CalcGAP -  Execute - carbohydrateRatio = 51.84
+INFO 11/15/2011 12:47:25 AM CalcGAP - Execute - fatRatio = 6.36
+INFO 11/15/2011 12:47:25 AM CalcGAP - Execute - proteinRatio = 41.80
+INFO 11/15/2011 12:47:25 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 57.10
+INFO 11/15/2011 12:47:25 AM CalcGAP - Execute - fatGapPercentDecimal = 31.54
+INFO 11/15/2011 12:47:25 AM CalcGAP - Execute - proteinGapPercentDecimal = 92.06
+INFO 11/15/2011 12:47:29 AM CalcGAP - Execute - carbohydrateGap = 53.81762500000000000000
+INFO 11/15/2011 12:47:29 AM CalcGAP - Execute - fatGap = 6.606138888888888888888888889
+INFO 11/15/2011 12:47:29 AM CalcGAP - Execute - proteinGap = 43.38881250000000000000
+INFO 11/15/2011 12:47:29 AM CalcGAP -  Execute - carbohydrateRatio = 51.84
+INFO 11/15/2011 12:47:29 AM CalcGAP - Execute - fatRatio = 6.36
+INFO 11/15/2011 12:47:29 AM CalcGAP - Execute - proteinRatio = 41.80
+INFO 11/15/2011 12:47:29 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 57.10
+INFO 11/15/2011 12:47:29 AM CalcGAP - Execute - fatGapPercentDecimal = 31.54
+INFO 11/15/2011 12:47:29 AM CalcGAP - Execute - proteinGapPercentDecimal = 92.06
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 4
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodProtein = 1
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 80.0
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodProteinRatio = 20.0
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.84
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFatRatio = 6.36
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealProteinRatio = 41.80
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 28.16
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodFatVariant = 6.36
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodProteinVariant = 21.80
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.84
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFatRatio = 6.36
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealProteinRatio = 41.80
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodVariantTtl = 56.32
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 50
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodFat = 3
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodProtein = 8
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 81.97
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodFatRatio = 4.92
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodProteinRatio = 13.11
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.84
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFatRatio = 6.36
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealProteinRatio = 41.80
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 30.13
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodFatVariant = 1.44
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodProteinVariant = 28.69
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.84
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFatRatio = 6.36
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealProteinRatio = 41.80
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodVariantTtl = 60.26
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 14
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.84
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFatRatio = 6.36
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealProteinRatio = 41.80
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 48.16
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodFatVariant = 6.36
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealFoodProteinVariant = 41.80
+INFO 11/15/2011 12:47:29 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.84
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealFatRatio = 6.36
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealProteinRatio = 41.80
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealFoodVariantTtl = 96.32
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 0
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealFoodFat = 100
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 0
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealFoodFatRatio = 100
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.84
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealFatRatio = 6.36
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealProteinRatio = 41.80
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 51.84
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealFoodFatVariant = 93.64
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealFoodProteinVariant = 41.80
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.84
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealFatRatio = 6.36
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealProteinRatio = 41.80
+INFO 11/15/2011 12:47:30 AM GetFoodRatios - Execute - mealFoodVariantTtl = 187.28
+ERROR 11/15/2011 12:47:30 AM An error occurred in CheckPercentages - setActualsPercents method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal)
+INFO 11/15/2011 12:47:30 AM CheckPercentages - finalTarget - rangeValue = False
+ERROR 11/15/2011 12:48:09 AM An error occurred in PerformRatioGapAnalysis - Execute method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.getFoodToAnalyze(List`1 mealFoods)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.PerformRatioGapAnalysis.Execute(Entity entityMeal, List`1 entityMealFood, OrganizationServiceProxy organizationServiceProxy)
+INFO 11/15/2011 12:48:11 AM CalcGAP - Execute - carbohydrateGap = 33.25762500000000000000
+INFO 11/15/2011 12:48:11 AM CalcGAP - Execute - fatGap = 4.966138888888888888888888889
+INFO 11/15/2011 12:48:11 AM CalcGAP - Execute - proteinGap = 38.46881250000000000000
+INFO 11/15/2011 12:48:11 AM CalcGAP -  Execute - carbohydrateRatio = 43.36
+INFO 11/15/2011 12:48:11 AM CalcGAP - Execute - fatRatio = 6.48
+INFO 11/15/2011 12:48:11 AM CalcGAP - Execute - proteinRatio = 50.16
+INFO 11/15/2011 12:48:11 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 35.28
+INFO 11/15/2011 12:48:11 AM CalcGAP - Execute - fatGapPercentDecimal = 23.71
+INFO 11/15/2011 12:48:11 AM CalcGAP - Execute - proteinGapPercentDecimal = 81.62
+INFO 11/15/2011 12:48:15 AM CalcGAP - Execute - carbohydrateGap = 33.25762500000000000000
+INFO 11/15/2011 12:48:15 AM CalcGAP - Execute - fatGap = 4.966138888888888888888888889
+INFO 11/15/2011 12:48:15 AM CalcGAP - Execute - proteinGap = 38.46881250000000000000
+INFO 11/15/2011 12:48:15 AM CalcGAP -  Execute - carbohydrateRatio = 43.36
+INFO 11/15/2011 12:48:15 AM CalcGAP - Execute - fatRatio = 6.48
+INFO 11/15/2011 12:48:15 AM CalcGAP - Execute - proteinRatio = 50.16
+INFO 11/15/2011 12:48:15 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 35.28
+INFO 11/15/2011 12:48:15 AM CalcGAP - Execute - fatGapPercentDecimal = 23.71
+INFO 11/15/2011 12:48:15 AM CalcGAP - Execute - proteinGapPercentDecimal = 81.62
+INFO 11/15/2011 12:48:45 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 25
+INFO 11/15/2011 12:48:46 AM GetFoodRatios - Execute - mealFoodFat = 1
+INFO 11/15/2011 12:48:46 AM GetFoodRatios - Execute - mealFoodProtein = 3
+INFO 11/15/2011 12:48:52 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 86.21
+INFO 11/15/2011 12:48:52 AM GetFoodRatios - Execute - mealFoodFatRatio = 3.45
+INFO 11/15/2011 12:48:53 AM GetFoodRatios - Execute - mealFoodProteinRatio = 10.34
+INFO 11/15/2011 12:48:59 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 43.36
+INFO 11/15/2011 12:48:59 AM GetFoodRatios - Execute - mealFatRatio = 6.48
+INFO 11/15/2011 12:48:59 AM GetFoodRatios - Execute - mealProteinRatio = 50.16
+INFO 11/15/2011 12:49:35 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 42.85
+INFO 11/15/2011 12:49:36 AM GetFoodRatios - Execute - mealFoodFatVariant = 3.03
+INFO 11/15/2011 12:49:37 AM GetFoodRatios - Execute - mealFoodProteinVariant = 39.82
+INFO 11/15/2011 12:49:38 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 43.36
+INFO 11/15/2011 12:49:38 AM GetFoodRatios - Execute - mealFatRatio = 6.48
+INFO 11/15/2011 12:49:38 AM GetFoodRatios - Execute - mealProteinRatio = 50.16
+INFO 11/15/2011 12:49:50 AM GetFoodRatios - Execute - mealFoodVariantTtl = 85.70
+INFO 11/15/2011 12:50:12 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 4
+INFO 11/15/2011 12:50:12 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 12:50:12 AM GetFoodRatios - Execute - mealFoodProtein = 1
+INFO 11/15/2011 1:26:34 AM CalcGAP - Execute - carbohydrateGap = 41.02775000000000000000
+INFO 11/15/2011 1:26:34 AM CalcGAP - Execute - fatGap = 7.006166666666666666666666667
+INFO 11/15/2011 1:26:34 AM CalcGAP - Execute - proteinGap = 30.97612500000000000000
+INFO 11/15/2011 1:26:35 AM CalcGAP -  Execute - carbohydrateRatio = 51.93
+INFO 11/15/2011 1:26:35 AM CalcGAP - Execute - fatRatio = 8.87
+INFO 11/15/2011 1:26:35 AM CalcGAP - Execute - proteinRatio = 39.21
+INFO 11/15/2011 1:26:35 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 50.78
+INFO 11/15/2011 1:26:35 AM CalcGAP - Execute - fatGapPercentDecimal = 39.02
+INFO 11/15/2011 1:26:35 AM CalcGAP - Execute - proteinGapPercentDecimal = 76.68
+INFO 11/15/2011 1:27:09 AM CalcGAP - Execute - carbohydrateGap = 41.02775000000000000000
+INFO 11/15/2011 1:27:09 AM CalcGAP - Execute - fatGap = 7.006166666666666666666666667
+INFO 11/15/2011 1:27:09 AM CalcGAP - Execute - proteinGap = 30.97612500000000000000
+INFO 11/15/2011 1:27:09 AM CalcGAP -  Execute - carbohydrateRatio = 51.93
+INFO 11/15/2011 1:27:09 AM CalcGAP - Execute - fatRatio = 8.87
+INFO 11/15/2011 1:27:09 AM CalcGAP - Execute - proteinRatio = 39.21
+INFO 11/15/2011 1:27:09 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 50.78
+INFO 11/15/2011 1:27:09 AM CalcGAP - Execute - fatGapPercentDecimal = 39.02
+INFO 11/15/2011 1:27:09 AM CalcGAP - Execute - proteinGapPercentDecimal = 76.68
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 11
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 48.07
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodFatVariant = 8.87
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodProteinVariant = 39.21
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodVariantTtl = 96.15
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 54
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodFat = 14
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodProtein = 3
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 76.06
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodFatRatio = 19.72
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodProteinRatio = 4.23
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 24.13
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodFatVariant = 10.85
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodProteinVariant = 34.98
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodVariantTtl = 69.96
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 14
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 48.07
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodFatVariant = 8.87
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodProteinVariant = 39.21
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodVariantTtl = 96.15
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 10
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodFat = 1
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodProtein = 3
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 71.43
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodFatRatio = 7.14
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodProteinRatio = 21.43
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 19.50
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodFatVariant = 1.73
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodProteinVariant = 17.78
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:27:10 AM GetFoodRatios - Execute - mealFoodVariantTtl = 39.01
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 0
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealFoodFat = 100
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 0
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealFoodFatRatio = 100
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 51.93
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealFoodFatVariant = 91.13
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealFoodProteinVariant = 39.21
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:27:11 AM GetFoodRatios - Execute - mealFoodVariantTtl = 182.27
+ERROR 11/15/2011 1:27:29 AM An error occurred in CheckPercentages - setActualsPercents method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+INFO 11/15/2011 1:27:29 AM CheckPercentages - finalTarget - rangeValue = False
+INFO 11/15/2011 1:29:09 AM CalcGAP - Execute - carbohydrateGap = 41.02775000000000000000
+INFO 11/15/2011 1:29:09 AM CalcGAP - Execute - fatGap = 7.006166666666666666666666667
+INFO 11/15/2011 1:29:09 AM CalcGAP - Execute - proteinGap = 30.97612500000000000000
+INFO 11/15/2011 1:29:09 AM CalcGAP -  Execute - carbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:09 AM CalcGAP - Execute - fatRatio = 8.87
+INFO 11/15/2011 1:29:09 AM CalcGAP - Execute - proteinRatio = 39.21
+INFO 11/15/2011 1:29:09 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 50.78
+INFO 11/15/2011 1:29:09 AM CalcGAP - Execute - fatGapPercentDecimal = 39.02
+INFO 11/15/2011 1:29:09 AM CalcGAP - Execute - proteinGapPercentDecimal = 76.68
+INFO 11/15/2011 1:29:12 AM CalcGAP - Execute - carbohydrateGap = 41.02775000000000000000
+INFO 11/15/2011 1:29:12 AM CalcGAP - Execute - fatGap = 7.006166666666666666666666667
+INFO 11/15/2011 1:29:12 AM CalcGAP - Execute - proteinGap = 30.97612500000000000000
+INFO 11/15/2011 1:29:12 AM CalcGAP -  Execute - carbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:12 AM CalcGAP - Execute - fatRatio = 8.87
+INFO 11/15/2011 1:29:12 AM CalcGAP - Execute - proteinRatio = 39.21
+INFO 11/15/2011 1:29:12 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 50.78
+INFO 11/15/2011 1:29:12 AM CalcGAP - Execute - fatGapPercentDecimal = 39.02
+INFO 11/15/2011 1:29:12 AM CalcGAP - Execute - proteinGapPercentDecimal = 76.68
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 11
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 48.07
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodFatVariant = 8.87
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodProteinVariant = 39.21
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodVariantTtl = 96.15
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 54
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodFat = 14
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodProtein = 3
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 76.06
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodFatRatio = 19.72
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodProteinRatio = 4.23
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 24.13
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodFatVariant = 10.85
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodProteinVariant = 34.98
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodVariantTtl = 69.96
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 14
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 48.07
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodFatVariant = 8.87
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodProteinVariant = 39.21
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodVariantTtl = 96.15
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 10
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodFat = 1
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodProtein = 3
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 71.43
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodFatRatio = 7.14
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodProteinRatio = 21.43
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 19.50
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodFatVariant = 1.73
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodProteinVariant = 17.78
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodVariantTtl = 39.01
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 0
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodFat = 100
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 0
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodFatRatio = 100
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 51.93
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodFatVariant = 91.13
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodProteinVariant = 39.21
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:12 AM GetFoodRatios - Execute - mealFoodVariantTtl = 182.27
+ERROR 11/15/2011 1:29:13 AM An error occurred in CheckPercentages - setActualsPercents method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+INFO 11/15/2011 1:29:13 AM CheckPercentages - finalTarget - rangeValue = False
+INFO 11/15/2011 1:29:59 AM CalcGAP - Execute - carbohydrateGap = 41.02775000000000000000
+INFO 11/15/2011 1:29:59 AM CalcGAP - Execute - fatGap = 7.006166666666666666666666667
+INFO 11/15/2011 1:29:59 AM CalcGAP - Execute - proteinGap = 30.97612500000000000000
+INFO 11/15/2011 1:29:59 AM CalcGAP -  Execute - carbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:59 AM CalcGAP - Execute - fatRatio = 8.87
+INFO 11/15/2011 1:29:59 AM CalcGAP - Execute - proteinRatio = 39.21
+INFO 11/15/2011 1:29:59 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 50.78
+INFO 11/15/2011 1:29:59 AM CalcGAP - Execute - fatGapPercentDecimal = 39.02
+INFO 11/15/2011 1:29:59 AM CalcGAP - Execute - proteinGapPercentDecimal = 76.68
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 11
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 48.07
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodFatVariant = 8.87
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodProteinVariant = 39.21
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodVariantTtl = 96.15
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 54
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodFat = 14
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodProtein = 3
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 76.06
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodFatRatio = 19.72
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodProteinRatio = 4.23
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 24.13
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodFatVariant = 10.85
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodProteinVariant = 34.98
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodVariantTtl = 69.96
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 14
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 48.07
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodFatVariant = 8.87
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodProteinVariant = 39.21
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodVariantTtl = 96.15
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 10
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodFat = 1
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodProtein = 3
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 71.43
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodFatRatio = 7.14
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodProteinRatio = 21.43
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 19.50
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodFatVariant = 1.73
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodProteinVariant = 17.78
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodVariantTtl = 39.01
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 0
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodFat = 100
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 0
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodFatRatio = 100
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 51.93
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodFatVariant = 91.13
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodProteinVariant = 39.21
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 51.93
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFatRatio = 8.87
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealProteinRatio = 39.21
+INFO 11/15/2011 1:29:59 AM GetFoodRatios - Execute - mealFoodVariantTtl = 182.27
+ERROR 11/15/2011 1:29:59 AM An error occurred in CheckPercentages - setActualsPercents method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal)
+INFO 11/15/2011 1:29:59 AM CheckPercentages - finalTarget - rangeValue = False
+INFO 11/17/2011 5:13:01 PM CalcGAP - Execute - carbohydrateGap = 21.46775000000000000000
+INFO 11/17/2011 5:13:01 PM CalcGAP - Execute - fatGap = 0.303833333333333333333333333
+INFO 11/17/2011 5:13:01 PM CalcGAP - Execute - proteinGap = 26.53612500000000000000
+INFO 11/17/2011 5:13:01 PM CalcGAP -  Execute - carbohydrateRatio = 44.44
+INFO 11/17/2011 5:13:01 PM CalcGAP - Execute - fatRatio = 0.63
+INFO 11/17/2011 5:13:01 PM CalcGAP - Execute - proteinRatio = 54.93
+INFO 11/17/2011 5:13:01 PM CalcGAP - Execute - carbohydrateGapPercentDecimal = 26.57
+INFO 11/17/2011 5:13:01 PM CalcGAP - Execute - fatGapPercentDecimal = 1.69
+INFO 11/17/2011 5:13:01 PM CalcGAP - Execute - proteinGapPercentDecimal = 65.69
+INFO 11/17/2011 5:14:01 PM CalcGAP - Execute - carbohydrateGap = 21.46775000000000000000
+INFO 11/17/2011 5:14:01 PM CalcGAP - Execute - fatGap = 0.303833333333333333333333333
+INFO 11/17/2011 5:14:01 PM CalcGAP - Execute - proteinGap = 26.53612500000000000000
+INFO 11/17/2011 5:14:01 PM CalcGAP -  Execute - carbohydrateRatio = 44.44
+INFO 11/17/2011 5:14:01 PM CalcGAP - Execute - fatRatio = 0.63
+INFO 11/17/2011 5:14:01 PM CalcGAP - Execute - proteinRatio = 54.93
+INFO 11/17/2011 5:14:01 PM CalcGAP - Execute - carbohydrateGapPercentDecimal = 26.57
+INFO 11/17/2011 5:14:01 PM CalcGAP - Execute - fatGapPercentDecimal = 1.69
+INFO 11/17/2011 5:14:01 PM CalcGAP - Execute - proteinGapPercentDecimal = 65.69
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodCarbohydrate = 11
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodProtein = 1
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 91.67
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodProteinRatio = 8.33
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 47.23
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodFatVariant = 0.63
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodProteinVariant = 46.60
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodVariantTtl = 94.46
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodCarbohydrate = 45
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodFat = 3
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodProtein = 7
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 81.82
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodFatRatio = 5.45
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodProteinRatio = 12.73
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 37.38
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodFatVariant = 4.82
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealFoodProteinVariant = 42.20
+INFO 11/17/2011 5:14:01 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodVariantTtl = 84.40
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodCarbohydrate = 10
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 55.56
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodFatVariant = 0.63
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodProteinVariant = 54.93
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodVariantTtl = 111.12
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodCarbohydrate = 10
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodFat = 1
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodProtein = 3
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 71.43
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodFatRatio = 7.14
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodProteinRatio = 21.43
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 26.99
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodFatVariant = 6.51
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodProteinVariant = 33.50
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodVariantTtl = 67.00
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodCarbohydrate = 0
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodFat = 100
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 0
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodFatRatio = 100
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 44.44
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodFatVariant = 99.37
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodProteinVariant = 54.93
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:14:02 PM GetFoodRatios - Execute - mealFoodVariantTtl = 198.74
+ERROR 11/17/2011 5:14:04 PM An error occurred in CheckPercentages - setActualsPercents method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal) in C:\Builds\NutriStyle\Applications\MenuGenerator\CheckPercentages.cs:line 24
+INFO 11/17/2011 5:14:04 PM CheckPercentages - finalTarget - rangeValue = False
+INFO 11/17/2011 5:22:24 PM CalcGAP - Execute - carbohydrateGap = 21.46775000000000000000
+INFO 11/17/2011 5:22:24 PM CalcGAP - Execute - fatGap = 0.303833333333333333333333333
+INFO 11/17/2011 5:22:24 PM CalcGAP - Execute - proteinGap = 26.53612500000000000000
+INFO 11/17/2011 5:22:24 PM CalcGAP -  Execute - carbohydrateRatio = 44.44
+INFO 11/17/2011 5:22:24 PM CalcGAP - Execute - fatRatio = 0.63
+INFO 11/17/2011 5:22:24 PM CalcGAP - Execute - proteinRatio = 54.93
+INFO 11/17/2011 5:22:24 PM CalcGAP - Execute - carbohydrateGapPercentDecimal = 26.57
+INFO 11/17/2011 5:22:24 PM CalcGAP - Execute - fatGapPercentDecimal = 1.69
+INFO 11/17/2011 5:22:24 PM CalcGAP - Execute - proteinGapPercentDecimal = 65.69
+INFO 11/17/2011 5:22:28 PM CalcGAP - Execute - carbohydrateGap = 21.46775000000000000000
+INFO 11/17/2011 5:22:28 PM CalcGAP - Execute - fatGap = 0.303833333333333333333333333
+INFO 11/17/2011 5:22:28 PM CalcGAP - Execute - proteinGap = 26.53612500000000000000
+INFO 11/17/2011 5:22:28 PM CalcGAP -  Execute - carbohydrateRatio = 44.44
+INFO 11/17/2011 5:22:28 PM CalcGAP - Execute - fatRatio = 0.63
+INFO 11/17/2011 5:22:28 PM CalcGAP - Execute - proteinRatio = 54.93
+INFO 11/17/2011 5:22:28 PM CalcGAP - Execute - carbohydrateGapPercentDecimal = 26.57
+INFO 11/17/2011 5:22:28 PM CalcGAP - Execute - fatGapPercentDecimal = 1.69
+INFO 11/17/2011 5:22:28 PM CalcGAP - Execute - proteinGapPercentDecimal = 65.69
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodCarbohydrate = 11
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodProtein = 1
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 91.67
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodProteinRatio = 8.33
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 47.23
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodFatVariant = 0.63
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodProteinVariant = 46.60
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodVariantTtl = 94.46
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodCarbohydrate = 45
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodFat = 3
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodProtein = 7
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 81.82
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodFatRatio = 5.45
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodProteinRatio = 12.73
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 37.38
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodFatVariant = 4.82
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodProteinVariant = 42.20
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodVariantTtl = 84.40
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodCarbohydrate = 10
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 55.56
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodFatVariant = 0.63
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodProteinVariant = 54.93
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodVariantTtl = 111.12
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodCarbohydrate = 10
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodFat = 1
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodProtein = 3
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 71.43
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodFatRatio = 7.14
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodProteinRatio = 21.43
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 26.99
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodFatVariant = 6.51
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodProteinVariant = 33.50
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodVariantTtl = 67.00
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodCarbohydrate = 0
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodFat = 100
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 0
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodFatRatio = 100
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodCarbohydrateVariant = 44.44
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodFatVariant = 99.37
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodProteinVariant = 54.93
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealCarbohydrateRatio = 44.44
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFatRatio = 0.63
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealProteinRatio = 54.93
+INFO 11/17/2011 5:22:28 PM GetFoodRatios - Execute - mealFoodVariantTtl = 198.74
+INFO 11/18/2011 10:59:26 AM CalcGAP - Execute - carbohydrateGap = 15.00775000000000000000
+INFO 11/18/2011 10:59:26 AM CalcGAP - Execute - fatGap = 0.303833333333333333333333333
+INFO 11/18/2011 10:59:26 AM CalcGAP - Execute - proteinGap = 26.65612500000000000000
+INFO 11/18/2011 10:59:26 AM CalcGAP -  Execute - carbohydrateRatio = 35.76
+INFO 11/18/2011 10:59:26 AM CalcGAP - Execute - fatRatio = 0.72
+INFO 11/18/2011 10:59:26 AM CalcGAP - Execute - proteinRatio = 63.52
+INFO 11/18/2011 10:59:26 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 18.58
+INFO 11/18/2011 10:59:26 AM CalcGAP - Execute - fatGapPercentDecimal = 1.69
+INFO 11/18/2011 10:59:26 AM CalcGAP - Execute - proteinGapPercentDecimal = 65.99
+INFO 11/18/2011 10:59:35 AM CalcGAP - Execute - carbohydrateGap = 15.00775000000000000000
+INFO 11/18/2011 10:59:35 AM CalcGAP - Execute - fatGap = 0.303833333333333333333333333
+INFO 11/18/2011 10:59:35 AM CalcGAP - Execute - proteinGap = 26.65612500000000000000
+INFO 11/18/2011 10:59:38 AM CalcGAP -  Execute - carbohydrateRatio = 35.76
+INFO 11/18/2011 10:59:38 AM CalcGAP - Execute - fatRatio = 0.72
+INFO 11/18/2011 10:59:39 AM CalcGAP - Execute - proteinRatio = 63.52
+INFO 11/18/2011 11:00:09 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 18.58
+INFO 11/18/2011 11:00:10 AM CalcGAP - Execute - fatGapPercentDecimal = 1.69
+INFO 11/18/2011 11:00:13 AM CalcGAP - Execute - proteinGapPercentDecimal = 65.99
+INFO 11/18/2011 11:01:20 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 11
+INFO 11/18/2011 11:01:20 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/18/2011 11:01:21 AM GetFoodRatios - Execute - mealFoodProtein = 1
+INFO 11/18/2011 11:02:39 AM CalcGAP - Execute - carbohydrateGap = 15.00775000000000000000
+INFO 11/18/2011 11:02:40 AM CalcGAP - Execute - fatGap = 0.303833333333333333333333333
+INFO 11/18/2011 11:02:40 AM CalcGAP - Execute - proteinGap = 26.65612500000000000000
+INFO 11/18/2011 11:02:43 AM CalcGAP -  Execute - carbohydrateRatio = 35.76
+INFO 11/18/2011 11:02:43 AM CalcGAP - Execute - fatRatio = 0.72
+INFO 11/18/2011 11:02:43 AM CalcGAP - Execute - proteinRatio = 63.52
+INFO 11/18/2011 11:03:05 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 18.58
+INFO 11/18/2011 11:03:05 AM CalcGAP - Execute - fatGapPercentDecimal = 1.69
+INFO 11/18/2011 11:03:06 AM CalcGAP - Execute - proteinGapPercentDecimal = 65.99
+INFO 11/18/2011 11:04:54 AM CalcGAP - Execute - carbohydrateGap = 15.00775000000000000000
+INFO 11/18/2011 11:04:55 AM CalcGAP - Execute - fatGap = 0.303833333333333333333333333
+INFO 11/18/2011 11:04:55 AM CalcGAP - Execute - proteinGap = 26.65612500000000000000
+INFO 11/18/2011 11:07:07 AM CalcGAP -  Execute - carbohydrateRatio = 35.76
+INFO 11/18/2011 11:07:08 AM CalcGAP - Execute - fatRatio = 0.72
+INFO 11/18/2011 11:07:08 AM CalcGAP - Execute - proteinRatio = 63.52
+INFO 11/18/2011 11:07:56 AM CalcGAP - Execute - carbohydrateGapPercentDecimal = 18.58
+INFO 11/18/2011 11:07:57 AM CalcGAP - Execute - fatGapPercentDecimal = 1.69
+INFO 11/18/2011 11:07:57 AM CalcGAP - Execute - proteinGapPercentDecimal = 65.99
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 11
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodProtein = 1
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 91.67
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodProteinRatio = 8.33
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 35.76
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFatRatio = 0.72
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealProteinRatio = 63.52
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariance = 55.91
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodFatVariance = 0.72
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodProteinVariance = 55.19
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 35.76
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFatRatio = 0.72
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealProteinRatio = 63.52
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodVarianceTtl = 111.82
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 45
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodFat = 3
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodProtein = 7
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 81.82
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodFatRatio = 5.45
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodProteinRatio = 12.73
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 35.76
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFatRatio = 0.72
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealProteinRatio = 63.52
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariance = 46.06
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodFatVariance = 4.73
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodProteinVariance = 50.79
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 35.76
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFatRatio = 0.72
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealProteinRatio = 63.52
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodVarianceTtl = 101.58
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 8
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodFat = 0
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 100
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodFatRatio = 0
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 35.76
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFatRatio = 0.72
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealProteinRatio = 63.52
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariance = 64.24
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodFatVariance = 0.72
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodProteinVariance = 63.52
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 35.76
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFatRatio = 0.72
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealProteinRatio = 63.52
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodVarianceTtl = 128.48
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 10
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodFat = 1
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodProtein = 3
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 71.43
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodFatRatio = 7.14
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodProteinRatio = 21.43
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 35.76
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFatRatio = 0.72
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealProteinRatio = 63.52
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariance = 35.67
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodFatVariance = 6.42
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodProteinVariance = 42.09
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 35.76
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFatRatio = 0.72
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealProteinRatio = 63.52
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodVarianceTtl = 84.18
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodCarbohydrate = 0
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodFat = 100
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodProtein = 0
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateRatio = 0
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodFatRatio = 100
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodProteinRatio = 0
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 35.76
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFatRatio = 0.72
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealProteinRatio = 63.52
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodCarbohydrateVariance = 35.76
+INFO 11/18/2011 11:08:12 AM GetFoodRatios - Execute - mealFoodFatVariance = 99.28
+INFO 11/18/2011 11:08:13 AM GetFoodRatios - Execute - mealFoodProteinVariance = 63.52
+INFO 11/18/2011 11:08:13 AM GetFoodRatios - Execute - mealCarbohydrateRatio = 35.76
+INFO 11/18/2011 11:08:13 AM GetFoodRatios - Execute - mealFatRatio = 0.72
+INFO 11/18/2011 11:08:13 AM GetFoodRatios - Execute - mealProteinRatio = 63.52
+INFO 11/18/2011 11:08:13 AM GetFoodRatios - Execute - mealFoodVarianceTtl = 198.56
+INFO 11/18/2011 11:08:18 AM CheckPercentages - Execute - carbohydrateActualsPercent = 118.57572972655174227726050457
+INFO 11/18/2011 11:08:18 AM CheckPercentages - Execute - fatActualsPercent = 98.30769659218551284312542354
+INFO 11/18/2011 11:08:18 AM CheckPercentages - Execute - proteinActualsPercent = 34.013163391290625029009589410
+INFO 11/18/2011 11:08:40 AM CheckPercentages - finalTarget - rangeValue = False
+ERROR 11/18/2011 11:10:24 AM An error occurred in CheckPercentages - setActualsPercents method. Message: The given key was not present in the dictionary. StackTrace:    at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.DataCollection`2.get_Item(TKey key)
+   at Microsoft.Xrm.Sdk.Entity.get_Item(String attributeName)
+   at DynamicConnections.NutriStyle.CRM2011.MenuGenerator.CheckPercentages.setActualsPercents(Entity entityMeal)
+INFO 11/18/2011 11:11:58 AM CheckPercentages - upperTarget - rangeValue = True

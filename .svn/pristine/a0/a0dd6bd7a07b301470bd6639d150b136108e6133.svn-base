@@ -1,0 +1,77 @@
+<Project DefaultTargets="build"   ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- 
+    Always setup the path to the root and also the orders root folder.
+    We then include the orders properties, which includes the root properties
+    For this project the orders folder is in the same folder as this build file
+    so can just reference the ms build project directory property as the orders_root.
+  -->
+
+  <PropertyGroup>
+    <root>$(MSBuildProjectDirectory)\..\..</root>
+    <ILMergeExecutable>"C:\program files (x86)\Microsoft\ILMerge\ILMerge.exe"</ILMergeExecutable>
+    <KeyFile>"..\..\Include\CommonStrongKey.snk"</KeyFile>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <Import Project="$(root)\DC.properties.proj"/>
+  
+  <ItemGroup>
+
+    
+    <Files Include="$(drop)\Server\webservices\**\*"/>
+
+    <WebFiles Include="$(MSBuildProjectDirectory)\**\*.aspx;
+                 $(MSBuildProjectDirectory)\**\*.js;
+                 $(MSBuildProjectDirectory)\**\*.css;
+                 $(MSBuildProjectDirectory)\**\*.htm;
+                 $(MSBuildProjectDirectory)\**\*web.config;
+                 $(MSBuildProjectDirectory)\**\*.asmx;
+                 $(MSBuildProjectDirectory)\**\*.gif;
+                 $(MSBuildProjectDirectory)\**\*.PNG;
+                 $(MSBuildProjectDirectory)\**\*.xml;
+                 $(MSBuildProjectDirectory)\**\*.bat;"/>
+    <ConfigFiles  Include="$(MSBuildProjectDirectory)\**\*.config;"/> 
+                  
+    <SourceFiles Include="$(root)\CommonAssemblyInfo.cs;$(MSBuildProjectDirectory)\**\*.cs;" Exclude="$(MSBuildProjectDirectory)\Properties\**\*.cs"/>
+    
+    <IncludeDlls Include="$(common)\Server\bin\assembly\DynamicConnections.CRM2011.Common.*"/>
+    <ReferenceFiles Include="$(common)\Server\bin\assembly\DynamicConnections.CRM2011.Common.dll;
+                    $(root)\include\microsoft.xrm.sdk.dll;
+                    $(root)\include\microsoft.crm.sdk.proxy.dll;
+                    $(drop)\Server\webservices\bin\DynamicConnections.NutriStyle.CRM2011.WebServices.dll  
+                    "/>
+
+  </ItemGroup>
+  
+  <!--
+      Once we have the roots configured we can now include all the standard properties,
+      this also includes the root.properties also.
+  -->
+  
+  <Target Name="clean">
+    <Message Text="drop is $(drop)"/>
+    <Exec Command="rmdir $(drop)\Server\MenuGenerator /s /q" />
+  </Target>
+ 
+  <Target Name="build">
+    <Message Text="drop is $(drop)"/>
+    <Message Text="Project dir is $(MSBuildProjectDirectory)"/>
+    <MakeDir Directories="$(drop)\Server\MenuGenerator\bin\"/>
+   
+    <Csc TargetType="library"
+          Sources="@(SourceFiles)"
+          References="@(ReferenceFiles)"
+          OutputAssembly="$(drop)\Server\MenuGenerator\bin\DynamicConnections.NutriStyle.CRM2011.MenuGenerator.dll" EmitDebugInformation="true" Optimize="false" KeyFile="..\..\Include\CommonStrongKey.snk"/>
+    
+    <Copy SourceFiles="@(WebFiles)"
+          DestinationFolder="$(drop)\Server\MenuGenerator\%(RecursiveDir)"/>
+
+    <Copy SourceFiles="@(ReferenceFiles)"
+         DestinationFolder="$(drop)\Server\MenuGenerator\bin"/>
+
+  </Target>
+
+  
+  
+</Project>

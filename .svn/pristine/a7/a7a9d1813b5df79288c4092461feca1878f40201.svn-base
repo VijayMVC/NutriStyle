@@ -1,0 +1,448 @@
+﻿<UserControl xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"  
+			 xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
+			 x:Class="DynamicConnections.NutriStyle.MenuGenerator.Controls.AddAFood"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:helpers="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Engine.Helpers"
+             xmlns:toolkit1="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit" Background="Transparent"
+             xmlns:toolkit2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+             xmlns:validation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input"
+             mc:Ignorable="d"
+             xmlns:Controls="clr-namespace:DynamicConnections.NutriStyle.MenuGenerator.Controls;assembly=DynamicConnections.NutriStyle.MenuGenerator"
+             xmlns:charting="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" 
+               d:DesignWidth="750" d:DesignHeight="700" Loaded="Page_Loaded">
+
+
+    <UserControl.Resources>
+        <helpers:RowIndexConverter x:Key="rowConvertor" />
+        <helpers:RadioButtonConverterMenuFood x:Key="radioButtonConverter" />
+        <helpers:RadioButtonConverterAvailableToAllUsers x:Key="radioButtonConverterAvailable" />
+    </UserControl.Resources>
+
+    <Grid x:Name="LayoutRoot" Style="{StaticResource gridStyle}" Height="700">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <!-- 1 -->
+
+
+        </Grid.RowDefinitions>
+        <Border Style="{StaticResource borderStyle}"  Height="700">
+
+            <toolkit2:BusyIndicator Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch"   Margin="0,0,0,0" 
+                        VerticalAlignment="Stretch" BorderThickness="0" Name="busyIndicator" Visibility="Visible" 
+                        IsBusy="False" >
+                <StackPanel Height="694">
+                    <Grid Height="Auto" Name="FormData">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="36"></RowDefinition>
+                            <!-- 0 -->
+                            <RowDefinition Height="40"></RowDefinition>
+                            <!-- 1: for validation errors-->
+
+
+                            <RowDefinition Height="446"></RowDefinition>
+                            <RowDefinition Height="36"></RowDefinition>
+                            <RowDefinition Height="36"></RowDefinition>
+                            <RowDefinition Height="36"></RowDefinition>
+
+
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="125"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="125"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <Grid Height="Auto" Grid.Row="0" Grid.ColumnSpan="24" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="110"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <sdk:Label Content="Add A Food" Style="{StaticResource textHeaderStyle}" Grid.Column="0"/>
+                            <TextBlock  Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Style="{StaticResource TextBlockLabel}">
+                                <Run Text="(" />
+                                <Run Text="*" Foreground="Red"/>
+                                <Run Text=" required)" />
+                            </TextBlock>
+                        </Grid>
+
+                        <validation:ValidationSummary  Name="ValidationSummary" Canvas.Top="50"  Grid.Row="1" Grid.ColumnSpan="34" Margin="0,20,0,0" />
+
+                        <StackPanel Grid.Row="1" Grid.ColumnSpan="4"  Orientation="Vertical">
+                            <sdk:Label Foreground="#878787" Content="Please fill out the below form to add a food to the system" FontSize="12" FontWeight="Bold"/>
+                        </StackPanel>
+
+                        <ScrollViewer Grid.ColumnSpan="4" Grid.Row="2" Height="Auto" VerticalScrollBarVisibility="Auto">
+                            <Grid   VerticalAlignment="Top" Name="Grid">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="36"></RowDefinition>
+                                    <!-- 1 -->
+                                    <RowDefinition Height="36"></RowDefinition>
+                                    <!-- 2 -->
+                                    <RowDefinition Height="36"></RowDefinition>
+                                    <!-- 3 -->
+                                    <RowDefinition Height="36"></RowDefinition>
+                                    <!-- 4 -->
+                                    <RowDefinition Height="36"></RowDefinition>
+                                    <!-- 5 -->
+                                    <RowDefinition Height="36"></RowDefinition>
+                                    <!-- 6 -->
+                                    <RowDefinition Height="36"></RowDefinition>
+                                    <!-- 7 -->
+                                    <RowDefinition Height="36"></RowDefinition>
+                                    <!-- 8 -->
+                                    <RowDefinition Height="36"></RowDefinition>
+                                    <!-- 9 -->
+                                    <RowDefinition Height="36"></RowDefinition>
+                                    <!-- 10 -->
+                                    <RowDefinition Height="36"></RowDefinition>
+                                    <!-- 11 -->
+                                    <RowDefinition Height="36"></RowDefinition>
+                                    <!-- 12 -->
+                                    <RowDefinition Height="0" x:Name="FormDataHeight"></RowDefinition>
+                                    <!-- 13 -->
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="125"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="125" />
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Form data -->
+                                <TextBlock Text="Food Display Name" Name="dc_nameLabel" Grid.Row="0" Grid.Column="0" Style="{StaticResource TextBlockLabel}" TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_name" Grid.Row="0" Grid.Column="1" Margin="2,2,2,2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}" 
+                            />
+
+                                <TextBlock Text="Food Manufacturer" Name="dc_foodmanufacturerwebLabel" Grid.Row="0" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_foodmanufacturerweb" Grid.Row="0" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding FoodManufacturerWeb, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}" 
+                                />
+
+                                <TextBlock Text="Shopping List Category" Name="dc_foodgroupLabel" Grid.Row="1" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                <Controls:ComboBoxWithValidation x:Name="dc_foodgroup" Grid.Row="1" Grid.Column="1" Margin="2"
+                                SelectedPair="{Binding FoodGroup, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />  
+                                                                 
+                                <TextBlock Text="Source of Information" Name="dc_sourceofinformationdateobtainedLabel" Grid.Row="1" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_sourceofinformationdateobtained" Grid.Row="1" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding SourceOfInformation, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}" 
+                                    />
+
+                                <TextBlock Text="Choose" Name="dc_canuseinmenuLabel" Grid.Row="2" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap">
+                                    <Run>Choose</Run>
+                                    <Run Foreground="{StaticResource defaultFontRequiredColor}">*</Run>
+                                </TextBlock>
+                                <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <RadioButton Name="ingredient" GroupName="menuFoodOptions" Content="Ingredent Only or" Margin="0,0,10,0" Cursor="Hand" ToolTipService.ToolTip="Ingredent"
+                                    IsChecked="{Binding MenuFood, Mode=TwoWay, ValidatesOnExceptions=True, 
+                                    NotifyOnValidationError=True, UpdateSourceTrigger=Explicit,
+                                    ConverterParameter=False, Converter={StaticResource radioButtonConverter}}"            
+                                />
+                                    <RadioButton Name="both" GroupName="menuFoodOptions" Content="Can be both an Ingredient and a Menu Food"  Cursor="Hand" ToolTipService.ToolTip="Both"
+                                    IsChecked="{Binding MenuFood, Mode=TwoWay, ValidatesOnExceptions=True, 
+                                    NotifyOnValidationError=True, UpdateSourceTrigger=Explicit,
+                                    ConverterParameter=True, Converter={StaticResource radioButtonConverter}}"             
+                                />
+                                </StackPanel>
+
+
+                                <TextBlock Text="Serving Size: Amount " Name="dc_portion_amountLabel" Grid.Row="3" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_portion_amount" Grid.Row="3" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                 Text="{Binding PortionAmount, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}" 
+                            />
+
+                                <TextBlock Text="Units" Name="dc_portiontypeidLabel" Grid.Row="3" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                <Controls:ComboBoxWithValidation x:Name="dc_portiontypeid" Grid.Row="3" Grid.Column="3" Margin="2"
+                                SelectedPair="{Binding PortionTypeId, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"     
+                            />
+
+                                <TextBlock Text="Serving Size Gram Weight" Name="dc_unit_gram_weightLabel" Grid.Row="4" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_unit_gram_weight" Grid.Row="4" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                 Text="{Binding UnitGramWeight, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}" 
+                            />
+
+                                <TextBlock Text="Calories (Kcals) per serving" Name="dc_food_nutrients_dc_kcalsLabel" Grid.Row="4" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_kcals" Grid.Row="4" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding Kcals, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"     
+                            />
+
+                                <TextBlock Text="Total Fat (g) per serving" Name="dc_food_nutrients_dc_fatLabel" Grid.Row="5" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_fat" Grid.Row="5" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding Fat, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"                           
+                            />
+
+                                <TextBlock Text="Saturated Fat (g)" Name="dc_food_nutrients_dc_fa_satLabel" Grid.Row="5" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_fa_sat" Grid.Row="5" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding SaturatedFat, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                            />
+
+                                <TextBlock Text="Trans Fat (g)" Name="dc_food_nutrients_dc_fa_transLabel" Grid.Row="6" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_fa_trans" Grid.Row="6" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding TransFat, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                            />
+
+                                <TextBlock Text="Cholesterol (mg) per serving" Name="dc_food_nutrients_dc_cholestrolLabel" Grid.Row="6" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_cholestrol" Grid.Row="6" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding Cholesterol, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                            />
+
+                                <TextBlock Text="Sodium (mg) per serving" Name="dc_food_nutrients_dc_sodiumLabel" Grid.Row="7" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_sodium" Grid.Row="7" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding Sodium, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                            />
+
+                                <TextBlock Text="Total Carbs (g) per serving" Name="dc_food_nutrients_dc_carbohydrateLabel" Grid.Row="7" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_carbohydrate" Grid.Row="7" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding Carbohydrate, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                            />
+
+                                <TextBlock Text="Dietary Fiber (g)" Name="dc_food_nutrients_dc_fiberLabel" Grid.Row="8" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_fiber" Grid.Row="8" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding Fiber, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                            />
+
+                                <TextBlock Text="Sugar (g)" Name="dc_food_nutrients_dc_sugarLabel" Grid.Row="8" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_sugar" Grid.Row="8" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding Sugar, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                            />
+
+                                <TextBlock Text="Protein" Name="dc_food_nutrients_dc_proteinLabel" Grid.Row="9" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_protein" Grid.Row="9" Grid.Column="1" Margin="2,8,2,4" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding Protein, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                            />
+
+                                <TextBlock Text="Alcohol" Name="dc_food_nutrients_dc_alcoholLabel" Grid.Row="9" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_alcohol" Grid.Row="9" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding Alcohol, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                            />
+
+
+                                <TextBlock Text="Vitamin A" Name="dc_food_nutrients_dc_vit_a_iuLabel" Grid.Row="10" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_vit_a_iu" Grid.Row="10" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding VitaminA, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                            />
+
+                             
+                                
+                                <TextBlock Text="Vitamin C" Name="dc_food_nutrients_dc_vit_cLabel" Grid.Row="10" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_vit_c" Grid.Row="10" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding VitaminC, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"                           
+                            />
+
+                                <TextBlock Text="Calcium" Name="dc_food_nutrients_dc_calciumLabel" Grid.Row="11" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_calcium" Grid.Row="11" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding Calcium, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                            />
+
+                                <TextBlock Text="Iron" Name="dc_food_nutrients_dc_ironLabel" Grid.Row="11" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_iron" Grid.Row="11" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                Text="{Binding Iron, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                            />
+                                <StackPanel Grid.Row="12" Grid.ColumnSpan="4" Visibility="Collapsed" Name="GridAdditionalFields" >
+                                    <Grid   VerticalAlignment="Top">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="36"></RowDefinition>
+                                            <!-- 1 -->
+                                            <RowDefinition Height="36"></RowDefinition>
+                                            <!-- 2 -->
+                                            <RowDefinition Height="36"></RowDefinition>
+                                            <!-- 3 -->
+                                            <RowDefinition Height="36"></RowDefinition>
+                                            <!-- 4 -->
+                                            <RowDefinition Height="36"></RowDefinition>
+                                            <!-- 5 -->
+                                            <RowDefinition Height="36"></RowDefinition>
+                                            <!-- 6 -->
+                                            <RowDefinition Height="36"></RowDefinition>
+                                            <!-- 7 -->
+                                            <RowDefinition Height="36"></RowDefinition>
+                                            <!-- 8 -->
+                                            <RowDefinition Height="36"></RowDefinition>
+                                            <!-- 9 -->
+                                            <RowDefinition Height="36"></RowDefinition>
+                                            <!-- 10 -->
+                                            <RowDefinition Height="36"></RowDefinition>
+                                            <!-- 11 -->
+                                            <RowDefinition Height="36"></RowDefinition>
+                                            <!-- 12 -->
+                                            <RowDefinition Height="36"></RowDefinition>
+                                            <!-- 13 -->
+                                            <RowDefinition Height="36"></RowDefinition>
+                                            <!-- 14 -->
+                                            <RowDefinition Height="36"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="125"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="125"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Text="Vitamin D" Name="dc_food_nutrients_dc_vit_dLabel" Grid.Row="0" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_vit_d" Grid.Row="0" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding VitaminD, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Vitamin E" Name="dc_food_nutrients_dc_vit_eLabel" Grid.Row="0" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_vit_e" Grid.Row="0" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding VitaminE, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Vitamin K" Name="dc_food_nutrients_dc_vit_kLabel" Grid.Row="1" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_vit_k" Grid.Row="1" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding VitaminK, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Thiamin" Name="dc_food_nutrients_dc_thiaminLabel" Grid.Row="1" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_thiamin" Grid.Row="1" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding Thiamin, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Riboflavin" Name="dc_food_nutrients_dc_riboflavinLabel" Grid.Row="2" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_riboflavin" Grid.Row="2" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding Riboflavin, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Niacin" Name="dc_food_nutrients_dc_niacinLabel" Grid.Row="2" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_niacin" Grid.Row="2" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding Niacin, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Vitamin B6" Name="dc_food_nutrients_dc_vit_b6Label" Grid.Row="3" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_vit_b6" Grid.Row="3" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding VitaminB6, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Folate" Name="dc_food_nutrients_dc_folateLabel" Grid.Row="3" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_folate" Grid.Row="3" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding Folate, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Vitamin B12" Name="dc_food_nutrients_dc_vit_b12Label" Grid.Row="4" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_vit_b12" Grid.Row="4" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding VitaminB12, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Biotin" Name="dc_food_nutrients_dc_biotinLabel" Grid.Row="4" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_biotin" Grid.Row="4" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding Biotin, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Pantothenic Acid" Name="dc_food_nutrients_dc_panto_acidLabel" Grid.Row="5" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_panto_acid" Grid.Row="5" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding PantothenicAcid, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Potassium" Name="dc_food_nutrients_dc_potassiumLabel" Grid.Row="5" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_potassium" Grid.Row="5" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding Potassium, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Magnesium" Name="dc_food_nutrients_dc_magnesiumLabel" Grid.Row="6" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_magnesium" Grid.Row="6" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding Magnesium, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Zinc" Name="dc_food_nutrients_dc_zincLabel" Grid.Row="6" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_zinc" Grid.Row="6" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding Zinc, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Selenium" Name="dc_food_nutrients_dc_seleniumLabel" Grid.Row="7" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_selenium" Grid.Row="7" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding Selenium, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Copper" Name="dc_food_nutrients_dc_copperLabel" Grid.Row="7" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_copper" Grid.Row="7" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding Copper, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Magnesium" Name="dc_food_nutrients_dc_manganeseLabel" Grid.Row="8" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_manganese" Grid.Row="8" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding Magnesium, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Choline" Name="dc_food_nutrients_dc_cholineLabel" Grid.Row="8" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_choline" Grid.Row="8" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding Choline, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Chromium" Name="dc_food_nutrients_dc_chromiumLabel" Grid.Row="9" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_chromium" Grid.Row="9" Grid.Column="1" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding Chromium, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Phosphorus" Name="dc_food_nutrients_dc_phosphorusLabel" Grid.Row="9" Grid.Column="2" Style="{StaticResource TextBlockLabelRight}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_food_nutrients_dc_phosphorus" Grid.Row="9" Grid.Column="3" Margin="2" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding Phosphorus, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+
+                                        <TextBlock Text="Ingredient List" Name="dc_ingredientlistLabel" Grid.Row="10" Grid.Column="0" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                                        <Controls:WatermarkTextBox x:Name="dc_ingredientlist" Grid.Row="10" Grid.Column="1" Margin="2" Grid.ColumnSpan="3" Style="{StaticResource WatermarkTextBox}"
+                                            Text="{Binding IngredientList, Mode=TwoWay, UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, NotifyOnValidationError=True}"
+                                        />
+                                        <TextBlock Text="Click on all of the following ingredients that are contain in this food:"  Grid.Row="11" Grid.Column="0"  Grid.ColumnSpan="4" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+
+                                        <StackPanel Grid.Row="12" Grid.Column="0" Margin="2" Grid.ColumnSpan="4" Orientation="Horizontal">
+                                            <CheckBox Content="Corn" Name="dc_corn" Width="100" IsChecked="{Binding Corn, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Cursor="Hand" Style="{StaticResource DefaultCheckBox}"/>
+                                            <CheckBox Content="Eggs" Name="dc_egg"  Width="100" IsChecked="{Binding Eggs, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Cursor="Hand" Style="{StaticResource DefaultCheckBox}"/>
+                                            <CheckBox Content="Dairy" Name="dc_dairy"  Width="100" IsChecked="{Binding Dairy, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Cursor="Hand" Style="{StaticResource DefaultCheckBox}"/>
+                                            
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Row="13" Grid.Column="0" Margin="2" Grid.ColumnSpan="4" Orientation="Horizontal">
+                                            <CheckBox Content="Soy" Name="dc_soy" Width="100" IsChecked="{Binding Soy, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Cursor="Hand" Style="{StaticResource DefaultCheckBox}"/>
+                                            <CheckBox Content="Peanuts" Name="dc_peanut" Width="100" IsChecked="{Binding Peanuts, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Cursor="Hand" Style="{StaticResource DefaultCheckBox}"/>
+                                            <CheckBox Content="Caffeine" Name="dc_caffeine" Width="100" IsChecked="{Binding Caffeine, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Cursor="Hand" Style="{StaticResource DefaultCheckBox}"/>
+                                            <CheckBox Content="Any Animal Product" Name="dc_animalproduct" Width="200" IsChecked="{Binding AnimalProduct, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Cursor="Hand" Style="{StaticResource DefaultCheckBox}"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Row="14" Grid.Column="0" Margin="2" Grid.ColumnSpan="4" Orientation="Horizontal">
+                                            <CheckBox Content="Artificial Sweeteners"  Width="200" Name="dc_artificialsweeteners" IsChecked="{Binding ArtificialSweeteners, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Cursor="Hand" Style="{StaticResource DefaultCheckBox}"/>
+                                            <CheckBox Content="Artificial Colors And Additives" Width="300"  Name="dc_artificialcolorsadditives" IsChecked="{Binding ArtificialColorsAdditives, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Cursor="Hand" Style="{StaticResource DefaultCheckBox}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+
+
+                            </Grid>
+
+
+                        </ScrollViewer>
+
+
+                        <TextBlock Text="Make this Food available to all users:" Name="dc_availabletoallusersLabel" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource TextBlockLabel}"  TextWrapping="Wrap"/>
+                        <StackPanel Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center">
+                            <RadioButton Name="availableToAllUsersYes" GroupName="AvailableToUsersOptions" Content="Yes" Margin="0,0,10,0" Cursor="Hand" ToolTipService.ToolTip="Yes"
+                                    IsChecked="{Binding AvailableToAllUsers, Mode=TwoWay, ValidatesOnExceptions=True, 
+                                    NotifyOnValidationError=True, UpdateSourceTrigger=Explicit,
+                                    ConverterParameter=True, Converter={StaticResource radioButtonConverterAvailable}}"            
+                                />
+                            <RadioButton Name="availableToAllUsersNo" GroupName="AvailableToUsersOptions" Content="No"  Cursor="Hand" ToolTipService.ToolTip="No"
+                                    IsChecked="{Binding AvailableToAllUsers, Mode=TwoWay, ValidatesOnExceptions=True, 
+                                    NotifyOnValidationError=True, UpdateSourceTrigger=Explicit,
+                                    ConverterParameter=False, Converter={StaticResource radioButtonConverterAvailable}}"             
+                                />
+                        </StackPanel>
+                        <Button Content="Show Nutrient Additional Fields" Grid.Row="4" HorizontalAlignment="Left" Height="24" VerticalAlignment="Center" Click="ShowAdditionalFields"
+                            Grid.Column="0" Width="225" Grid.ColumnSpan="2" Style="{StaticResource DefaultButtonStyle}" ToolTipService.ToolTip="Show Nutrient Additional Fields" >
+                        </Button>
+                        <Button Content="Save" Grid.Row="5" Grid.Column="0" Width="75" HorizontalAlignment="Left" ToolTipService.ToolTip="Save" 
+                            Cursor="Hand"  Height="24" VerticalAlignment="Center" Margin="0,0,0,0" Click="SaveFood"/>
+                    </Grid>
+
+
+
+                </StackPanel>
+            </toolkit2:BusyIndicator>
+        </Border>
+    </Grid>
+</UserControl>

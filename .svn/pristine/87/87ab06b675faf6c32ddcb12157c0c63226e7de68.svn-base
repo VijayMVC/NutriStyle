@@ -1,0 +1,284 @@
+﻿<navigation:Page x:Class="DynamicConnections.NutriStyle.MenuGenerator.MainPage" 
+           xmlns:System="clr-namespace:System;assembly=mscorlib"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"         
+            xmlns:divtools="clr-namespace:Divelements.SilverlightTools;assembly=Divelements.SilverlightTools"                 
+           mc:Ignorable="d"
+           xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+           xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"   
+           d:DesignWidth="1500" d:DesignHeight="796"
+           xmlns:layout="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
+           xmlns:vsm="clr-namespace:System.Windows;assembly=System.Windows"
+           Title="MainPage Page" SizeChanged="UserControl_SizeChanged" Background="#CCECFF">
+
+    <navigation:Page.Resources>
+
+        <!-- Content Frame Style -->
+        <Style x:Key="ContentFrameStyle" TargetType="navigation:Frame">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <!--<Setter Property="Padding" Value="58,15,58,15"/> -->
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+
+            <!-- custom Frame template-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="navigation:Frame">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <layout:TransitioningContentControl Content="{TemplateBinding Content}" Cursor="{TemplateBinding Cursor}" Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--
+        <Style TargetType="sdk:TreeViewItem" x:Name="treeViewItemStyle">
+    -->
+        
+
+
+
+        
+
+
+    </navigation:Page.Resources>
+
+    <Grid x:Name="LayoutRoot" Background="#CCECFF">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="1024"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0"></RowDefinition>
+            <RowDefinition Height="744"></RowDefinition>
+            <RowDefinition Height="55"></RowDefinition>
+
+        </Grid.RowDefinitions>
+
+        <!-- Logo-->
+        <Border BorderBrush="#7B92BF" BorderThickness="1,0,1,0" Background="White"  Grid.Column="1" Grid.Row="0">
+            <StackPanel  Background="White" >
+                <Grid Background="White">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="250"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"></RowDefinition>
+                        <RowDefinition Height="3"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+                        <StackPanel.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="White" Offset="0"/>
+                                <GradientStop Color="DarkGray" Offset="1"/>
+                            </LinearGradientBrush>
+
+                        </StackPanel.Background>
+                    </StackPanel>
+                </Grid>
+
+            </StackPanel>
+        </Border>
+        <Border Grid.Column="1" Grid.Row="1" BorderBrush="#7B92BF" BorderThickness="1,0,1,1" >
+
+            <Canvas  HorizontalAlignment="Stretch">
+                <Canvas.Background>
+                    <ImageBrush x:Name="backgroundImage" ImageSource="images/background.png"/>
+                </Canvas.Background>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160"></ColumnDefinition>
+                        <ColumnDefinition Width="554"></ColumnDefinition>
+                        <ColumnDefinition Width="310"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="744"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <!--Menu-->
+                    <toolkit:DockPanel Grid.Row="1" Grid.Column="0" Margin="0,0,2,15"  Background="Transparent" VerticalAlignment="Top">
+                        <StackPanel Orientation="Vertical" Background="Transparent" Visibility="Collapsed" Name="StackPanalDock">
+                            <!--<Border CornerRadius="4" BorderThickness="1" BorderBrush="Black" VerticalAlignment="Stretch" Background="Transparent">-->
+                            <sdk:TreeView ScrollViewer.HorizontalScrollBarVisibility="Disabled" AllowDrop="True" BorderThickness="0" 
+                                VerticalAlignment="Stretch" Background="Transparent" Foreground="#3395B9" FontWeight="Bold" Name="TreeView">
+                                
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" IsSelected="True" Header="Profile"  Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="Profile_MouseLeftButtonUp" Name="Profile" Cursor="Hand" ToolTipService.ToolTip="Profile"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator   HorizontalAlignment="Right" BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                
+
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" Header="Menu Preferences" Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="MenuPreferences_MouseLeftButtonUp" Name="MenuPreferences" Cursor="Hand" ToolTipService.ToolTip="Menu Preferences"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" Header="Food Likes" Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="foodLikes_MouseLeftButtonUp" Name="foodLikes" Cursor="Hand" ToolTipService.ToolTip="Food Likes"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" Header="Food Dislikes" Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="foodDisLikes_MouseLeftButtonUp" Name="foodDisLikes" Cursor="Hand" ToolTipService.ToolTip="Food Disikes" VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" Header="Daily Menu" Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="DailyMenu_MouseLeftButtonUp" Name="DailyMenu" Cursor="Hand" ToolTipService.ToolTip="Daily Menu"  VerticalAlignment="Stretch"/>
+
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" Header="Saved Menus" Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="WeeklyMenu_MouseLeftButtonUp" Name="WeeklyMenu" Cursor="Hand" ToolTipService.ToolTip="Saved Menus"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" Header="Shopping List" Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="ShoppingList_MouseLeftButtonUp" Name="ShoppingList" Cursor="Hand" ToolTipService.ToolTip="Shopping List"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" Header="Fitness Log" Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="FitnessLog_MouseLeftButtonUp" Name="FitnessLog" Cursor="Hand" ToolTipService.ToolTip="Fitness Log"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem Header="Daily Food Log" Style="{StaticResource customTreeViewItem}" HorizontalAlignment="Right"  Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="FoodLog_MouseLeftButtonUp" Name="FoodLog" Cursor="Hand" ToolTipService.ToolTip="Food Log"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+                                
+                                <sdk:TreeViewItem Header="My Foods" Style="{StaticResource customTreeViewItem}" HorizontalAlignment="Right"  Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="YourFoods_MouseLeftButtonUp" Name="YourFoods" Cursor="Hand" ToolTipService.ToolTip="My Foods"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem Header="Feedback" Style="{StaticResource customTreeViewItem}" HorizontalAlignment="Right"  Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="Feedback_MouseLeftButtonUp" Name="Feedback" Cursor="Hand" ToolTipService.ToolTip="Leave Feedback"  VerticalAlignment="Stretch"/>
+
+
+                            </sdk:TreeView>
+
+                            <!--</Border>-->
+                            <!-- Left hand adds-->
+                            <!--<Border CornerRadius="4" BorderThickness="1"  BorderBrush="Black" Margin="2,10,2,2" Height="95" Background="Transparent"  Width="125">-->
+                            <Image Name="topLeft" Margin="2,10,2,2" Height="95" Width="125" />
+                            <!--</Border> -->
+                            <!--<Border CornerRadius="4" BorderThickness="1"  BorderBrush="Black" Margin="2,10,2,2" Height="95" Background="Transparent" Width="125">-->
+                            <Image Name="bottomLeft" Margin="2,10,2,2" Height="95" Width="125" />
+                            <!--</Border>-->
+                        </StackPanel>
+                    </toolkit:DockPanel>
+                    <!--#7B92BF-->
+                    <!-- content frame-->
+                    <StackPanel Grid.Column="1" Grid.Row="1"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,5,0,0" Orientation="Vertical">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="700"></RowDefinition>
+                                <RowDefinition Height="20"></RowDefinition>
+                            </Grid.RowDefinitions>
+
+                            <navigation:Frame x:Name="ContentFrame" Grid.Column="0" Grid.Row="0" Source="/pages/login.xaml" Background="Transparent" VerticalContentAlignment="Top" Height="700"
+                            Navigated="ContentFrame_Navigated" 
+                            NavigationFailed="ContentFrame_NavigationFailed">
+                                <sdk:Frame.UriMapper>
+                                    <sdk:UriMapper>
+                                        <sdk:UriMapping Uri="Login" MappedUri="/pages/Login.xaml"/>
+                                        <sdk:UriMapping Uri="Profile" MappedUri="/pages/Profile.xaml"/>
+                                        <sdk:UriMapping Uri="MenuOptions" MappedUri="/pages/MenuOptions.xaml"/>
+                                        <sdk:UriMapping Uri="FoodLikes" MappedUri="/pages/FoodLikes.xaml"/>
+                                        <sdk:UriMapping Uri="FoodDislikes" MappedUri="/pages/FoodDislikes.xaml"/>
+                                        <sdk:UriMapping Uri="Menus" MappedUri="/pages/Menus.xaml"/>
+                                        <sdk:UriMapping Uri="MenuEditor" MappedUri="/pages/MenuEditor.xaml"/>
+                                        <sdk:UriMapping Uri="ShoppingList" MappedUri="/pages/EditShoppingList.xaml"/>
+                                        <sdk:UriMapping Uri="FitnessLog" MappedUri="/pages/DailyFitnessLog.xaml"/>
+                                        <sdk:UriMapping Uri="FoodLog" MappedUri="/pages/FoodLog.xaml"/>
+                                        <sdk:UriMapping Uri="DailyFoodLog" MappedUri="/pages/DailyFoodLog.xaml"/>
+                                        <sdk:UriMapping Uri="DailyMenu" MappedUri="/pages/DailyMenu.xaml"/>
+                                        <sdk:UriMapping Uri="YourFoods" MappedUri="/pages/YourFoods.xaml"/>
+                                        <sdk:UriMapping Uri="AdditionalProfiles" MappedUri="/pages/AdditionalProfiles.xaml"/>
+                                    </sdk:UriMapper>
+                                </sdk:Frame.UriMapper>
+                            </navigation:Frame>
+
+                            <TextBlock Grid.Column="0" Grid.Row="1" Name="Version" Text="Version: " FontSize="10" Margin="5,5,0,0" Foreground="Black"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <!--Right hand items-->
+                    <StackPanel  Margin="5,5,5,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical"  Grid.Row="1" Grid.Column="2">
+                        <sdk:Label Content="About This Page" HorizontalAlignment="Center" FontWeight="Bold" Foreground="{StaticResource defaultFontColor}" FontSize="14"
+                             VerticalAlignment="Top"                                   
+                                   />
+                        <Canvas  Canvas.ZIndex="80" Margin="275,0,0,0">
+                            <ToggleButton Background="Transparent" BorderThickness="0" Foreground="Transparent" Height="18" Margin="0,5,0,0" IsChecked="False" Click="ToggleButton_Click" Cursor="Hand" ToolTipService.ToolTip="Expand">
+                                <ToggleButton.Content>
+                                    <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/plus.png" Name="ExpandAbout"
+                                        Height="12" />
+                                </ToggleButton.Content>
+                            </ToggleButton>
+
+                        </Canvas>
+                        <Canvas  Canvas.ZIndex="12" >
+                            <Border CornerRadius="4" BorderBrush="White" BorderThickness="1"  Width="290" Grid.Column="1" Background="White" Margin="5" 
+                                    Height="90" Canvas.ZIndex="10" Name="AboutBorder">
+                                <Border.Resources>
+                                    <Storyboard x:Name="borderStoryBoard" >
+                                        <DoubleAnimation x:Name="da" Storyboard.TargetName="AboutBorder" Storyboard.TargetProperty="Height" Duration="0:0:1" />
+                                    </Storyboard>
+                                </Border.Resources>
+
+                                <ScrollViewer  Margin="2" VerticalScrollBarVisibility="Auto" BorderThickness="0" Height="Auto" Background="White">
+                                    <TextBlock Name="helpText" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="4" TextWrapping="Wrap"/>
+                                </ScrollViewer>
+                            </Border>
+
+                        </Canvas>
+
+
+                        <!-- <Border CornerRadius="4" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Background="Transparent" Margin="5" Width="305" Height="205">-->
+                        <Image Name="topRight" Width="285" Height="205" Margin="0,100,0,0"/>
+                        <!--</Border>-->
+                        <StackPanel Name="SPTipsAndNews" Background="Transparent">
+                            <StackPanel Name="SPTipsAndNewsContainer">
+                                <sdk:Label Content="Tips and News" HorizontalAlignment="Center" FontWeight="Bold" Foreground="{StaticResource defaultFontColor}" FontSize="14"
+                                 VerticalAlignment="Top"/>
+
+                                <Canvas  Canvas.ZIndex="11" Margin="275,0,0,0" >
+                                    <ToggleButton Background="Transparent" BorderThickness="0" Foreground="Transparent" Height="18" Margin="0,5,0,0" IsChecked="False" Click="ToggleButton_Click2" Cursor="Hand" ToolTipService.ToolTip="Expand">
+                                        <ToggleButton.Content>
+                                            <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/minus.png" Name="ExpandTips"
+                                            Height="12" />
+                                        </ToggleButton.Content>
+                                    </ToggleButton>
+                                </Canvas>
+                                <Canvas  Canvas.ZIndex="10" Background="Red">
+                                    <Border CornerRadius="4" BorderBrush="LightGray" BorderThickness="1"  Width="290" Grid.Column="1" Background="White" Margin="5" 
+                                        Height="300" Canvas.ZIndex="10" Name="TipsBorder">
+                                        <Border.Resources>
+                                            <Storyboard x:Name="tipsStoryBoard" >
+                                                <DoubleAnimation x:Name="tipsda" Storyboard.TargetName="TipsBorder" Storyboard.TargetProperty="Height" Duration="0:0:1" />
+                                            </Storyboard>
+                                        </Border.Resources>
+                                        <ScrollViewer Margin="2" VerticalScrollBarVisibility="Auto" BorderThickness="0"  Height="Auto" Background="White" Name="tipScrollViewer"/>
+                                    </Border>
+                                </Canvas>
+                            </StackPanel>
+                        </StackPanel>
+                        <!--<Border CornerRadius="4" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Background="Transparent" Margin="5" Width="305" Height="205">-->
+                        <Canvas  Canvas.ZIndex="8" >
+                            <StackPanel Name="BottomRightSP" Width="285" Height="275" Margin="0,100,0,0" Canvas.ZIndex="1">
+                                <Image Name="bottomRight" Width="0" Height="0" />
+                            </StackPanel>
+                        </Canvas>
+                        <!--</Border> -->
+
+                    </StackPanel>
+
+                </Grid>
+
+            </Canvas>
+        </Border>
+    </Grid>
+
+</navigation:Page>

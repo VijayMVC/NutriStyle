@@ -1,0 +1,6 @@
+C:\Builds\NutriStyle\Applications\ReportAuthExtensions\bin\Debug\Microsoft.Samples.ReportingServices.AnonymousSecurity.dll
+C:\Builds\NutriStyle\Applications\ReportAuthExtensions\bin\Debug\Microsoft.Samples.ReportingServices.AnonymousSecurity.pdb
+C:\Builds\NutriStyle\Applications\ReportAuthExtensions\bin\Debug\Microsoft.ReportingServices.Interfaces.dll
+C:\Builds\NutriStyle\Applications\ReportAuthExtensions\obj\Debug\ReportAuthExtensions.csprojResolveAssemblyReference.cache
+C:\Builds\NutriStyle\Applications\ReportAuthExtensions\obj\Debug\Microsoft.Samples.ReportingServices.AnonymousSecurity.dll
+C:\Builds\NutriStyle\Applications\ReportAuthExtensions\obj\Debug\Microsoft.Samples.ReportingServices.AnonymousSecurity.pdb

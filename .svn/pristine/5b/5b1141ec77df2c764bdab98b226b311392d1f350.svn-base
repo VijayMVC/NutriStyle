@@ -1,0 +1,224 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml;
+using DynamicConnections.CRM2011.Common.Utility;
+
+using System.ServiceModel;
+using Microsoft.Xrm.Sdk.Client;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+using DynamicConnections.NutriStyle.CRM2011.MenuGenerator;
+using DynamicConnections.NutriStyle.CRM2011.MenuGenerator.Wrappers;
+
+namespace DynamicConnections.NutriStyle.CRM2011.MenuGenerator
+{
+    public class Meal : General
+    {
+        private static Logger logger = GetLogger();
+
+        public Meal() { }
+
+        /// <summary>
+        /// This method updates the kcal, protein and fat actuals.  It properly takes into account the portion size and uses the correct gram weight
+        /// </summary>
+        /// <param name="entityMeal">Meal in question</param>
+        /// <param name="mealFoods">Collection of related meal foods</param>
+        /// <returns></returns>
+        public static Entity UpdateTotals(Entity meal, List<MealFoodWrapper> mealFoods)
+        {
+            try
+            {
+                decimal fatTotal        = 0m;
+                decimal proteinTotal    = 0m;
+                decimal carbTotal       = 0m;
+                decimal kcalTotal       = 0m;
+                if (mealFoods != null)
+                {
+                    foreach (MealFoodWrapper mfw in mealFoods)
+                    {
+                        Entity mealFood = mfw.MealFood;
+                        decimal fat = mealFood.Attributes.Contains("dc_fat") ? (decimal)mealFood.Attributes["dc_fat"] : 0m;
+                        decimal protein = mealFood.Attributes.Contains("dc_protein") ? (decimal)mealFood.Attributes["dc_protein"] : 0m;
+                        decimal carb = mealFood.Attributes.Contains("dc_carbohydrate") ? (decimal)mealFood.Attributes["dc_carbohydrate"] : 0m;
+                        decimal kcals = mealFood.Attributes.Contains("dc_kcals") ? (decimal)mealFood.Attributes["dc_kcals"] : 0m;
+                        decimal gramWeight = mealFood.Attributes.Contains("dc_unit_gram_weight") ? (decimal)mealFood.Attributes["dc_unit_gram_weight"] : 0m;
+                        decimal orgAmount = mealFood.Attributes.Contains("dc_portion_amount") ? (decimal)mealFood.Attributes["dc_portion_amount"] : 0m;
+                        decimal amount = mealFood.Attributes.Contains("dc_portionsize") ? (decimal)mealFood.Attributes["dc_portionsize"] : 0m;
+
+                        fatTotal += fat;
+                        proteinTotal += protein;
+                        carbTotal += carb;
+                        kcalTotal += kcals;
+
+                    }
+
+                    meal["dc_fat_actuals"] = fatTotal;
+                    meal["dc_protein_actuals"] = proteinTotal;
+                    meal["dc_carbohydrate_actuals"] = carbTotal;
+                    meal["dc_kcals_actuals"] = kcalTotal;
+                    if (carbTotal > 0 && meal.Contains("dc_carbohydrate_targets") && meal["dc_carbohydrate_targets"] != null && (decimal)meal["dc_carbohydrate_targets"] > 0)
+                    {
+                        meal["dc_carbohydrate_actuals_percent"] = (carbTotal / (decimal)meal["dc_carbohydrate_targets"]) * 100m;//dc_carbohydrate_actuals_percent
+                    }
+                    else
+                    {
+                        meal["dc_carbohydrate_actuals_percent"] = 0m;
+                    }
+                    if (fatTotal > 0 && meal.Contains("dc_fat_targets") && meal["dc_fat_targets"] != null && (decimal)meal["dc_fat_targets"] > 0)
+                    {
+                        meal["dc_fat_actuals_percent"] = (fatTotal / (decimal)meal["dc_fat_targets"]) * 100m;
+                    }
+                    else
+                    {
+                        meal["dc_fat_actuals_percent"] = 0m;
+                    }
+                    if (proteinTotal > 0 && meal.Contains("dc_protein_targets") && meal["dc_protein_targets"] != null && (decimal)meal["dc_protein_targets"] > 0)
+                    {
+                        meal["dc_protein_actuals_percent"] = (proteinTotal / (decimal)meal["dc_protein_targets"]) * 100m;
+
+                    }
+                    else
+                    {
+                        meal["dc_protein_actuals_percent"] = 0m;
+                    }
+                    //Set meal ratios
+                    meal = CalcGAP.Execute(meal);
+                }
+                else
+                {
+                    logger.error("UpdateTotals: Critical bug: mealfoods is null");
+                }
+                return (meal);
+            }
+            catch (Exception ex)
+            {
+                logger.error(ex.Message);
+                logger.error(ex.StackTrace);
+
+                return (null);
+            }
+        }// end UpdateTotals
+
+        public static Dictionary<String, decimal> CarryOvers(Entity meal)
+        {
+            Dictionary<String, decimal> list = new Dictionary<string, decimal>();
+
+            decimal fat = (decimal)meal["dc_fat_targets"] - (decimal)meal["dc_fat_actuals"];
+            decimal protein = (decimal)meal["dc_protein_targets"] - (decimal)meal["dc_protein_actuals"];
+            decimal carbs = (decimal)meal["dc_carbohydrate_targets"] - (decimal)meal["dc_carbohydrate_actuals"];
+
+            list.Add("carbohydrate", carbs);
+            list.Add("fat", fat);
+            list.Add("protein", protein);
+            
+
+            return(list);
+        }
+        public static decimal Score(Entity meal)
+        {
+            decimal proScore = 0;
+            decimal fatScore = 0;
+            decimal choScore = 0;
+
+            decimal carbohydratePercent = (decimal)meal["dc_carbohydrate_actuals_percent"];
+            decimal fatPercent          = (decimal)meal["dc_fat_actuals_percent"];
+            decimal proteinPercent      = (decimal)meal["dc_protein_actuals_percent"];
+
+
+            #region get protein score
+            if ((proteinPercent >= 85) && (proteinPercent <= 115))
+            {
+                proScore = 0;
+            }
+            else
+            {
+                if (proteinPercent < 85)
+                {
+                    proScore = Math.Abs(85m - proteinPercent);
+                }
+                else if (proteinPercent > 115)
+                {
+                    proScore = (proteinPercent - 115);
+                }
+            }
+            #endregion
+
+            #region get fat score
+            if ((fatPercent >= 85) && (fatPercent <= 115))
+            {
+                fatScore = 0;
+            }
+            else
+            {
+                if (fatPercent < 85)
+                {
+                    fatScore = Math.Abs(85m - fatPercent);
+                }
+                else if (fatPercent > 115)
+                {
+                    fatScore = fatPercent - 115;
+                }
+            } 
+            #endregion
+
+            #region get carbohydrate score
+            if ((carbohydratePercent >= 85) && (carbohydratePercent <= 115))
+            {
+                choScore = 0;
+            }
+            else
+            {
+                if (carbohydratePercent < 85)
+                {
+                    choScore = Math.Abs(85 - carbohydratePercent);
+                }
+                else if (carbohydratePercent > 115)
+                {
+                    choScore = carbohydratePercent - 115;
+                }
+            } 
+            #endregion
+            
+            decimal score = proScore + fatScore + choScore;
+
+            return (score);	
+        }
+
+
+        /// <summary>
+        /// Retrieve the score for the snack.  Looks at kcals; not macros
+        /// </summary>
+        /// <param name="meal"></param>
+        /// <returns></returns>
+        public static decimal SnackScore(Entity meal)
+        {
+            decimal kcalPercent = 0m;
+
+            decimal kcalsTarget = (decimal)meal["dc_kcals_targets"];
+            //need actuals
+            decimal kcalsActual = (decimal)meal["dc_kcals_actuals"];
+
+
+             kcalPercent = kcalsActual / kcalsTarget;
+             decimal kcalScore = 0m;
+
+             if ((kcalPercent >= 85) && ((kcalPercent) <= 115))
+             {
+                kcalScore = 0;
+            }
+		    else {
+                if (kcalPercent < 85)
+                {
+                    kcalScore = Math.Abs(85 - kcalPercent);
+                }
+                else if (kcalPercent > 115)
+                {
+                    kcalScore = (kcalPercent - 115);
+                }
+		    }
+		    return(kcalScore);
+	    }
+    }
+}

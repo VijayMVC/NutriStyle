@@ -1,0 +1,9 @@
+C:\Builds\NutriStyle\Applications\MenuGenerator\bin\Debug\MenuGenerator.dll.config
+C:\Builds\NutriStyle\Applications\MenuGenerator\bin\Debug\MenuGenerator.dll
+C:\Builds\NutriStyle\Applications\MenuGenerator\bin\Debug\MenuGenerator.pdb
+C:\Builds\NutriStyle\Applications\MenuGenerator\bin\Debug\microsoft.crm.sdk.proxy.dll
+C:\Builds\NutriStyle\Applications\MenuGenerator\bin\Debug\microsoft.xrm.sdk.dll
+C:\Builds\NutriStyle\Applications\MenuGenerator\bin\Debug\DynamicConnections.CRM2011.Common.pdb
+C:\Builds\NutriStyle\Applications\MenuGenerator\obj\Debug\MenuGenerator.dll
+C:\Builds\NutriStyle\Applications\MenuGenerator\obj\Debug\MenuGenerator.pdb
+C:\Builds\NutriStyle\Applications\MenuGenerator\obj\Debug\MenuGenerator.csprojResolveAssemblyReference.cache

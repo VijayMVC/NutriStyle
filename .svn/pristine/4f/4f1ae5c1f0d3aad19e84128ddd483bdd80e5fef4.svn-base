@@ -1,0 +1,625 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Windows;
+using System.Windows.Controls;
+
+using System.Windows.Input;
+
+using DynamicConnections.NutriStyle.MenuGenerator.Engine.Helpers;
+
+using DynamicConnections.NutriStyle.MenuGenerator.ChildWindows;
+using System.Collections;
+
+namespace DynamicConnections.NutriStyle.MenuGenerator.Controls
+{
+
+    [TemplatePart(Name = "PART_myAutoCompleteBox", Type = typeof(AutoCompleteBox))]
+    [TemplatePart(Name = "PART_progressBar", Type = typeof(ProgressBar))]
+    [TemplatePart(Name = "PART_LayoutRoot", Type = typeof(Grid))]
+    [TemplatePart(Name = "PART_recipeImage", Type = typeof(Button))]
+    public class ComboBoxWithValidation : Control
+    {
+
+        private AutoCompleteBox part_myAutoCompleteBox;
+        private ProgressBar     part_progressBar;
+        private Grid            part_LayoutRoot;
+        private Button          part_recipeImage;
+
+        private bool _displayWatermark = true;
+        private bool _hasFocus;
+        
+        public ComboBoxWithValidation()
+        {
+            this.DefaultStyleKey = typeof(ComboBoxWithValidation);
+            // Initialize the controller in your main UserControl/Window when your app starts up
+            StyleController.Initialize((FrameworkElement)this, App.Current.Resources);
+        }
+
+        private const string ButtonName = "downArrow";
+
+        private Button _button;
+
+        //public event RoutedEventHandler Click;
+
+        public event EventHandler<SelectionChangedEventArgs> SelectionChanged;
+
+        //public event EventHandler<MouseButtonEventArgs> RecipeButtonClicked;
+
+        public event RoutedEventHandler RecipeButtonClicked;
+
+        public event EventHandler WindowClosed;
+
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            part_myAutoCompleteBox  = GetTemplateChild("PART_myAutoCompleteBox") as AutoCompleteBox;
+            part_progressBar        = GetTemplateChild("PART_progressBar") as ProgressBar;
+            part_LayoutRoot         = GetTemplateChild("PART_LayoutRoot") as Grid;
+            part_recipeImage        = GetTemplateChild("PART_recipeImage") as Button;
+
+            
+            this.SizeChanged        += new SizeChangedEventHandler(ComboBoxWithValidation_SizeChanged);
+            this.IsEnabledChanged   += new DependencyPropertyChangedEventHandler(ComboBoxWithValidation_IsEnabledChanged);
+            this.LostFocus += new RoutedEventHandler(ComboBoxWithValidation_LostFocus);
+            part_myAutoCompleteBox.SelectionChanged += new SelectionChangedEventHandler(MyAutoCompleteBox_SelectionChanged);
+            part_myAutoCompleteBox.SelectionChanged += new SelectionChangedEventHandler(myhandler);
+            part_myAutoCompleteBox.Populated += new PopulatedEventHandler(part_myAutoCompleteBox_Populated);
+            part_myAutoCompleteBox.Populating += new PopulatingEventHandler(part_myAutoCompleteBox_Populating);
+            part_recipeImage.Click -= part_recipeImage_Click;
+            part_recipeImage.Click += part_recipeImage_Click;
+            //part_recipeImage.MouseLeftButtonDown += new MouseButtonEventHandler(part_recipeImage_MouseLeftButtonDown);
+            part_myAutoCompleteBox.DropDownClosed += new RoutedPropertyChangedEventHandler<bool>(part_myAutoCompleteBox_DropDownClosed);
+
+            //part_myAutoCompleteBox.SelectionChanged += new SelectionChangedEventHandler(autoCompleteBox_SelectionChanged);
+            
+            part_myAutoCompleteBox.LostFocus += new RoutedEventHandler(part_myAutoCompleteBox_LostFocus);
+            //part_myAutoCompleteBox.TextChanged += new RoutedEventHandler(part_myAutoCompleteBox_TextChanged);
+            //this.GotFocus += new RoutedEventHandler(ComboBoxWithValidation_GotFocus);
+            this.IsTabStop = false;
+            // Detach during re-templating
+            //this.Unloaded += ComboBoxWithValidation_Unloaded;
+            if (_button != null)
+            {
+                _button.Click -= Button_Click;
+                _button.Click -= button_MouseEnter;
+                _button.Click -= button_MouseLeave;
+            }
+
+            _button = GetTemplateChild(ButtonName) as Button;
+
+            // Attach to the Click event
+            if (_button != null)
+            {
+                _button.Click += Button_Click;
+                _button.MouseEnter += button_MouseEnter;
+                _button.MouseLeave += button_MouseLeave;
+            }
+            if (this.SelectedPair != null)
+            {
+                if (!String.IsNullOrEmpty(((PairWithList)this.SelectedPair).Name))
+                {
+                    this.part_myAutoCompleteBox.SelectedItem = (PairWithList)this.SelectedPair;
+                    ToolTipService.SetToolTip(this.part_myAutoCompleteBox, ((PairWithList)this.SelectedPair).Name);
+                }
+                else
+                {
+                    this.part_myAutoCompleteBox.SelectedItem = null;
+                }
+                if ((this.SelectedPair).List != null && (this.SelectedPair).List.Count() > 0)
+                {
+                    this.part_myAutoCompleteBox.DataContext = (this.SelectedPair).List;
+                }
+                this.IsBusy = false;
+                this.part_myAutoCompleteBox.IsDropDownOpen = false;
+            }
+            if (this.Watermark != null)
+            {
+                if (this.SelectedPair == null || (this.SelectedPair.Id != null && new Guid(SelectedPair.Id) == Guid.Empty))
+                {
+                    this.part_myAutoCompleteBox.Text = this.Watermark;
+                    this.SetMode(true);
+                }
+                else
+                {
+                    this.SetMode(false);
+                }
+            }
+            if (part_recipeImage != null)
+            {
+                ToggleRecipeButton();
+            }
+
+            //Watermark
+            //this.Unloaded += new RoutedEventHandler(ComboBoxWithValidation_Unloaded);
+            //this.part_myAutoCompleteBox.Loaded += new RoutedEventHandler(ComboBoxWithValidation_Loaded);
+
+            part_myAutoCompleteBox.GotFocus += WatermarkTextBoxGotFocus;
+            part_myAutoCompleteBox.LostFocus += WatermarkTextBoxLostFocus;
+            part_myAutoCompleteBox.TextChanged += part_myAutoCompleteBox_TextChanged;
+            part_myAutoCompleteBox.Unloaded += WatermarkTextBoxUnloaded;
+            
+        }
+
+        void part_myAutoCompleteBox_Populating(object sender, PopulatingEventArgs e)
+        {
+            
+        }
+
+        void part_myAutoCompleteBox_Populated(object sender, PopulatedEventArgs e)
+        {
+            IEnumerator ie = e.Data.GetEnumerator();
+        }
+
+        void ComboBoxWithValidation_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (SelectedPair != null)
+            {
+                if (!String.IsNullOrEmpty(SelectedPair.Name))
+                {
+                    _displayWatermark = false;
+                    SetMode(false);
+                    Text = SelectedPair.Name;
+                }
+            }
+        }
+
+        void part_recipeImage_Click(object sender, RoutedEventArgs e)
+        {
+            Button i = sender as Button;
+            //Row r = (Row)i.DataContext;
+            if (this.SelectedPair != null)
+            {
+                Guid foodId = new Guid(this.SelectedPair.Id);
+                Recipe recipe = new Recipe(foodId);
+                recipe.Show();
+            }
+        }
+
+        void part_recipeImage_MouseLeftButtonDown(object sender, RoutedEventArgs e)
+        {
+           
+            
+            /*
+            if (RecipeButtonClicked != null)
+            {
+                RecipeButtonClicked(sender, e);
+            }*/
+        }
+
+        void recipe_Closed(object sender, EventArgs e)
+        {
+            if (WindowClosed != null)
+            {
+                WindowClosed(this, e);
+            }
+        }
+
+        void part_myAutoCompleteBox_DropDownClosed(object sender, RoutedPropertyChangedEventArgs<bool> e)
+        {
+            if (part_myAutoCompleteBox.SelectedItem == null)
+            {
+                if (SelectedPair != null && !String.IsNullOrEmpty(SelectedPair.Id))
+                {
+                    this.part_myAutoCompleteBox.SelectedItem = SelectedPair;
+                }
+            }
+        }
+
+
+        void RecipeButtonClickedHandler(object sender, MouseButtonEventArgs e)
+        {
+            if (RecipeButtonClicked != null)
+            {
+                RecipeButtonClicked(sender, e);
+            }
+        }
+        //For Selection Changed event
+        void myhandler(object sender, SelectionChangedEventArgs e)
+        {
+            if (SelectionChanged != null) { 
+                SelectionChanged(sender, e); 
+            }
+        }
+
+        void part_myAutoCompleteBox_TextChanged(object sender, RoutedEventArgs e)
+        {
+            //OnTextChanged();
+        }
+        private void WatermarkTextBoxUnloaded(object sender, RoutedEventArgs e)
+        {
+            part_myAutoCompleteBox.GotFocus -= WatermarkTextBoxGotFocus;
+            part_myAutoCompleteBox.LostFocus -= WatermarkTextBoxLostFocus;
+            part_myAutoCompleteBox.Unloaded -= WatermarkTextBoxUnloaded;
+            part_myAutoCompleteBox.TextChanged -= part_myAutoCompleteBox_TextChanged;
+        }
+
+        private void WatermarkTextBoxGotFocus(object sender, RoutedEventArgs e)
+        {
+            _hasFocus = true;
+            if (_displayWatermark)
+            {
+                _displayWatermark = false;
+                SetMode(false);
+                if (Watermark != null && Text.Equals(Watermark))
+                {
+                    Text = string.Empty;
+                }
+            }
+        }
+
+        private void WatermarkTextBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            _hasFocus = false;
+            OnTextChanged();
+        }
+
+        private void OnTextChanged()
+        {
+            if (!_displayWatermark && !_hasFocus)
+            {
+                bool isEmpty = string.IsNullOrEmpty(Text);
+                SetMode(isEmpty);
+                _displayWatermark = isEmpty;
+
+                if (isEmpty)
+                {
+                    Text = Watermark;
+                }
+                /*
+                else if (SelectedPair != null)
+                {
+                    Text = SelectedPair.Name;
+                }*/
+            }
+        }
+
+        public void SetMode(bool showWatermark)
+        {
+            if (showWatermark)
+            {
+                part_myAutoCompleteBox.TextBoxStyle = (Style)App.Current.Resources["textBoxStyleWatermark"];
+            }
+            else
+            {
+                part_myAutoCompleteBox.TextBoxStyle = (Style)App.Current.Resources["textBoxStyleCustom"];
+            }
+        }
+
+        public string Watermark
+        {
+            get { return GetValue(WatermarkProperty) as string; }
+            set { SetValue(WatermarkProperty, value); }
+        }
+
+        public static readonly DependencyProperty WatermarkProperty =
+            DependencyProperty.Register("Watermark", typeof(string), typeof(ComboBoxWithValidation), new PropertyMetadata(OnWatermarkPropertyChanged));
+
+        private static void OnWatermarkPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            ComboBoxWithValidation cbwv = sender as ComboBoxWithValidation;
+            if (cbwv != null && cbwv._displayWatermark && cbwv.part_myAutoCompleteBox != null) 
+            {
+                cbwv.part_myAutoCompleteBox.Text = e.NewValue.ToString();
+                cbwv.SetMode(true);
+            }
+        }
+
+        void ComboBoxWithValidation_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (this.part_myAutoCompleteBox != null)
+            {
+                if (this.IsEnabled)
+                {
+                    // Use syntax
+                    this.part_myAutoCompleteBox.Style = (Style)StyleController.FindResource("EditableComboStyle");
+                }
+                else if (!this.IsEnabled)
+                {
+                    this.part_myAutoCompleteBox.Style = (Style)StyleController.FindResource("EditableComboStyleDisabled");
+                }
+            }
+        }
+
+        void part_myAutoCompleteBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (part_myAutoCompleteBox.SelectedItem == null)
+            {
+                //this.part_myAutoCompleteBox.Text = String.Empty;
+            }
+        }
+        void textbox_LostFocus(object sender, RoutedEventArgs e)
+        {
+        }
+
+        void ComboBoxWithValidation_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (part_myAutoCompleteBox != null && part_LayoutRoot != null)
+            {
+                if (IsRecipe)
+                {
+                    if (this.part_LayoutRoot.ActualWidth > 44d)
+                    {
+                        this.part_myAutoCompleteBox.Width = this.part_LayoutRoot.ActualWidth - 20d - 24d;
+                    }
+                }
+                else
+                {
+                    if (this.part_LayoutRoot.ActualWidth > 20d)
+                    {
+                        this.part_myAutoCompleteBox.Width = this.part_LayoutRoot.ActualWidth - 20d;
+                    }
+                }
+            }
+        }
+        
+        private void button_MouseLeave(object sender, RoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "ToggleButtonOut", true);
+        }
+
+        private void button_MouseEnter(object sender, RoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "ToggleButtonOver", true);
+        }
+
+        public bool IsRecipe
+        {
+            get
+            {
+                return (bool)GetValue(IsRecipeProperty);
+            }
+            set
+            {
+                SetValue(IsRecipeProperty, value);//set the value of the text box
+            }
+        }
+
+        public static readonly DependencyProperty IsRecipeProperty =
+           DependencyProperty.Register("IsRecipe",
+           typeof(Boolean),
+           typeof(ComboBoxWithValidation),
+           new PropertyMetadata(IsRecipeChanged));
+        
+        private static void IsRecipeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            ComboBoxWithValidation myControl = sender as ComboBoxWithValidation;
+            if (myControl != null)
+            {
+                if (e.NewValue != null)
+                {
+                    bool bl = (bool)e.NewValue;
+                    if(myControl.part_recipeImage != null) {
+                    if (bl) //Display recipe icon
+                    {
+                        myControl.part_recipeImage.Width = 22d;
+                        myControl.part_recipeImage.Visibility = System.Windows.Visibility.Visible;
+                        //resize textbox
+                        myControl.ComboBoxWithValidation_SizeChanged(null, null);
+                    }
+                    else
+                    { //Hide
+                        myControl.part_recipeImage.Width = 0;
+                        myControl.part_recipeImage.Visibility = System.Windows.Visibility.Collapsed;
+                        //resize textbox
+                        myControl.ComboBoxWithValidation_SizeChanged(null, null);
+                    }
+                        }
+                }
+            }
+        }
+        public PairWithList SelectedPair
+        {
+            get
+            {
+                return (PairWithList)GetValue(SelectedPairProperty);
+            }
+            set
+            {
+                SetValue(SelectedPairProperty, value);//set the value of the text box
+            }
+        }
+
+        public static readonly DependencyProperty SelectedPairProperty =
+           DependencyProperty.Register("SelectedPair",
+           typeof(PairWithList),
+           typeof(ComboBoxWithValidation),
+           new PropertyMetadata(null, SelectedPairChanged));
+        
+        private static void SelectedPairChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+
+            ComboBoxWithValidation myControl = sender as ComboBoxWithValidation;
+
+            if (myControl != null)
+            {
+                if (e.NewValue != null)
+                {
+                    String text = ((PairWithList)e.NewValue).Name;
+                    if (myControl.part_myAutoCompleteBox != null)
+                    {
+                        if (!String.IsNullOrEmpty(((PairWithList)e.NewValue).Name))
+                        {
+                            myControl.part_myAutoCompleteBox.SelectedItem = (PairWithList)e.NewValue;
+                            //SetElipse(myControl);
+                            ToolTipService.SetToolTip(myControl.part_myAutoCompleteBox, ((PairWithList)e.NewValue).Name);
+                            //hide watermark/change style
+                            myControl.part_myAutoCompleteBox.TextBoxStyle = (Style)App.Current.Resources["textBoxStyleCustom"];
+                            myControl._displayWatermark = false;
+                        }
+                        else
+                        {
+                            myControl.part_myAutoCompleteBox.SelectedItem = null;
+                            /*
+                            if (!myControl.part_myAutoCompleteBox.IsDropDownOpen )
+                            {
+                                myControl.part_myAutoCompleteBox.Text = String.Empty;
+                            }*/
+                        }
+                        if (((PairWithList)e.NewValue).List != null && ((PairWithList)e.NewValue).List.Count() > 0)
+                        {
+                            myControl.part_myAutoCompleteBox.DataContext = ((PairWithList)e.NewValue).List;
+                            myControl.OpenDropdown(true);
+                        }
+                        myControl.IsBusy = false;
+                        //myControl.part_myAutoCompleteBox.IsDropDownOpen = false;
+                    }
+                }
+            }
+            else
+            {
+                PairWithList pwl = new PairWithList();
+                pwl.List = new List<PairWithList>();
+                pwl.Name = String.Empty;
+                pwl.Id = Guid.Empty.ToString();
+                myControl.part_myAutoCompleteBox.SelectedItem = pwl;
+            }
+        }
+
+        private void MyAutoCompleteBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.part_myAutoCompleteBox.SelectedItem != null)
+            {
+                if (typeof(PairWithList) == this.part_myAutoCompleteBox.SelectedItem.GetType())
+                {
+                    SelectedPair = (PairWithList)this.part_myAutoCompleteBox.SelectedItem;//Have to set this value for binding to work correctly
+                    //recipe?
+                    /*
+                    if (this.GetBindingExpression(ComboBoxWithValidation.SelectedPairProperty) != null)
+                    {
+                        this.GetBindingExpression(ComboBoxWithValidation.SelectedPairProperty).UpdateSource();
+                    }*/
+                }
+            }
+        }
+
+        public bool IsBusy
+        {
+            set
+            {
+                if (value)
+                {
+                    if (part_progressBar != null)
+                    {
+                        part_progressBar.Visibility = System.Windows.Visibility.Visible;
+                    }
+                }
+                else
+                {
+                    if (part_progressBar != null)
+                    {
+                        part_progressBar.Visibility = System.Windows.Visibility.Collapsed;
+                    }
+                }
+            }
+
+        }
+
+        public String Text
+        {
+            get
+            {
+                return (this.part_myAutoCompleteBox.Text);
+            }
+            set
+            {
+                if (this.part_myAutoCompleteBox != null)
+                {
+                    this.part_myAutoCompleteBox.Text = value;
+                }
+            }
+        }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            //SelectedPair = new PairWithList(String.Empty, String.Empty);
+            //this.part_myAutoCompleteBox.Text = String.Empty;
+            this.part_myAutoCompleteBox.IsDropDownOpen = !this.part_myAutoCompleteBox.IsDropDownOpen;
+            if (!this.part_myAutoCompleteBox.IsDropDownOpen)
+            {
+                //make sure that something is in the box
+                this.part_myAutoCompleteBox.SelectedItem = SelectedPair;
+            }
+            else
+            {
+                //make sure something is in the box
+                //myControl.part_myAutoCompleteBox.DataContext = ((PairWithList)e.NewValue).List;
+                
+                if (this.part_myAutoCompleteBox.DataContext != null &&
+                    part_myAutoCompleteBox.DataContext.GetType() == typeof(Row))
+                {
+                    List<PairWithList> list = new List<PairWithList>();
+                    if (part_myAutoCompleteBox.SelectedItem != null)//make sure something was there
+                    {
+                        list.Add(new PairWithList(((PairWithList)part_myAutoCompleteBox.SelectedItem).Name, ((PairWithList)part_myAutoCompleteBox.SelectedItem).Id));
+                        this.part_myAutoCompleteBox.DataContext = list;
+                    }
+                } 
+                else if (this.part_myAutoCompleteBox.DataContext != null &&
+                     part_myAutoCompleteBox.DataContext.GetType() == typeof(PairWithList))
+                {
+                    List<PairWithList> list = new List<PairWithList>();
+                    if (part_myAutoCompleteBox.SelectedItem != null)//make sure something was there
+                    {
+                        list.Add(new PairWithList(((PairWithList)part_myAutoCompleteBox.SelectedItem).Name, ((PairWithList)part_myAutoCompleteBox.SelectedItem).Id));
+                        this.part_myAutoCompleteBox.DataContext = list;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Open/Close Dropdown
+        /// </summary>
+        /// <param name="open"></param>
+        public void OpenDropdown(bool open)
+        {
+            if (this.part_myAutoCompleteBox != null && !String.IsNullOrEmpty(part_myAutoCompleteBox.Text))
+            {
+                part_myAutoCompleteBox.IsDropDownOpen = open;
+            }
+        }
+
+        private void autoCompleteBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+        }
+        void textbox_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+           
+        }
+        
+        public String TagName { get; set; }
+        public String SearchText { get; set; }
+        
+       
+        private void ToggleRecipeButton()
+        {
+            if (part_recipeImage != null)
+            {
+                if (IsRecipe) //Display recipe icon
+                {
+                    part_recipeImage.Width = 22d;
+                    part_recipeImage.Visibility = System.Windows.Visibility.Visible;
+                    //resize textbox
+                    ComboBoxWithValidation_SizeChanged(null, null);
+                }
+                else
+                { //Hide
+                    part_recipeImage.Width = 0;
+                    part_recipeImage.Visibility = System.Windows.Visibility.Collapsed;
+                    //resize textbox
+                    ComboBoxWithValidation_SizeChanged(null, null);
+                }
+            }
+        }
+
+        public AutoCompleteBox MyAutoCompleteBox
+        {
+            get
+            {
+                return (part_myAutoCompleteBox);
+            }
+        }
+    }
+}

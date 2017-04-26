@@ -1,0 +1,91 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+using System.Xml.Linq;
+using DynamicConnections.NutriStyle.MenuGenerator.Engine.Helpers;
+
+namespace DynamicConnections.NutriStyle.MenuGenerator.Controls.GridHelper
+{
+    public class Data
+    {
+        /// <summary>
+        /// Attaches data to the grid via the sortablecollectionview.
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static SortableCollectionView Attach(IEnumerable<XElement> rows, SortableCollectionView data)
+        {
+
+            foreach (var row in rows)
+            {
+                Row rowData = new Row();
+                rowData["visibility"] = Visibility.Collapsed.ToString();
+                foreach (KeyValuePair<String, String> type in data.ColumnTypes)
+                {
+
+                    if (type.Value.Equals("Lookup", StringComparison.OrdinalIgnoreCase))
+                    {
+                        rowData[type.Key] = new Pair(String.Empty, Guid.Empty.ToString());
+                    }
+                    if (type.Value.Equals("Picklist", StringComparison.OrdinalIgnoreCase))
+                    {
+                        rowData[type.Key] = "1";//new Pair(String.Empty, "-1");
+                    }
+                    if (type.Value.Equals("DateTime", StringComparison.OrdinalIgnoreCase))
+                    {
+                        rowData[type.Key] = null;
+                    }
+                    if (type.Value.Equals("Money", StringComparison.OrdinalIgnoreCase))
+                    {
+                        rowData[type.Key] = null;
+                    }
+                    if (type.Value.Equals("Boolean", StringComparison.OrdinalIgnoreCase))
+                    {
+                        rowData[type.Key] = false;
+                    }
+                    else
+                    {
+                        rowData[type.Key] = String.Empty;
+                    }
+                }
+
+                foreach (XElement xe in row.Elements())
+                {
+                    if (data.ColumnTypes.ContainsKey(xe.Name.LocalName) && data.ColumnTypes[xe.Name.LocalName].Equals("money", StringComparison.OrdinalIgnoreCase))
+                    {
+                        rowData[xe.Name.LocalName] = String.Format("{0:C2}", Convert.ToDecimal(xe.Value));
+                    }
+                    else if (data.ColumnTypes.ContainsKey(xe.Name.LocalName) && data.ColumnTypes[xe.Name.LocalName].Equals("lookup", StringComparison.OrdinalIgnoreCase))
+                    {
+                        rowData[xe.Name.LocalName] = new Pair(xe.Value, xe.Attribute("Id").Value);
+                    }
+                    else if (data.ColumnTypes.ContainsKey(xe.Name.LocalName) && data.ColumnTypes[xe.Name.LocalName].Equals("picklist", StringComparison.OrdinalIgnoreCase))
+                    {
+                        rowData[xe.Name.LocalName] = new Pair(xe.Value, xe.Attribute("Id").Value);
+                    }
+                    else if (data.ColumnTypes[xe.Name.LocalName].Equals("Boolean", StringComparison.OrdinalIgnoreCase))
+                    {
+                        bool value = false;
+                        Boolean.TryParse(xe.Value, out value);
+                        rowData[xe.Name.LocalName] = value;
+                    }
+                    else
+                    {
+                        rowData[xe.Name.LocalName] = xe.Value;
+                    }
+                }
+                data.Add(rowData);
+            }
+            return (data);
+        }
+    }
+}

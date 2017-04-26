@@ -1,0 +1,204 @@
+﻿using System;
+using System.Net;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Ink;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+using System.Xml.Linq;
+using System.Linq;
+using System.Collections.Generic;
+
+namespace DynamicConnections.NutriStyle.MenuGenerator.Engine.Helpers
+{
+    public class General
+    {
+        public event EventHandler DeleteCompleted;
+        public event EventHandler DeleteFailed;
+
+
+        public static SolidColorBrush GetColorFromHexa(string hexaColor)
+        {
+            return new SolidColorBrush(
+                Color.FromArgb(
+                    Convert.ToByte(hexaColor.Substring(1, 2), 16),
+                    Convert.ToByte(hexaColor.Substring(3, 2), 16),
+                    Convert.ToByte(hexaColor.Substring(5, 2), 16),
+                    Convert.ToByte(hexaColor.Substring(7, 2), 16)
+                )
+            );
+        }
+
+        public static DateTime ZeroOutDateHHMMSS(DateTime date)
+        {
+            return (new DateTime(date.Year, date.Month, date.Day));
+        }
+
+        public static DateTime RetrieveLastSunday(DateTime date)
+        {
+
+            int weekNumber = (int)date.DayOfWeek;
+            DateTime dt = ZeroOutDateHHMMSS(date);
+
+            return (date.AddDays(-weekNumber));
+        }
+        public static String ReportServerUrl(String endpoint)
+        {
+            if (endpoint.Equals("WebServicesSoapDEV", StringComparison.OrdinalIgnoreCase))
+            {
+                return ("http://crmdev.dynamiconnections.com/ReportServer/Pages/ReportViewer.aspx?/NSDEV_MSCRM");
+            }
+            else if (endpoint.Equals("WebServicesSoap", StringComparison.OrdinalIgnoreCase))
+            {
+                return ("http://crmdev.dynamiconnections.com/ReportServer/Pages/ReportViewer.aspx?/NS_MSCRM");
+            }
+            else
+            {
+                return (string.Empty);
+            }
+        }
+
+        public static UserControl FindParrentUserControl(DependencyObject child, System.Type type)
+        {
+            DependencyObject parent = VisualTreeHelper.GetParent(child);
+            if (parent == null)
+            {
+                return null;
+            }
+            else if (parent.GetType() == type)
+            {
+                return (UserControl)parent;
+            }
+            return FindParrentUserControl(parent, type);
+        }
+
+        public static String RetrieveAttributeLabelName(String attributeName, XElement metadata)
+        {
+            String label = String.Empty;
+            //var labelXml    = from x in metadata.Descendants(attributeName) select x;
+            //label           = labelXml.First().Value;
+            var list    = from x in metadata.Element("Entity").Elements("Attributes").Elements("Attribute") where x.Element("LogicalName").Value == attributeName select x;
+            if (list != null)
+            {
+                label = list.First().Descendants("DisplayName").First().Value;
+            }
+            else
+            {
+
+            }
+            return (label);
+        }
+        
+        /// <summary>
+        ///Get all child control with type T 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> GetChildren<T>(DependencyObject d) where T : DependencyObject
+        {
+            var count = VisualTreeHelper.GetChildrenCount(d);
+            for (int i = 0; i < count; i++)
+            {
+                var c = VisualTreeHelper.GetChild(d, i);
+                if (c is T)
+                    yield return (T)c;
+                foreach (var c1 in GetChildren<T>(c))
+                    yield return c1;
+            }
+        }
+        /// <summary>
+        /// returns the logged in contact taken from the app
+        /// </summary>
+        /// <returns></returns>
+        public static String ContactId()
+        {
+            return (((App)App.Current).contactId);
+        }
+        /// <summary>
+        /// Deletes an entity
+        /// </summary>
+        /// <param name="entityname"></param>
+        /// <param name="entityId"></param>
+        public void Delete(String entityname, Guid entityId) {
+
+            XElement deleteXml = new XElement(entityname, new XElement("id", entityId.ToString()));
+            CrmSdk.WebServicesSoapClient cms = new CrmSdk.WebServicesSoapClient(((App)App.Current).webServicesName);
+            cms.DeleteCompleted += new EventHandler<CrmSdk.DeleteCompletedEventArgs>(cms_Delete);
+            cms.DeleteAsync(deleteXml);
+        }
+
+        private void cms_Delete(object sender, CrmSdk.DeleteCompletedEventArgs e)
+        {
+            try
+            {
+                var element = e.Result;
+
+                var errors = from x in e.Result.Descendants("error") select x;
+                if (errors.Count() > 0)
+                {
+
+                    String message = e.Result.Value.ToString();
+                    DeleteFailed(e.Result, new EventArgs());
+                    ChildWindows.Error error = new ChildWindows.Error(message);
+                    error.Show();
+                }
+                else
+                {
+                    DeleteCompleted(e.Result, new EventArgs());
+                }
+            }
+            catch (Exception err)
+            {
+                ChildWindows.Error error = new ChildWindows.Error(err.Message);
+                error.Show();
+            }
+        }
+        /// <summary>
+        /// For buttons
+        /// </summary>
+        /// <param name="dg"></param>
+        /// <param name="e"></param>
+        /// <param name="action"></param>
+        /// <param name="name"></param>
+        public static void DataGrid_AttachEvent(DataGrid dg, DataGridRowEventArgs e, RoutedEventHandler action, String name )
+        {
+            
+               
+                //deal with getting the data bound to the autocompletebox
+                try
+                {
+                    foreach (DataGridColumn c in dg.Columns)
+                    {
+                        if (c.GetCellContent(e.Row).GetType() == typeof(Button))
+                        {
+                            if (((String)c.Header).Equals(name, StringComparison.OrdinalIgnoreCase))
+                            {
+                                Button ccb = c.GetCellContent(e.Row) as Button;
+                                ccb.Click -= action;
+                                ccb.Click += new RoutedEventHandler(action);
+                            }else if( c.GetCellContent(e.Row).GetType() == typeof(Button)  ) {
+
+                                Button ccb = c.GetCellContent(e.Row) as Button;
+                                if (ccb.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    ccb.Click -= action;
+                                    ccb.Click += new RoutedEventHandler(action);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception err)
+                {
+                    ChildWindows.Error error = new ChildWindows.Error(err.Message +" "+err.StackTrace);
+                    error.Show();
+                }
+            
+        }
+    }
+
+}

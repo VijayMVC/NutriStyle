@@ -1,0 +1,191 @@
+﻿using DynamicConnections.CRM2011.Common.Utility;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Client;
+using Microsoft.Xrm.Sdk.Metadata;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace DynamicConnections.NutriStyle.CRM2011.MenuGenerator.Helpers
+{
+    class Clone : General
+    {
+        private static Logger logger = GetLogger();
+
+        public Clone()
+        {
+
+        }
+        /// <summary>
+        /// Clone the menu, top to buttom
+        /// </summary>
+        /// <param name="toClone"></param>
+        /// <param name="crmService"></param>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        public Entity Execute(Entity toClone, OrganizationServiceProxy crmService, KeyValuePair<String, EntityReference> parent)
+        {
+            Entity entity = new Entity();
+            entity.LogicalName = toClone.LogicalName;
+            entity.Id = Guid.NewGuid();
+
+            EntityMetadata em = MetadataHelper.GetEntityMetadata(toClone.LogicalName, crmService);
+
+            //copy in attributes
+            foreach (KeyValuePair<string, object> pair in toClone.Attributes)
+            {
+                if (!entity.Attributes.Contains(pair.Key) && !em.PrimaryIdAttribute.Equals(pair.Key))
+                {
+                    //do not copy in the primary key
+                    if (!String.IsNullOrEmpty(parent.Key) && pair.Key.Equals(parent.Key))
+                    {
+                        entity.Attributes.Add(parent.Key, parent.Value);
+                    }
+                    else
+                    {
+                        entity.Attributes.Add(pair);
+                    }
+                }
+            }
+            //Clone in relationships
+
+            foreach (KeyValuePair<Relationship, EntityCollection> pair in toClone.RelatedEntities)
+            {
+                EntityCollection collection = new EntityCollection();
+                foreach (Entity e in ((EntityCollection)pair.Value).Entities)
+                {
+                    if (entity.LogicalName.Equals("dc_menu"))
+                    {
+                        parent = new KeyValuePair<string, EntityReference>("dc_menuid", new EntityReference("dc_menu", entity.Id));
+                    }
+                    else if (entity.LogicalName.Equals("dc_day"))
+                    {
+                        parent = new KeyValuePair<string, EntityReference>("dc_dayid", new EntityReference("dc_day", entity.Id));
+                    }
+                    else if (entity.LogicalName.Equals("dc_meal"))
+                    {
+                        parent = new KeyValuePair<string, EntityReference>("dc_mealid", new EntityReference("dc_meal", entity.Id));
+                    }
+                    Entity child = Execute(e, crmService, parent);
+                    collection.Entities.Add(child);
+                }
+                if (collection.Entities.Count > 0)
+                {
+                    entity.RelatedEntities.Add((Relationship)pair.Key, collection);
+                }
+            }
+            return (entity);
+        }
+
+        /// <summary>
+        /// Remove dc_min_amount
+        /// </summary>
+        /// <param name="parent"></param>
+        public static void RemoveMinAmount(Entity parent)
+        {
+            //relationships
+            foreach (KeyValuePair<Relationship, EntityCollection> pair in parent.RelatedEntities)
+            {
+
+                EntityCollection collection = new EntityCollection();
+                foreach (Entity e in ((EntityCollection)pair.Value).Entities)
+                {
+                    if (e.LogicalName.Equals("dc_mealfood", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (e.Attributes.Contains("dc_amount_incr"))
+                        {
+                            e.Attributes.Remove("dc_amount_incr");
+                        }
+                        else if (e.Attributes.Contains("dc_min_amount"))
+                        {
+                            e.Attributes.Remove("dc_min_amount");
+                        }
+                        else if (e.Attributes.Contains("dc_max_amount"))
+                        {
+                            e.Attributes.Remove("dc_max_amount");
+                        }
+                    }
+                    else
+                    {
+                        RemoveMinAmount(e);
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// Round the portion size up to the next round number as defined by the dc_amount_incr
+        /// </summary>
+        /// <param name="parent"></param>
+        public static void RoundUpPortionSize(Entity parent)
+        {
+            //relationships
+            foreach (KeyValuePair<Relationship, EntityCollection> pair in parent.RelatedEntities)
+            {
+
+                EntityCollection collection = new EntityCollection();
+                foreach (Entity e in ((EntityCollection)pair.Value).Entities)
+                {
+                    if (e.LogicalName.Equals("dc_mealfood", StringComparison.OrdinalIgnoreCase))
+                    {
+
+                        //Check to see the the min amount and max amount are the same.  If they are the food has to be that portion size.
+                        decimal minAmount = e.Contains("dc_min_amount") ? (decimal)e["dc_min_amount"] : 0m;
+                        decimal maxAmount = e.Contains("dc_max_amount") ? (decimal)e["dc_max_amount"] : 0m;
+                        bool useMinAmount = false;
+                        if (minAmount != 0 && minAmount == maxAmount)
+                        {
+                            logger.debug("Portion size for this food ("+e["dc_name"]+") must be: " + minAmount);
+                            useMinAmount = true;
+                        }
+
+                        decimal portionSize = (decimal)e["dc_portionsize"];
+                        decimal moveTo = 0m;
+                        if (useMinAmount)
+                        {
+                            moveTo = minAmount;
+                        }
+                        else
+                        {
+                            moveTo = (decimal) e["dc_amount_incr"];
+                        }
+                        decimal wholeNumber = Math.Truncate(portionSize);
+                        decimal remander = portionSize - wholeNumber;
+
+                        decimal needToAdd = moveTo - remander;
+                        if (needToAdd < 0)
+                        {
+                            needToAdd += moveTo;
+                        }
+                        decimal multiplier = (portionSize + needToAdd) / portionSize;
+
+                        if (useMinAmount)
+                        {
+                            logger.debug("wholeNumber: " + wholeNumber);
+                            logger.debug("remander: " + remander);
+                            logger.debug("needToAdd: " + needToAdd);
+                            logger.debug("multiplier: " + multiplier);
+                            logger.debug("portionSize: " + portionSize);
+
+                            logger.debug("Setting portion size:" + (decimal)e["dc_portionsize"] * multiplier);
+
+                        }
+
+                        e["dc_portionsize"] = (decimal)e["dc_portionsize"] * multiplier;
+                       
+                        e["dc_fat"] = (decimal)e["dc_fat"] * multiplier;
+                        e["dc_protein"] = (decimal)e["dc_protein"] * multiplier;
+                        e["dc_carbohydrate"] = (decimal)e["dc_carbohydrate"] * multiplier;
+                        e["dc_kcals"] = General.CalculateKcals((decimal)e["dc_carbohydrate"], (decimal)e["dc_fat"],
+                                                               (decimal)e["dc_protein"]);
+
+                    }
+                    else
+                    {
+                        RoundUpPortionSize(e);
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,11 @@
+C:\Builds\NutriStyle\Applications\MenuGeneratorTest\bin\Debug\MenuGeneratorTest.exe.config
+C:\Builds\NutriStyle\Applications\MenuGeneratorTest\bin\Debug\MenuGeneratorTest.exe
+C:\Builds\NutriStyle\Applications\MenuGeneratorTest\bin\Debug\MenuGeneratorTest.pdb
+C:\Builds\NutriStyle\Applications\MenuGeneratorTest\bin\Debug\DynamicConnections.CRM2011.Common.dll
+C:\Builds\NutriStyle\Applications\MenuGeneratorTest\bin\Debug\MenuGenerator.dll
+C:\Builds\NutriStyle\Applications\MenuGeneratorTest\bin\Debug\microsoft.xrm.sdk.dll
+C:\Builds\NutriStyle\Applications\MenuGeneratorTest\bin\Debug\MenuGenerator.pdb
+C:\Builds\NutriStyle\Applications\MenuGeneratorTest\bin\Debug\DynamicConnections.CRM2011.Common.pdb
+C:\Builds\NutriStyle\Applications\MenuGeneratorTest\obj\x86\Debug\MenuGeneratorTest.csprojResolveAssemblyReference.cache
+C:\Builds\NutriStyle\Applications\MenuGeneratorTest\obj\x86\Debug\MenuGeneratorTest.exe
+C:\Builds\NutriStyle\Applications\MenuGeneratorTest\obj\x86\Debug\MenuGeneratorTest.pdb

@@ -1,0 +1,24 @@
+﻿<navigation:Page x:Class="DynamicConnections.NutriStyle.MenuGenerator.Pages.GenerateMenu" 
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:toolkit2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+           mc:Ignorable="d"
+           xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+           d:DesignWidth="640" d:DesignHeight="480"
+           Title="Login Page" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk">
+    <Grid x:Name="LayoutRoot" Background="White">
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <Border CornerRadius="4" BorderBrush="Black" BorderThickness="1" Background="White" Margin="10,0,10,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+
+            <toolkit2:BusyIndicator   BorderThickness="0" Name="busyIndicator" IsBusy="true" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0" >
+                </toolkit2:BusyIndicator>
+           
+        </Border>
+    </Grid>
+</navigation:Page>

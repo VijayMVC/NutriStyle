@@ -1,0 +1,167 @@
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xrm.Sdk;
+using DynamicConnections.CRM2011.CustomAssemblies.Utilities;
+using Microsoft.Xrm.Sdk.Query;
+
+
+namespace DynamicConnections.NutriStyle.CRM2011.Plugins
+{
+    /// <summary>
+    /// Plugin creates a new field in the entity Meal Food.  
+    /// The values dc_fat, dc_protein, dc_carbohydrate, dc_portion_amount, dc_portionsize are passed in to the calculate the dc_kcals.
+    /// This calculation is then passed back. Needs to run first.  Register against dc_mealfood, pre-create and pre-update
+    /// </summary>
+    public class MealFood : IPlugin
+    {
+        Logger logger;
+        public void Execute(IServiceProvider serviceProvider)
+        {
+            logger = new Logger("DEBUG", @"c:\windows\temp\nutristyle_plugins_output.txt", 1);
+            try
+            {
+                // get the execution context from the service provider
+                IPluginExecutionContext pluginExecutionContext = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
+
+                // Obtain the organization service reference.
+                IOrganizationServiceFactory serviceFactory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
+                IOrganizationService crmService = serviceFactory.CreateOrganizationService(pluginExecutionContext.UserId);
+
+                logger.debug("MealFood: starting: " + pluginExecutionContext.PrimaryEntityName + ":" + pluginExecutionContext.MessageName);//so me know if this is an update or create message
+
+                // initilize the variables                
+                double fat              = 0d;
+                double protein          = 0d;
+                double carbohydrate     = 0d;
+                double alcohol          = 0d;
+                double portionSize      = 0d;
+                double portionamount    = 0d;
+
+                // form - data that the user changed
+                Entity mealFood = (Entity)pluginExecutionContext.InputParameters["Target"];
+                //logger.debug("food: " + mealFood.Values);
+                Guid dc_foodsid = new Guid();
+
+                if (mealFood.Contains("dc_foodid") && !mealFood.Contains("dc_kcal"))
+                {
+                    dc_foodsid = ((EntityReference)mealFood["dc_foodid"]).Id;
+                    
+                    String fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
+                      <entity name='dc_foods'>
+                        <attribute name='dc_portion_amount' />
+                        <filter type='and'>
+                          <condition attribute='dc_foodsid' operator='eq' value='@DC_FOODID' />
+                        </filter>
+                        <link-entity name='dc_food_nutrients' from='dc_food_nutrientsid' to='dc_foodnutrientid' alias='aa'>
+                            <attribute name='dc_fat' />
+                            <attribute name='dc_protein' />
+                            <attribute name='dc_carbohydrate' />
+                            <attribute name='dc_alcohol' />
+                        </link-entity>
+                      </entity>
+                    </fetch>";
+
+                    fetchXml = fetchXml.Replace("@DC_FOODID", dc_foodsid.ToString());
+                    EntityCollection response = null;
+                    logger.debug("Retrieving food: " + dc_foodsid.ToString());
+                    try
+                    {
+                        response = crmService.RetrieveMultiple(new FetchExpression(fetchXml));
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.error("fetchxml retrieve");
+                        logger.error(ex.Message);
+                        logger.error(ex.StackTrace);
+                    }
+                    //make sure we have a value
+                    if (response != null && response.Entities.Count > 0)
+                    {
+                        logger.debug("Found "+response.Entities.Count+" entities");
+                        Entity entity = (Entity)response.Entities[0];
+                        if (entity.Contains("aa.dc_fat"))
+                        {
+                            fat = entity["aa.dc_fat"] == null ? 0d : (double)((AliasedValue)entity["aa.dc_fat"]).Value;
+                        }
+                        else
+                        {
+                            logger.debug("Not able to find related food (dc_fat)");
+                        }
+                        if (entity.Contains("aa.dc_protein"))
+                        {
+                            protein = entity["aa.dc_protein"] == null ? 0d: (double)((AliasedValue)entity["aa.dc_protein"]).Value;
+                        }
+                        else
+                        {
+                            logger.debug("Not able to find related food (dc_protein)");
+                        }
+                        if (entity.Contains("aa.dc_carbohydrate"))
+                        {
+                            carbohydrate = entity["aa.dc_carbohydrate"] == null ? 0d : (double)((AliasedValue)entity["aa.dc_carbohydrate"]).Value;
+                        }
+                        else
+                        {
+                            logger.debug("Not able to find related food (dc_carbohydrate)");
+                        }
+                        if (entity.Contains("aa.dc_alcohol"))
+                        {
+                            alcohol = entity["aa.dc_alcohol"] == null ? 0d : (double)((AliasedValue)entity["aa.dc_alcohol"]).Value;
+                        }
+                        else
+                        {
+                            logger.debug("Not able to find related food (dc_alcohol)");
+                        }
+                        
+                        portionSize = mealFood.Contains("dc_portionsize") ? Convert.ToDouble((decimal)mealFood["dc_portionsize"]) : 0;
+                        portionamount = entity.Contains("dc_portion_amount") ? (double)entity["dc_portion_amount"] : 0;
+
+                        decimal unitGramWeight = mealFood.Contains("dc_unit_gram_weight") ? (decimal)mealFood["dc_unit_gram_weight"] : 0m;
+                        double orgPortionAmount = entity.Contains("dc_portion_amount") ? (double)entity["dc_portion_amount"] : 0d;
+                        
+                        if (portionSize >0 && portionamount >0)
+                        {
+                            if (fat == 100)
+                            {
+                                decimal sngFactor = ((unitGramWeight) / Convert.ToDecimal(orgPortionAmount));
+                                sngFactor = sngFactor * (decimal)portionamount;
+                                fat = fat * (double)sngFactor;
+                                decimal kcals = (decimal)fat * 9m;
+
+                                mealFood["dc_kcals"]        = kcals;//set value back to pre entity
+                                mealFood["dc_fat"]          = (decimal)fat;
+                                mealFood["dc_protein"]      = 0m;
+                                mealFood["dc_alcohol"]      = 0m;
+                                mealFood["dc_carbohydrate"] = 0m;
+                            }
+                            else
+                            {
+                                double kcalMultiplier       = portionSize / portionamount;
+                                decimal kcals               = Convert.ToDecimal(((fat * 9) + (protein * 4) + (carbohydrate * 4) +(alcohol*7)) * kcalMultiplier);
+                                //logger.debug("Setting kcals to: "+ kcals);
+                                mealFood["dc_kcals"]        = kcals;//set value back to pre entity
+                                mealFood["dc_fat"]          = (decimal)(fat * kcalMultiplier);
+                                mealFood["dc_protein"]      = (decimal)(protein * kcalMultiplier);
+                                mealFood["dc_alcohol"]      = (decimal)(alcohol * kcalMultiplier);
+                                mealFood["dc_carbohydrate"] = (decimal)(carbohydrate * kcalMultiplier);
+                            }
+                        }
+                        else
+                        {
+                            logger.debug("Not able to find related food (dc_portionsize) and (dc_portion_amount)");
+                        }
+                    }
+                    else
+                    {
+                        logger.debug("FoodId not found: " + dc_foodsid.ToString());
+                    }
+                }//end of check for dc_foodsid and dc_kcal
+            }
+            catch (Exception ex)
+            {
+                logger.error("Execute Method");
+                logger.error(ex.Message);
+                logger.error(ex.StackTrace);
+            }
+        }
+    }
+}

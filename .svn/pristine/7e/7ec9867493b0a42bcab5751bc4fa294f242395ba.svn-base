@@ -1,0 +1,318 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7AB52E15-ED91-48FF-ACD6-653C7470806F}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DynamicConnections.NutriStyle.MenuGenerator</RootNamespace>
+    <AssemblyName>DynamicConnections.NutriStyle.MenuGenerator</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>true</SilverlightApplication>
+    <SupportedCultures>
+    </SupportedCultures>
+    <XapOutputs>true</XapOutputs>
+    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
+    <XapFilename>Silverlight.xap</XapFilename>
+    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
+    <SilverlightAppEntry>DynamicConnections.NutriStyle.MenuGenerator.App</SilverlightAppEntry>
+    <TestPageFileName>SilverlightTestPage.html</TestPageFileName>
+    <CreateTestPage>true</CreateTestPage>
+    <ValidateXaml>true</ValidateXaml>
+    <EnableOutOfBrowser>false</EnableOutOfBrowser>
+    <OutOfBrowserSettingsFile>Properties\OutOfBrowserSettings.xml</OutOfBrowserSettingsFile>
+    <UsePlatformExtensions>false</UsePlatformExtensions>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <LinkedServerProject>
+    </LinkedServerProject>
+  </PropertyGroup>
+  <!-- This property group is only here to support building this project using the 
+       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
+       to set the TargetFrameworkVersion to v3.5 -->
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>ClientBin</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>ClientBin</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Divelements.SilverlightTools">
+      <HintPath>..\..\Include\Divelements.SilverlightTools.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="System.ComponentModel.DataAnnotations, Version=2.0.5.0, Culture=neutral, PublicKeyToken=ddd0da4d3e678217" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Controls, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.Data.Input, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.DataVisualization.Toolkit, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.Input, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Navigation, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Toolkit, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Windows.Controls.Toolkit.Internals, Version=4.0.5.0, Culture=neutral, PublicKeyToken=2c5c654d367bf4a7" />
+    <Reference Include="System.Windows.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Windows.Browser" />
+    <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+  </ItemGroup>
+  <ItemGroup>
+
+    <Compile Include="engine\Helpers\ItemType.cs" />
+    <Compile Include="engine\Helpers\Row.cs" />
+    <Compile Include="engine\Helpers\RowIndexConverter.cs" />
+    <Compile Include="engine\Helpers\SortableCollectionView.cs" />
+    <Compile Include="engine\Helpers\PropertyValueChange.cs" />
+    <Compile Include="engine\PopulateHelp.cs" />
+    <Compile Include="engine\PopulateTip.cs" />
+
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Include="pages\Login.xaml.cs">
+      <DependentUpon>pages\Login.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Include="pages\Profile.xaml.cs">
+      <DependentUpon>pages\Profile.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Include="childwindows\status.xaml.cs">
+      <DependentUpon>childwindows\status.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Include="Controls\ComboBox.xaml.cs">
+      <DependentUpon>Controls\ComboBox.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Include="Pages\MenuOptions.xaml.cs">
+      <DependentUpon>Pages\MenuOptions.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Include="Pages\FoodLikes.xaml.cs">
+      <DependentUpon>Pages\FoodLikes.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Include="Pages\FoodDislikes.xaml.cs">
+      <DependentUpon>Pages\FoodDislikes.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Include="Pages\MenuEditor.xaml.cs">
+      <DependentUpon>Pages\MenuEditor.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Include="Pages\ShoppingList.xaml.cs">
+      <DependentUpon>Pages\ShoppingList.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Include="Pages\GenerateMenu.xaml.cs">
+      <DependentUpon>Pages\GenerateMenu.xaml</DependentUpon>
+    </Compile>
+    
+
+    <Compile Include="adds\page1.xaml.cs">
+      <DependentUpon>adds\page1.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DC.build.proj" />
+    <None Include="Properties\AppManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+
+    <Page Include="pages\Login.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+
+    <Page Include="pages\Profile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+
+    <Page Include="ChildWindows\status.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+
+
+    <Page Include="Controls\ComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+
+    <Page Include="Pages\MenuOptions.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\FoodLikes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+
+    <Page Include="Pages\FoodDislikes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+
+    <Page Include="Pages\MenuEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+
+    <Page Include="Pages\ShoppingList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+
+    <Page Include="Pages\GenerateMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+
+    <Page Include="adds\page1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+
+    <Compile Include="Service References\CrmSdk\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+
+
+    <None Include="Service References\CrmSdk\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\CrmSdk\configuration.svcinfo" />
+    <None Include="Service References\CrmSdk\configuration91.svcinfo" />
+    <None Include="Service References\CrmSdk\WebServices.disco" />
+
+    <None Include="Service References\CrmSdk\WebServices.wsdl" />
+    <Content Include="ServiceReferences.ClientConfig" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="index.aspx" />
+    <Resource Include="Images\warning.png" />
+    <Resource Include="Images\success.png" />
+    <Resource Include="Images\delete.png" />
+    <Resource Include="Images\cloudlogo1.png" />
+
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+
+  <ItemGroup>
+
+    <Files Include="$(drop)\Server\Silverlight\**\*.*" />
+    <DLLS Include="$(MSBuildProjectDirectory)\ClientBin\*.dll;$(MSBuildProjectDirectory)\ClientBin\*.xap"/>
+    <XML Include="$(MSBuildProjectDirectory)\**\*.xml;"/>
+    <WebFiles Include="$(MSBuildProjectDirectory)\**\*.aspx;
+                 $(MSBuildProjectDirectory)\**\*.js;
+                 $(MSBuildProjectDirectory)\**\*.css;
+                 $(MSBuildProjectDirectory)\**\*.htm;
+                 $(MSBuildProjectDirectory)\**\*.asmx;
+                 $(MSBuildProjectDirectory)\**\*.gif;
+                 $(MSBuildProjectDirectory)\**\*.html;
+                 $(MSBuildProjectDirectory)\**\*.xaml;
+                 $(MSBuildProjectDirectory)\**\*.png;
+                 "/>
+
+  </ItemGroup>
+
+  <PropertyGroup>
+    <root>$(MSBuildProjectDirectory)\..\..</root>
+  </PropertyGroup>
+
+
+  <Import Project="$(root)\DC.properties.proj"/>
+
+
+  <Target Name="copy2" DependsOnTargets="build">
+    <Message Text="drop is $(drop)"/>
+    <Message Text="Project dir is $(MSBuildProjectDirectory)"/>
+
+    <Copy SourceFiles="@(WebFiles)"
+          DestinationFolder="$(drop)\Server\Silverlight\%(RecursiveDir)"/>
+
+    <Copy SourceFiles="@(DLLS)"
+          DestinationFolder="$(drop)\Server\Silverlight\ClientBin"/>
+    <!--
+    <Copy SourceFiles="@(XML)"
+         DestinationFolder="$(drop)\Server\SilverlightMap\ClientBin\%(RecursiveDir)"/>
+    -->
+  </Target>
+
+  <Target Name="copy" DependsOnTargets="copy2">
+    <Copy SourceFiles="@(Files)"
+         DestinationFolder="\\10.1.10.3\nutristyle\Silverlight\%(RecursiveDir)"/>
+  </Target>
+
+  <Target Name="deploy" DependsOnTargets="copy2">
+    <Copy SourceFiles="@(Files)"
+         DestinationFolder="\\svn\nutristyle\Silverlight\%(RecursiveDir)"/>
+  </Target>
+
+
+</Project>

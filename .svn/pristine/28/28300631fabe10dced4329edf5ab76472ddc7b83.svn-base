@@ -1,0 +1,539 @@
+﻿<navigation:Page x:Class="DynamicConnections.NutriStyle.MenuGenerator.MainPage" 
+           xmlns:System="clr-namespace:System;assembly=mscorlib"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"         
+            xmlns:divtools="clr-namespace:Divelements.SilverlightTools;assembly=Divelements.SilverlightTools"                 
+           mc:Ignorable="d"
+           xmlns:navigation="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Navigation"
+           xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"   
+           d:DesignWidth="1500" d:DesignHeight="796"
+           xmlns:layout="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
+           xmlns:vsm="clr-namespace:System.Windows;assembly=System.Windows"
+           Title="MainPage Page" SizeChanged="UserControl_SizeChanged" Background="#CCECFF">
+
+    <navigation:Page.Resources>
+
+        <!-- Content Frame Style -->
+        <Style x:Key="ContentFrameStyle" TargetType="navigation:Frame">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <!--<Setter Property="Padding" Value="58,15,58,15"/> -->
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+
+            <!-- custom Frame template-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="navigation:Frame">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <layout:TransitioningContentControl Style="{StaticResource TransitioningStyle}" Content="{TemplateBinding Content}" Cursor="{TemplateBinding Cursor}" Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--
+        <Style TargetType="sdk:TreeViewItem" x:Name="treeViewItemStyle">
+    -->
+        <ControlTemplate x:Key="CommonValidationToolTipTemplate" TargetType="ToolTip">
+            <Grid x:Name="Root" Margin="5,0" RenderTransformOrigin="0,0" Opacity="0">
+                <Grid.RenderTransform>
+                    <TranslateTransform x:Name="Translation" X="-25" />
+                </Grid.RenderTransform>
+                <vsm:VisualStateManager.VisualStateGroups>
+                    <vsm:VisualStateGroup Name="OpenStates">
+                        <vsm:VisualStateGroup.Transitions>
+                            <vsm:VisualTransition GeneratedDuration="0" />
+                            <vsm:VisualTransition To="Open" GeneratedDuration="0:0:0.2">
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="Translation" Storyboard.TargetProperty="X" To="0" Duration="0:0:0.2">
+                                        <DoubleAnimation.EasingFunction>
+                                            <BackEase Amplitude=".3" EasingMode="EaseOut" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                    <DoubleAnimation Storyboard.TargetName="Root" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.2" />
+                                </Storyboard>
+                            </vsm:VisualTransition>
+                        </vsm:VisualStateGroup.Transitions>
+                        <vsm:VisualState x:Name="Closed">
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="Root" Storyboard.TargetProperty="Opacity" To="0" Duration="0" />
+                            </Storyboard>
+                        </vsm:VisualState>
+                        <vsm:VisualState x:Name="Open">
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="Translation" Storyboard.TargetProperty="X" To="0" Duration="0" />
+                                <DoubleAnimation Storyboard.TargetName="Root" Storyboard.TargetProperty="Opacity" To="1" Duration="0" />
+                            </Storyboard>
+                        </vsm:VisualState>
+                    </vsm:VisualStateGroup>
+                </vsm:VisualStateManager.VisualStateGroups>
+
+                <Border Margin="4,4,-4,-4" Background="#052A2E31" CornerRadius="5" />
+                <Border Margin="3,3,-3,-3" Background="#152A2E31" CornerRadius="4" />
+                <Border Margin="2,2,-2,-2" Background="#252A2E31" CornerRadius="3" />
+                <Border Margin="1,1,-1,-1" Background="#352A2E31" CornerRadius="2" />
+
+                <Border Background="#FFDC000C" CornerRadius="2">
+                    <TextBlock UseLayoutRounding="false" Foreground="White" Margin="8,4,8,4" MaxWidth="250" TextWrapping="Wrap" Text="{Binding (Validation.Errors)[0].ErrorContent}" />
+                </Border>
+            </Grid>
+        </ControlTemplate>
+
+
+
+        <Style TargetType="sdk:TreeViewItem" x:Name="customTreeViewItem">
+            <Setter Property="Padding" Value="3" />
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+            <Setter Property="Background" Value="Transparent" />
+
+
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Cursor" Value="Arrow" />
+            <Setter Property="IsTabStop" Value="True" />
+            <Setter Property="TabNavigation" Value="Once" />
+            <Setter Property="Margin" Value="0 1 0 0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="sdk:TreeViewItem">
+                        <Grid Background="{x:Null}">
+                            <vsm:VisualStateManager.VisualStateGroups>
+                                <vsm:VisualStateGroup x:Name="CommonStates">
+                                    <vsm:VisualState x:Name="Normal" />
+                                    <vsm:VisualState x:Name="MouseOver" />
+                                    <vsm:VisualState x:Name="Pressed" />
+                                    <vsm:VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Header" Storyboard.TargetProperty="Foreground" Duration="0">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <SolidColorBrush Color="#FF999999" />
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </vsm:VisualState>
+                                </vsm:VisualStateGroup>
+                                <vsm:VisualStateGroup x:Name="SelectionStates">
+                                    <vsm:VisualState x:Name="Unselected" />
+                                    <vsm:VisualState x:Name="Selected">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Selection" Storyboard.TargetProperty="Opacity" Duration="0" To=".75" />
+                                        </Storyboard>
+                                    </vsm:VisualState>
+                                    <vsm:VisualState x:Name="SelectedInactive">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Selection" Storyboard.TargetProperty="Opacity" Duration="0" To=".2" />
+                                            <ColorAnimation Storyboard.TargetName="SelectionFill" Storyboard.TargetProperty="Color" Duration="0" To="#FF999999" />
+                                            <ColorAnimation Storyboard.TargetName="SelectionStroke" Storyboard.TargetProperty="Color" Duration="0" To="#FF333333" />
+                                        </Storyboard>
+                                    </vsm:VisualState>
+                                </vsm:VisualStateGroup>
+                                <vsm:VisualStateGroup x:Name="HasItemsStates">
+                                    <vsm:VisualState x:Name="HasItems" />
+                                    <vsm:VisualState x:Name="NoItems">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ExpanderButton" Storyboard.TargetProperty="Visibility" Duration="0">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </vsm:VisualState>
+                                </vsm:VisualStateGroup>
+                                <vsm:VisualStateGroup x:Name="ExpansionStates">
+                                    <vsm:VisualState x:Name="Collapsed" />
+                                    <vsm:VisualState x:Name="Expanded">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ItemsHost" Storyboard.TargetProperty="Visibility" Duration="0">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </vsm:VisualState>
+                                </vsm:VisualStateGroup>
+                                <vsm:VisualStateGroup x:Name="ValidationStates">
+                                    <vsm:VisualState x:Name="Valid" />
+                                    <vsm:VisualState x:Name="InvalidUnfocused">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Validation" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </vsm:VisualState>
+                                    <vsm:VisualState x:Name="InvalidFocused">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Validation" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ValidationToolTip" Storyboard.TargetProperty="IsOpen">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <System:Boolean>True</System:Boolean>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </vsm:VisualState>
+                                </vsm:VisualStateGroup>
+                            </vsm:VisualStateManager.VisualStateGroups>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="15" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <ToggleButton x:Name="ExpanderButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsTabStop="False" TabNavigation="Once">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Grid x:Name="Root" Background="Transparent">
+                                            <vsm:VisualStateManager.VisualStateGroups>
+                                                <vsm:VisualStateGroup x:Name="CommonStates">
+                                                    <vsm:VisualState x:Name="Normal" />
+                                                    <vsm:VisualState x:Name="MouseOver">
+                                                        <Storyboard>
+                                                            <ColorAnimation Storyboard.TargetName="UncheckedVisual" Storyboard.TargetProperty="(Path.Stroke).Color" To="#FF1BBBFA" Duration="0" />
+                                                        </Storyboard>
+                                                    </vsm:VisualState>
+                                                    <vsm:VisualState x:Name="Disabled">
+                                                        <Storyboard>
+                                                            <DoubleAnimation Storyboard.TargetName="Root" Storyboard.TargetProperty="Opacity" To=".7" Duration="0" />
+                                                        </Storyboard>
+                                                    </vsm:VisualState>
+                                                </vsm:VisualStateGroup>
+                                                <vsm:VisualStateGroup x:Name="CheckStates">
+                                                    <vsm:VisualState x:Name="Unchecked" />
+                                                    <vsm:VisualState x:Name="Checked">
+                                                        <Storyboard>
+                                                            <DoubleAnimation Storyboard.TargetName="UncheckedVisual" Storyboard.TargetProperty="Opacity" To="0" Duration="0" />
+                                                            <DoubleAnimation Storyboard.TargetName="CheckedVisual" Storyboard.TargetProperty="Opacity" To="1" Duration="0" />
+                                                        </Storyboard>
+                                                    </vsm:VisualState>
+                                                </vsm:VisualStateGroup>
+                                            </vsm:VisualStateManager.VisualStateGroups>
+                                            <Grid HorizontalAlignment="Right" Margin="2 2 5 2">
+                                                <Path x:Name="UncheckedVisual" Width="6" Height="9" Fill="#FFFFFFFF" VerticalAlignment="Center" HorizontalAlignment="Right" Data="M 0,0 L 0,9 L 5,4.5 Z" StrokeThickness="1" StrokeLineJoin="Miter">
+                                                    <Path.Stroke>
+                                                        <SolidColorBrush Color="#FF989898" />
+                                                    </Path.Stroke>
+                                                </Path>
+                                                <Path x:Name="CheckedVisual" Opacity="0" Width="6" Height="6" Fill="#FF262626" VerticalAlignment="Center" HorizontalAlignment="Center" Data="M 6,0 L 6,6 L 0,6 Z" StrokeLineJoin="Miter" />
+                                            </Grid>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                            <Rectangle x:Name="Selection" Grid.Column="1" Opacity="0" StrokeThickness="1" IsHitTestVisible="False" RadiusX="2" RadiusY="2">
+                                <Rectangle.Fill>
+                                    <SolidColorBrush x:Name="SelectionFill" Color="#FFBADDE9" />
+                                </Rectangle.Fill>
+                                <Rectangle.Stroke>
+                                    <SolidColorBrush x:Name="SelectionStroke" Color="#FF6DBDD1" />
+                                </Rectangle.Stroke>
+                            </Rectangle>
+
+                            <Button x:Name="Header" Grid.Column="1" ClickMode="Hover" Background="{TemplateBinding Background}" Foreground="{TemplateBinding Foreground}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Cursor="{TemplateBinding Cursor}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" IsTabStop="False" TabNavigation="Once">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Grid Background="{TemplateBinding Background}">
+                                            <vsm:VisualStateManager.VisualStateGroups>
+                                                <vsm:VisualStateGroup x:Name="CommonStates">
+                                                    <vsm:VisualState x:Name="Normal" />
+                                                    <vsm:VisualState x:Name="Pressed">
+                                                        <Storyboard>
+                                                            <!--
+                                                            <DoubleAnimation Storyboard.TargetName="Hover" Storyboard.TargetProperty="Opacity" Duration="0" To=".5" />
+                                                            -->
+                                                        </Storyboard>
+                                                    </vsm:VisualState>
+                                                    <vsm:VisualState x:Name="Disabled">
+                                                        <Storyboard>
+                                                            <DoubleAnimation Storyboard.TargetName="Content" Storyboard.TargetProperty="Opacity" Duration="0" To=".55" />
+                                                        </Storyboard>
+                                                    </vsm:VisualState>
+                                                </vsm:VisualStateGroup>
+                                            </vsm:VisualStateManager.VisualStateGroups>
+                                            <!--
+                                                <Rectangle x:Name="Hover" Opacity="0" Fill="#FFBADDE9" Width="120" Stroke="#FF6DBDD1" StrokeThickness="1" IsHitTestVisible="False" RadiusX="2" RadiusY="2" />
+                                            -->
+                                            <Border CornerRadius="4" Background="White">
+                                                <StackPanel Width="120" Background="Transparent">
+                                                    <ContentPresenter x:Name="Content" HorizontalAlignment="Right" Cursor="{TemplateBinding Cursor}" Content="{TemplateBinding Content}" 
+                                                    ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}" />
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Button.Template>
+                                <Button.Content>
+                                    <ContentPresenter Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" />
+                                </Button.Content>
+                            </Button>
+
+                            <Border x:Name="Validation" Grid.Column="1" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="#FFDB000C" CornerRadius="2" Visibility="Collapsed">
+                                <ToolTipService.ToolTip>
+                                    <ToolTip x:Name="ValidationToolTip" Template="{StaticResource CommonValidationToolTipTemplate}" Placement="Right" PlacementTarget="{Binding ElementName=Header}" DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}" IsHitTestVisible="True" />
+                                </ToolTipService.ToolTip>
+                                <Grid Width="10" Height="10" HorizontalAlignment="Right" Margin="0,-4,-4,0" VerticalAlignment="Top" Background="Transparent">
+                                    <Path Margin="-1,3,0,0" Fill="#FFDC000C" Data="M 1,0 L6,0 A 2,2 90 0 1 8,2 L8,7 Z" />
+                                    <Path Margin="-1,3,0,0" Fill="#FFFFFFFF" Data="M 0,0 L2,0 L 8,6 L8,8" />
+                                </Grid>
+                            </Border>
+
+                            <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Visibility="Collapsed" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+    </navigation:Page.Resources>
+
+    <Grid x:Name="LayoutRoot" Background="#CCECFF">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="1024"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0"></RowDefinition>
+            <RowDefinition Height="744"></RowDefinition>
+            <RowDefinition Height="55"></RowDefinition>
+
+        </Grid.RowDefinitions>
+
+        <!-- Logo-->
+        <Border BorderBrush="#7B92BF" BorderThickness="1,0,1,0" Background="White"  Grid.Column="1" Grid.Row="0">
+            <StackPanel  Background="White" >
+                <Grid Background="White">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="250"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"></RowDefinition>
+                        <RowDefinition Height="3"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+                        <StackPanel.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="White" Offset="0"/>
+                                <GradientStop Color="DarkGray" Offset="1"/>
+                            </LinearGradientBrush>
+
+                        </StackPanel.Background>
+                    </StackPanel>
+                </Grid>
+
+            </StackPanel>
+        </Border>
+        <Border Grid.Column="1" Grid.Row="1" BorderBrush="#7B92BF" BorderThickness="1,0,1,1" >
+
+            <Canvas  HorizontalAlignment="Stretch">
+                <Canvas.Background>
+                    <ImageBrush x:Name="backgroundImage" ImageSource="images/background.png"/>
+                </Canvas.Background>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160"></ColumnDefinition>
+                        <ColumnDefinition Width="554"></ColumnDefinition>
+                        <ColumnDefinition Width="310"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="744"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <!--Menu-->
+                    <toolkit:DockPanel Grid.Row="1" Grid.Column="0" Margin="0,0,2,15"  Background="Transparent" VerticalAlignment="Top">
+                        <StackPanel Orientation="Vertical" Background="Transparent" Visibility="Collapsed" Name="StackPanalDock">
+                            <!--<Border CornerRadius="4" BorderThickness="1" BorderBrush="Black" VerticalAlignment="Stretch" Background="Transparent">-->
+                            <sdk:TreeView ScrollViewer.HorizontalScrollBarVisibility="Disabled" AllowDrop="True" BorderThickness="0" 
+                                VerticalAlignment="Stretch" Background="Transparent" Foreground="#3395B9" FontWeight="Bold" Name="TreeView">
+                                <!--
+                                <sdk:TreeViewItem  HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" Foreground="Black" Unselected="Profile_Unselected" Header="Glad to See you..."  MouseLeftButtonUp="Account_MouseLeftButtonUp" Name="Account" Cursor="Hand" ToolTipService.ToolTip="Glad to See You Back" IsSelected="True" VerticalAlignment="Stretch" />
+
+                                <toolkit:Separator HorizontalAlignment="Right"  BorderBrush="LightGray" BorderThickness=".5" Width="110"  Margin="0" Padding="0" />
+-->
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" IsSelected="True" Header="Profile"  Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="Profile_MouseLeftButtonUp" Name="Profile" Cursor="Hand" ToolTipService.ToolTip="Profile"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator   HorizontalAlignment="Right" BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" IsSelected="False" Header="Additional Profiles"  Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="Additional_Profiles_MouseLeftButtonUp" Name="AdditionalProfiles" Cursor="Hand" ToolTipService.ToolTip="Additional Profiles"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator   HorizontalAlignment="Right" BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" Header="Menu Preferences" Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="MenuPreferences_MouseLeftButtonUp" Name="MenuPreferences" Cursor="Hand" ToolTipService.ToolTip="Menu Preferences"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" Header="Food Likes" Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="foodLikes_MouseLeftButtonUp" Name="foodLikes" Cursor="Hand" ToolTipService.ToolTip="Food Likes"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" Header="Food Dislikes" Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="foodDisLikes_MouseLeftButtonUp" Name="foodDisLikes" Cursor="Hand" ToolTipService.ToolTip="Food Disikes" VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" Header="Daily Menu" Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="DailyMenu_MouseLeftButtonUp" Name="DailyMenu" Cursor="Hand" ToolTipService.ToolTip="Daily Menu"  VerticalAlignment="Stretch"/>
+
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" Header="Saved Menus" Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="WeeklyMenu_MouseLeftButtonUp" Name="WeeklyMenu" Cursor="Hand" ToolTipService.ToolTip="Saved Menus"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" Header="Shopping List" Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="ShoppingList_MouseLeftButtonUp" Name="ShoppingList" Cursor="Hand" ToolTipService.ToolTip="Shopping List"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem HorizontalAlignment="Right" Style="{StaticResource customTreeViewItem}" Header="Fitness Log" Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="FitnessLog_MouseLeftButtonUp" Name="FitnessLog" Cursor="Hand" ToolTipService.ToolTip="Fitness Log"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem Header="Daily Food Log" Style="{StaticResource customTreeViewItem}" HorizontalAlignment="Right"  Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="FoodLog_MouseLeftButtonUp" Name="FoodLog" Cursor="Hand" ToolTipService.ToolTip="Food Log"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+                                
+                                <sdk:TreeViewItem Header="My Foods" Style="{StaticResource customTreeViewItem}" HorizontalAlignment="Right"  Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="YourFoods_MouseLeftButtonUp" Name="YourFoods" Cursor="Hand" ToolTipService.ToolTip="My Foods"  VerticalAlignment="Stretch"/>
+
+                                <toolkit:Separator  BorderBrush="LightGray" BorderThickness=".5" Width="110" Margin="0" Padding="0"/>
+
+                                <sdk:TreeViewItem Header="Feedback" Style="{StaticResource customTreeViewItem}" HorizontalAlignment="Right"  Selected="Profile_Selected" Unselected="Profile_Unselected" MouseLeftButtonUp="Feedback_MouseLeftButtonUp" Name="Feedback" Cursor="Hand" ToolTipService.ToolTip="Leave Feedback"  VerticalAlignment="Stretch"/>
+
+
+                            </sdk:TreeView>
+
+                            <!--</Border>-->
+                            <!-- Left hand adds-->
+                            <!--<Border CornerRadius="4" BorderThickness="1"  BorderBrush="Black" Margin="2,10,2,2" Height="95" Background="Transparent"  Width="125">-->
+                            <Image Name="topLeft" Margin="2,10,2,2" Height="95" Width="125" />
+                            <!--</Border> -->
+                            <!--<Border CornerRadius="4" BorderThickness="1"  BorderBrush="Black" Margin="2,10,2,2" Height="95" Background="Transparent" Width="125">-->
+                            <Image Name="bottomLeft" Margin="2,10,2,2" Height="95" Width="125" />
+                            <!--</Border>-->
+                        </StackPanel>
+                    </toolkit:DockPanel>
+                    <!--#7B92BF-->
+                    <!-- content frame-->
+                    <StackPanel Grid.Column="1" Grid.Row="1"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,5,0,0" Orientation="Vertical">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="700"></RowDefinition>
+                                <RowDefinition Height="20"></RowDefinition>
+                            </Grid.RowDefinitions>
+
+                            <navigation:Frame x:Name="ContentFrame" Grid.Column="0" Grid.Row="0" Source="/pages/login.xaml" Background="Transparent" VerticalContentAlignment="Top" Height="700"
+                            Navigated="ContentFrame_Navigated" 
+                            NavigationFailed="ContentFrame_NavigationFailed">
+                                <sdk:Frame.UriMapper>
+                                    <sdk:UriMapper>
+                                        <sdk:UriMapping Uri="Login" MappedUri="/pages/Login.xaml"/>
+                                        <sdk:UriMapping Uri="Profile" MappedUri="/pages/Profile.xaml"/>
+                                        <sdk:UriMapping Uri="MenuOptions" MappedUri="/pages/MenuOptions.xaml"/>
+                                        <sdk:UriMapping Uri="FoodLikes" MappedUri="/pages/FoodLikes.xaml"/>
+                                        <sdk:UriMapping Uri="FoodDislikes" MappedUri="/pages/FoodDislikes.xaml"/>
+                                        <sdk:UriMapping Uri="Menus" MappedUri="/pages/Menus.xaml"/>
+                                        <sdk:UriMapping Uri="MenuEditor" MappedUri="/pages/MenuEditor.xaml"/>
+                                        <sdk:UriMapping Uri="ShoppingList" MappedUri="/pages/EditShoppingList.xaml"/>
+                                        <sdk:UriMapping Uri="FitnessLog" MappedUri="/pages/DailyFitnessLog.xaml"/>
+                                        <sdk:UriMapping Uri="FoodLog" MappedUri="/pages/FoodLog.xaml"/>
+                                        <sdk:UriMapping Uri="DailyFoodLog" MappedUri="/pages/DailyFoodLog.xaml"/>
+                                        <sdk:UriMapping Uri="DailyMenu" MappedUri="/pages/DailyMenu.xaml"/>
+                                        <sdk:UriMapping Uri="YourFoods" MappedUri="/pages/YourFoods.xaml"/>
+                                        <sdk:UriMapping Uri="AdditionalProfiles" MappedUri="/pages/AdditionalProfiles.xaml"/>
+                                    </sdk:UriMapper>
+                                </sdk:Frame.UriMapper>
+                            </navigation:Frame>
+
+                            <TextBlock Grid.Column="0" Grid.Row="1" Name="Version" Text="Version: " FontSize="10" Margin="5,5,0,0" Foreground="Black"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <!--Right hand items-->
+                    <StackPanel  Margin="5,5,5,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical"  Grid.Row="1" Grid.Column="2">
+                        <sdk:Label Content="About This Page" HorizontalAlignment="Center" FontWeight="Bold" Foreground="{StaticResource defaultFontColor}" FontSize="14"
+                             VerticalAlignment="Top"                                   
+                                   />
+                        <Canvas  Canvas.ZIndex="80" Margin="275,0,0,0">
+                            <ToggleButton Background="Transparent" BorderThickness="0" Foreground="Transparent" Height="18" Margin="0,5,0,0" IsChecked="False" Click="ToggleButton_Click" Cursor="Hand" ToolTipService.ToolTip="Expand">
+                                <ToggleButton.Content>
+                                    <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/plus.png" Name="ExpandAbout"
+                                        Height="12" />
+                                </ToggleButton.Content>
+                            </ToggleButton>
+
+                        </Canvas>
+                        <Canvas  Canvas.ZIndex="12" >
+                            <Border CornerRadius="4" BorderBrush="White" BorderThickness="1"  Width="290" Grid.Column="1" Background="White" Margin="5" 
+                                    Height="90" Canvas.ZIndex="10" Name="AboutBorder">
+                                <Border.Resources>
+                                    <Storyboard x:Name="borderStoryBoard" >
+                                        <DoubleAnimation x:Name="da" Storyboard.TargetName="AboutBorder" Storyboard.TargetProperty="Height" Duration="0:0:1" />
+                                    </Storyboard>
+                                </Border.Resources>
+
+                                <ScrollViewer  Margin="2" VerticalScrollBarVisibility="Auto" BorderThickness="0" Height="Auto" Background="White">
+                                    <TextBlock Name="helpText" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="4" TextWrapping="Wrap"/>
+                                </ScrollViewer>
+                            </Border>
+
+                        </Canvas>
+
+
+                        <!-- <Border CornerRadius="4" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Background="Transparent" Margin="5" Width="305" Height="205">-->
+                        <Image Name="topRight" Width="285" Height="205" Margin="0,100,0,0"/>
+                        <!--</Border>-->
+                        <StackPanel Name="SPTipsAndNews" Background="Transparent">
+                            <StackPanel Name="SPTipsAndNewsContainer">
+                                <sdk:Label Content="Tips and News" HorizontalAlignment="Center" FontWeight="Bold" Foreground="{StaticResource defaultFontColor}" FontSize="14"
+                                 VerticalAlignment="Top"/>
+
+                                <Canvas  Canvas.ZIndex="11" Margin="275,0,0,0" >
+                                    <ToggleButton Background="Transparent" BorderThickness="0" Foreground="Transparent" Height="18" Margin="0,5,0,0" IsChecked="False" Click="ToggleButton_Click2" Cursor="Hand" ToolTipService.ToolTip="Expand">
+                                        <ToggleButton.Content>
+                                            <Image Source="/DynamicConnections.NutriStyle.MenuGenerator;component/Images/minus.png" Name="ExpandTips"
+                                            Height="12" />
+                                        </ToggleButton.Content>
+                                    </ToggleButton>
+                                </Canvas>
+                                <Canvas  Canvas.ZIndex="10" Background="Red">
+                                    <Border CornerRadius="4" BorderBrush="LightGray" BorderThickness="1"  Width="290" Grid.Column="1" Background="White" Margin="5" 
+                                        Height="300" Canvas.ZIndex="10" Name="TipsBorder">
+                                        <Border.Resources>
+                                            <Storyboard x:Name="tipsStoryBoard" >
+                                                <DoubleAnimation x:Name="tipsda" Storyboard.TargetName="TipsBorder" Storyboard.TargetProperty="Height" Duration="0:0:1" />
+                                            </Storyboard>
+                                        </Border.Resources>
+                                        <ScrollViewer Margin="2" VerticalScrollBarVisibility="Auto" BorderThickness="0"  Height="Auto" Background="White" Name="tipScrollViewer"/>
+                                    </Border>
+                                </Canvas>
+                            </StackPanel>
+                        </StackPanel>
+                        <!--<Border CornerRadius="4" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Background="Transparent" Margin="5" Width="305" Height="205">-->
+                        <Canvas  Canvas.ZIndex="8" >
+                            <StackPanel Name="BottomRightSP" Width="285" Height="275" Margin="0,100,0,0" Canvas.ZIndex="1">
+                                <Image Name="bottomRight" Width="0" Height="0" />
+                            </StackPanel>
+                        </Canvas>
+                        <!--</Border> -->
+
+                    </StackPanel>
+
+                </Grid>
+
+            </Canvas>
+        </Border>
+    </Grid>
+
+</navigation:Page>

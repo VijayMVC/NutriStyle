@@ -1,0 +1,8 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <debug>true</debug>
+    <drop>c:\drops\Nutristyle\CRM 2011</drop>
+    <framework>net-3.5</framework>
+    <common>C:\drops\Common\CRM 2011</common>
+  </PropertyGroup>
+</Project>
